@@ -357,6 +357,98 @@ ddev export-db > backup.sql.gz
 ddev import-db --file=backup.sql.gz
 ```
 
+### Optional Services
+
+The skill includes optional service templates for enhanced TYPO3 development:
+
+#### Redis (Caching)
+
+Add high-performance caching to TYPO3:
+
+```bash
+# Copy optional template
+cp .ddev/templates/docker-compose.services.yaml.optional .ddev/docker-compose.services.yaml
+cp .ddev/templates/config.redis.yaml.optional .ddev/config.redis.yaml
+
+# Restart DDEV
+ddev restart
+
+# Test Redis
+ddev ssh
+redis-cli -h redis ping  # Should return: PONG
+```
+
+**Configuration**: Add Redis backend to TYPO3 `AdditionalConfiguration.php` (see `.ddev/config.redis.yaml` for examples)
+
+**Image**: `redis:7-alpine`
+**Memory**: 256MB with LRU eviction policy
+
+#### MailHog (Email Testing)
+
+Catch all emails sent by TYPO3 for testing:
+
+```bash
+# Already included in docker-compose.services.yaml.optional
+# Access Web UI after ddev restart:
+# http://{{DDEV_SITENAME}}.ddev.site:8025
+```
+
+**Image**: `mailhog/mailhog:latest`
+**SMTP**: `mailhog:1025` (automatically configured in docker-compose.web.yaml)
+
+#### Ofelia (TYPO3 Scheduler Automation)
+
+Automate TYPO3 scheduler tasks with **netresearch/ofelia**:
+
+```bash
+# Copy Ofelia configuration
+cp .ddev/templates/docker-compose.ofelia.yaml.optional .ddev/docker-compose.ofelia.yaml
+
+# Restart DDEV
+ddev restart
+
+# View scheduler logs
+docker logs -f ddev-{{DDEV_SITENAME}}-ofelia
+```
+
+**Image**: `netresearch/ofelia:latest` (TYPO3-optimized fork)
+**Default Schedule**: TYPO3 scheduler runs every 1 minute for all versions
+**Cache Warmup**: Every 1 hour for v13
+
+**Compose Format**: All service files use Docker Compose v2 specification (no `version:` field)
+
+#### Shell Aliases
+
+Add convenient shortcuts:
+
+```bash
+# Copy bash additions
+cp .ddev/templates/homeadditions/.bashrc_additions.optional .ddev/homeadditions/.bashrc_additions
+
+# Restart DDEV to load aliases
+ddev restart
+
+# Available aliases:
+ddev ssh
+t3-scheduler-v11    # Run TYPO3 11 scheduler
+t3-scheduler-v12    # Run TYPO3 12 scheduler
+t3-scheduler-v13    # Run TYPO3 13 scheduler
+t3-scheduler-all    # Run scheduler on all versions
+redis               # Access Redis CLI
+t3-cache-flush-v13  # Flush TYPO3 13 cache
+```
+
+#### Complete Services Documentation
+
+For detailed service configuration, troubleshooting, and performance tuning:
+
+```bash
+# Copy services README
+cp .ddev/templates/README-SERVICES.md.optional .ddev/README-SERVICES.md
+```
+
+**Note**: All optional templates follow Docker Compose v2 standards and use `netresearch/ofelia` for scheduler automation.
+
 ## Validation Checklist
 
 Before completing, verify:
