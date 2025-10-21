@@ -1,0 +1,278 @@
+# TYPO3 DDEV Skill
+
+> A Claude Code skill for automating DDEV environment setup in TYPO3 extension projects
+
+[![TYPO3](https://img.shields.io/badge/TYPO3-11%20%7C%2012%20%7C%2013-orange.svg)](https://typo3.org/)
+[![DDEV](https://img.shields.io/badge/DDEV-Local%20Development-blue.svg)](https://ddev.com/)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+
+## Overview
+
+This skill helps TYPO3 extension developers quickly set up a complete DDEV development environment with multiple TYPO3 versions. Instead of manually configuring DDEV, this skill automates the entire process - from detecting your extension metadata to generating all configuration files and installing TYPO3.
+
+### What It Does
+
+- ✅ Detects TYPO3 extension projects automatically
+- ✅ Extracts extension metadata (key, package name, namespace)
+- ✅ Generates complete DDEV configuration
+- ✅ Creates multi-version TYPO3 testing environment (11.5, 12.4, 13.4 LTS)
+- ✅ Provides backend and frontend access with preconfigured credentials
+- ✅ Includes custom DDEV commands for easy TYPO3 installation
+
+### Who It's For
+
+- TYPO3 extension developers
+- Teams working on TYPO3 extensions
+- Developers needing to test extensions across multiple TYPO3 versions
+- Anyone wanting a quick, reproducible TYPO3 development environment
+
+## Prerequisites
+
+Before using this skill, ensure you have:
+
+- [DDEV](https://ddev.readthedocs.io/en/stable/users/install/ddev-installation/) installed
+- [Docker](https://www.docker.com/get-started) running
+- A TYPO3 extension project (with `ext_emconf.php` or `composer.json`)
+- [Claude Code](https://claude.com/claude-code) installed
+
+## Installation
+
+### Option 1: Install as Claude Code Skill
+
+```bash
+# Clone this repository into your Claude Code skills directory
+cd ~/.claude/skills/  # or your custom skills directory
+git clone https://github.com/netresearch/typo3-ddev-skill.git
+
+# The skill is now available in Claude Code
+```
+
+### Option 2: Manual Setup
+
+1. Download this repository
+2. Copy the `skill.md` file to your project or reference it when needed
+3. Use the templates manually by copying from the `templates/` directory
+
+## Usage
+
+### In Claude Code
+
+Once installed, simply invoke the skill in your TYPO3 extension project:
+
+```
+/typo3-ddev
+```
+
+Or ask Claude:
+
+```
+Set up DDEV for my TYPO3 extension
+```
+
+The skill will:
+
+1. Validate prerequisites (DDEV, Docker, TYPO3 extension structure)
+2. Extract your extension metadata
+3. Confirm configuration with you
+4. Generate all `.ddev/` files with proper values
+5. Guide you through starting DDEV and installing TYPO3
+
+### What You'll Get
+
+After setup, you'll have:
+
+```
+project-root/
+├── .ddev/
+│   ├── config.yaml
+│   ├── docker-compose.web.yaml
+│   ├── apache/
+│   │   └── apache-site.conf
+│   ├── web-build/
+│   │   └── Dockerfile
+│   └── commands/
+│       └── web/
+│           ├── install-v11
+│           ├── install-v12
+│           ├── install-v13
+│           └── install-all
+├── Classes/
+├── Configuration/
+├── ext_emconf.php
+└── composer.json
+```
+
+### Accessing Your Environment
+
+Once installed, access TYPO3 at:
+
+**Overview Dashboard:**
+```
+https://your-ext.ddev.site/
+```
+
+**TYPO3 11.5 LTS:**
+- Frontend: `https://v11.your-ext.ddev.site/`
+- Backend: `https://v11.your-ext.ddev.site/typo3/`
+
+**TYPO3 12.4 LTS:**
+- Frontend: `https://v12.your-ext.ddev.site/`
+- Backend: `https://v12.your-ext.ddev.site/typo3/`
+
+**TYPO3 13.4 LTS:**
+- Frontend: `https://v13.your-ext.ddev.site/`
+- Backend: `https://v13.your-ext.ddev.site/typo3/`
+
+### Backend Credentials
+
+```
+Username: admin
+Password: Password:joh316
+```
+
+## Custom DDEV Commands
+
+The skill creates these custom commands:
+
+```bash
+# Install specific TYPO3 version
+ddev install-v11  # TYPO3 11.5 LTS
+ddev install-v12  # TYPO3 12.4 LTS
+ddev install-v13  # TYPO3 13.4 LTS
+
+# Install all versions at once
+ddev install-all
+```
+
+## Architecture
+
+The setup creates a unique multi-version environment:
+
+- **Extension Source**: Mounted at `/var/www/{{EXTENSION_KEY}}` (your project root)
+- **TYPO3 Installations**: Separate directories for each version (`/var/www/html/v11`, `v12`, `v13`)
+- **Extension Installation**: Installed via Composer path repository in each TYPO3 version
+- **Persistent Data**: Docker volumes for each TYPO3 version database and files
+
+This architecture allows you to:
+- Develop extension code in your project root
+- Test immediately across all TYPO3 versions
+- Keep TYPO3 installations separate and clean
+- Avoid committing TYPO3 core files to your extension repository
+
+## Configuration
+
+### Supported TYPO3 Versions
+
+By default, the skill supports:
+- TYPO3 11.5 LTS (PHP 8.0+)
+- TYPO3 12.4 LTS (PHP 8.1+)
+- TYPO3 13.4 LTS (PHP 8.2+)
+
+PHP version is set to 8.2 for maximum compatibility.
+
+### Customization
+
+After generation, you can customize:
+
+**PHP Version** (`.ddev/config.yaml`):
+```yaml
+php_version: "8.3"  # Change to 8.1 or 8.3 if needed
+```
+
+**XDebug** (enable/disable):
+```bash
+ddev xdebug on   # Enable
+ddev xdebug off  # Disable
+```
+
+**Additional Services** (add to `.ddev/docker-compose.services.yaml`):
+```yaml
+# Example: Add Redis, Elasticsearch, etc.
+```
+
+## Troubleshooting
+
+### DDEV Won't Start
+
+**Port Conflicts:**
+```bash
+# Check what's using ports 80/443
+sudo lsof -i :80
+sudo lsof -i :443
+
+# Option 1: Stop conflicting services
+# Option 2: Change ports in .ddev/config.yaml
+router_http_port: "8080"
+router_https_port: "8443"
+```
+
+### Installation Fails
+
+**Check Composer Issues:**
+```bash
+ddev ssh
+composer diagnose
+```
+
+**View Installation Logs:**
+```bash
+ddev logs
+```
+
+**Retry Installation:**
+```bash
+# For specific version
+ddev ssh
+rm -rf /var/www/html/v13/*
+exit
+ddev install-v13
+```
+
+### Extension Not Appearing
+
+**Verify Extension Key:**
+```bash
+ddev ssh
+echo $EXTENSION_KEY  # Should match your ext_emconf.php
+```
+
+**Check Composer Repository:**
+```bash
+ddev ssh
+cd /var/www/html/v13
+composer config repositories
+```
+
+## Contributing
+
+Contributions welcome! Please:
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## Credits
+
+This skill is based on the excellent work by [Armin Vieweg](https://github.com/a-r-m-i-n) in [ddev-for-typo3-extensions](https://github.com/a-r-m-i-n/ddev-for-typo3-extensions).
+
+### Additional Resources
+
+- [DDEV Documentation](https://ddev.readthedocs.io/)
+- [TYPO3 Extension Development](https://docs.typo3.org/m/typo3/reference-coreapi/main/en-us/ExtensionArchitecture/Index.html)
+- [TYPO3 DDEV Setup Guide](https://docs.typo3.org/m/typo3/tutorial-getting-started/main/en-us/Installation/UsingDdev.html)
+
+## License
+
+MIT License - see [LICENSE](LICENSE) file for details.
+
+## Support
+
+- **Issues**: [GitHub Issues](https://github.com/netresearch/typo3-ddev-skill/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/netresearch/typo3-ddev-skill/discussions)
+- **TYPO3 Slack**: #ddev channel
+
+---
+
+**Made with ❤️ for the TYPO3 Community**
