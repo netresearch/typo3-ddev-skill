@@ -16,25 +16,25 @@ services:
       - REDIS_MAXMEMORY_POLICY=allkeys-lru
     command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
 
-  # MailHog for email testing
-  mailhog:
-    container_name: ddev-${DDEV_SITENAME}-mailhog
-    image: mailhog/mailhog:latest
+  # MailPit for email testing
+  mailpit:
+    container_name: ddev-${DDEV_SITENAME}-mailpit
+    image: axllent/mailpit:latest
     restart: unless-stopped
     ports:
       - "1025"  # SMTP port
       - "8025"  # Web UI port
     labels:
       com.ddev.site-name: ${DDEV_SITENAME}
-      com.ddev.approot: $DDEV_APPROOT
+      com.ddev.approot: $DDEV_SITENAME
     environment:
-      MH_SMTP_BIND_ADDR: 0.0.0.0:1025
-      MH_UI_BIND_ADDR: 0.0.0.0:8025
+      MP_SMTP_BIND_ADDR: 0.0.0.0:1025
+      MP_UI_BIND_ADDR: 0.0.0.0:8025
 
   # Ofelia for cron jobs (TYPO3 scheduler)
   ofelia:
     container_name: ddev-${DDEV_SITENAME}-ofelia
-    image: netresearch/ofelia:latest
+    image: ghcr.io/netresearch/ofelia:latest
     restart: unless-stopped
     depends_on:
       - web
@@ -45,7 +45,7 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - .:/src
-    command: daemon --docker
+    command: daemon --docker-events
 
 volumes:
   redis-data:

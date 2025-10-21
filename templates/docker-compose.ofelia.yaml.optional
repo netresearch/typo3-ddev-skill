@@ -1,6 +1,6 @@
 # Ofelia configuration for TYPO3 scheduler jobs
 # This runs the TYPO3 scheduler every minute
-# Uses netresearch/ofelia for TYPO3-optimized cron handling
+# Uses ghcr.io/netresearch/ofelia (TYPO3-optimized fork)
 
 services:
   web:

@@ -35,10 +35,10 @@ redis-cli -h redis ping
 
 ---
 
-### 2. MailHog (Email Testing)
+### 2. MailPit (Email Testing)
 
-**Container**: `ddev-rte-ckeditor-image-mailhog`
-**Image**: `mailhog/mailhog`
+**Container**: `ddev-{{DDEV_SITENAME}}-mailpit`
+**Image**: `axllent/mailpit`
 **Ports**:
 - 1025 (SMTP)
 - 8025 (Web UI)
@@ -47,19 +47,19 @@ redis-cli -h redis ping
 
 **Access**:
 - **Web UI**: `http://rte-ckeditor-image.ddev.site:8025`
-- **SMTP**: `mailhog:1025` (from containers)
+- **SMTP**: `mailpit:1025` (from containers)
 
 **TYPO3 Configuration**:
-Already configured in `.ddev/compose.web.yaml`:
+Already configured in `.ddev/docker-compose.web.yaml`:
 ```yaml
 TYPO3_INSTALL_MAIL_TRANSPORT: smtp
-TYPO3_INSTALL_MAIL_TRANSPORT_SMTP_SERVER: mailhog:1025
+TYPO3_INSTALL_MAIL_TRANSPORT_SMTP_SERVER: mailpit:1025
 ```
 
 Or manually in `AdditionalConfiguration.php`:
 ```php
 $GLOBALS['TYPO3_CONF_VARS']['MAIL']['transport'] = 'smtp';
-$GLOBALS['TYPO3_CONF_VARS']['MAIL']['transport_smtp_server'] = 'mailhog:1025';
+$GLOBALS['TYPO3_CONF_VARS']['MAIL']['transport_smtp_server'] = 'mailpit:1025';
 ```
 
 **Testing**:
@@ -69,7 +69,7 @@ ddev ssh
 cd /var/www/html/v13
 vendor/bin/typo3 mailer:spool:send
 
-# View in MailHog UI
+# View in MailPit UI
 open http://rte-ckeditor-image.ddev.site:8025
 ```
 
@@ -78,11 +78,11 @@ open http://rte-ckeditor-image.ddev.site:8025
 ### 3. Ofelia (Cron/Scheduler)
 
 **Container**: `ddev-rte-ckeditor-image-ofelia`
-**Image**: `netresearch/ofelia:latest`
+**Image**: `ghcr.io/netresearch/ofelia:latest`
 
 **Purpose**: Run TYPO3 scheduler tasks automatically
 
-**Configuration**: `.ddev/compose.ofelia.yaml`
+**Configuration**: `.ddev/docker-compose.ofelia.yaml`
 
 **Scheduled Jobs**:
 - TYPO3 scheduler for v11, v12, v13: Every 1 minute
@@ -168,7 +168,7 @@ docker ps | grep rte-ckeditor-image
 
 # Service logs
 docker logs ddev-rte-ckeditor-image-redis
-docker logs ddev-rte-ckeditor-image-mailhog
+docker logs ddev-{{DDEV_SITENAME}}-mailpit
 docker logs ddev-rte-ckeditor-image-ofelia
 ```
 
@@ -182,7 +182,7 @@ ddev redis-cli
 ddev ssh
 redis-cli -h redis
 
-# MailHog web interface
+# MailPit web interface
 open http://rte-ckeditor-image.ddev.site:8025
 
 # Check Redis connection from TYPO3
@@ -233,19 +233,19 @@ vendor/bin/typo3 scheduler:list --verbose
 
 To adjust:
 ```yaml
-# .ddev/compose.services.yaml
+# .ddev/docker-compose.services.yaml
 environment:
   - REDIS_MAXMEMORY=512mb  # Increase if needed
 ```
 
-### MailHog
+### MailPit
 
 No tuning needed for development. All emails are stored in memory.
 
 ### Ofelia/Cron
 
 **Frequency**: Default is every 1 minute
-To adjust, edit `.ddev/compose.ofelia.yaml`:
+To adjust, edit `.ddev/docker-compose.ofelia.yaml`:
 
 ```yaml
 # Every 5 minutes instead
@@ -271,7 +271,7 @@ redis-cli -h redis ping
 docker logs ddev-rte-ckeditor-image-redis
 ```
 
-### MailHog Not Receiving Emails
+### MailPit Not Receiving Emails
 
 ```bash
 # Check TYPO3 mail configuration
@@ -300,7 +300,7 @@ vendor/bin/typo3 scheduler:list --verbose
 
 ### Remove Service
 
-To remove a service, comment it out in `.ddev/compose.services.yaml` and restart:
+To remove a service, comment it out in `.ddev/docker-compose.services.yaml` and restart:
 
 ```bash
 ddev restart
@@ -321,7 +321,7 @@ ddev restart
 ### Elasticsearch
 
 ```yaml
-# Add to .ddev/compose.services.yaml
+# Add to .ddev/docker-compose.services.yaml
 elasticsearch:
   image: elasticsearch:8.10.2
   environment:
@@ -334,7 +334,7 @@ elasticsearch:
 ### Solr
 
 ```yaml
-# Add to .ddev/compose.services.yaml
+# Add to .ddev/docker-compose.services.yaml
 solr:
   image: solr:9
   ports:
@@ -350,8 +350,8 @@ solr:
 | Service | Access | Purpose |
 |---------|--------|---------|
 | Redis | `redis-cli -h redis` | Caching |
-| MailHog UI | http://localhost:8025 | Email testing |
-| MailHog SMTP | `mailhog:1025` | Email delivery |
+| MailPit UI | http://localhost:8025 | Email testing |
+| MailPit SMTP | `mailpit:1025` | Email delivery |
 | Ofelia | Background | Cron jobs |
 | Web | https://*.ddev.site | TYPO3 instances |
 | Database | `ddev mysql` | MariaDB |
