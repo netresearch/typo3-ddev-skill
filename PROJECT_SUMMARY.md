@@ -21,7 +21,7 @@ typo3-ddev-skill/
 │
 ├── templates/                          # DDEV configuration templates
 │   ├── config.yaml                     # Main DDEV config
-│   ├── compose.web.yaml         # Web service configuration
+│   ├── docker-compose.web.yaml         # Web service configuration
 │   ├── apache/
 │   │   └── apache-site.conf            # Apache virtual hosts
 │   ├── web-build/
@@ -141,7 +141,7 @@ Use this checklist to verify the skill works correctly:
 
 ### DDEV Configuration
 - [ ] `.ddev/config.yaml` created with correct sitename
-- [ ] `.ddev/compose.web.yaml` has correct environment variables
+- [ ] `.ddev/docker-compose.web.yaml` has correct environment variables
 - [ ] `.ddev/apache/apache-site.conf` has correct hostnames
 - [ ] `.ddev/web-build/Dockerfile` has correct extension key
 - [ ] All command scripts created in `.ddev/commands/web/`
@@ -240,7 +240,7 @@ php_version: "8.3"  # or "8.1"
 
 ### Add Additional Services
 ```yaml
-# Create templates/compose.services.yaml
+# Create templates/docker-compose.services.yaml
 services:
   redis:
     image: redis:7-alpine

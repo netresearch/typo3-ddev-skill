@@ -93,7 +93,7 @@ Create the following directory structure and files:
 ```
 .ddev/
 ├── config.yaml
-├── compose.web.yaml
+├── docker-compose.web.yaml
 ├── apache/
 │   └── apache-site.conf
 ├── web-build/
@@ -131,7 +131,7 @@ additional_fqdns: []
 use_dns_when_possible: true
 ```
 
-#### 3.2: .ddev/compose.web.yaml
+#### 3.2: .ddev/docker-compose.web.yaml
 
 Replace these variables:
 - `{{EXTENSION_KEY}}` → Extension key with underscores (e.g., `my_ext`)
@@ -342,7 +342,7 @@ ddev xdebug on
 
 ### Customize TYPO3 Versions
 
-Edit `.ddev/compose.web.yaml` and installation scripts to add/remove versions.
+Edit `.ddev/docker-compose.web.yaml` and installation scripts to add/remove versions.
 
 ### Database Access
 
@@ -367,8 +367,8 @@ Add high-performance caching to TYPO3:
 
 ```bash
 # Copy optional template
-cp .ddev/templates/compose.services.yaml.optional .ddev/compose.services.yaml
-cp .ddev/templates/config.redis.yaml.optional .ddev/config.redis.yaml
+cp .ddev/templates/docker-compose.services.yaml.optional .ddev/docker-compose.services.yaml
+cp .ddev/templates/config.redis.php.example .ddev/config.redis.php.example
 
 # Restart DDEV
 ddev restart
@@ -378,31 +378,31 @@ ddev ssh
 redis-cli -h redis ping  # Should return: PONG
 ```
 
-**Configuration**: Add Redis backend to TYPO3 `AdditionalConfiguration.php` (see `.ddev/config.redis.yaml` for examples)
+**Configuration**: Add Redis backend to TYPO3 `AdditionalConfiguration.php` (see `.ddev/config.redis.php.example` for examples)
 
 **Image**: `redis:7-alpine`
 **Memory**: 256MB with LRU eviction policy
 
-#### MailHog (Email Testing)
+#### MailPit (Email Testing)
 
 Catch all emails sent by TYPO3 for testing:
 
 ```bash
-# Already included in compose.services.yaml.optional
+# Already included in docker-compose.services.yaml.optional
 # Access Web UI after ddev restart:
 # http://{{DDEV_SITENAME}}.ddev.site:8025
 ```
 
-**Image**: `mailhog/mailhog:latest`
-**SMTP**: `mailhog:1025` (automatically configured in compose.web.yaml)
+**Image**: `axllent/mailpit:latest`
+**SMTP**: `mailpit:1025` (automatically configured in docker-compose.web.yaml)
 
 #### Ofelia (TYPO3 Scheduler Automation)
 
-Automate TYPO3 scheduler tasks with **netresearch/ofelia**:
+Automate TYPO3 scheduler tasks with **ghcr.io/netresearch/ofelia**:
 
 ```bash
 # Copy Ofelia configuration
-cp .ddev/templates/compose.ofelia.yaml.optional .ddev/compose.ofelia.yaml
+cp .ddev/templates/docker-compose.ofelia.yaml.optional .ddev/docker-compose.ofelia.yaml
 
 # Restart DDEV
 ddev restart
@@ -411,11 +411,12 @@ ddev restart
 docker logs -f ddev-{{DDEV_SITENAME}}-ofelia
 ```
 
-**Image**: `netresearch/ofelia:latest` (TYPO3-optimized fork)
+**Image**: `ghcr.io/netresearch/ofelia:latest` (GitHub Container Registry - TYPO3-optimized fork)
 **Default Schedule**: TYPO3 scheduler runs every 1 minute for all versions
 **Cache Warmup**: Every 1 hour for v13
 
-**Compose Format**: All service files use Docker Compose v2 specification (no `version:` field)
+**DDEV Naming**: Uses `docker-compose.*.yaml` naming (DDEV v1.24.8 requirement, not Compose v2 standard)
+**No Version Field**: All service files omit `version:` declaration per Compose v2 spec
 
 #### Shell Aliases
 
@@ -447,7 +448,11 @@ For detailed service configuration, troubleshooting, and performance tuning:
 cp .ddev/templates/README-SERVICES.md.optional .ddev/README-SERVICES.md
 ```
 
-**Note**: All optional templates follow Docker Compose v2 standards and use `netresearch/ofelia` for scheduler automation.
+**Important Notes**:
+- DDEV v1.24.8 requires `docker-compose.*.yaml` naming (auto-loads from `.ddev/`)
+- Ofelia image: `ghcr.io/netresearch/ofelia:latest` (not Docker Hub)
+- Ofelia command: `daemon --docker-events` (not `--docker`)
+- Redis config must NOT be `.yaml` (DDEV tries to parse it as config)
 
 ## Validation Checklist
 
