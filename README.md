@@ -142,6 +142,53 @@ ddev install-v13  # TYPO3 13.4 LTS
 
 # Install all versions at once
 ddev install-all
+
+# Install Introduction Package (demo content)
+ddev install-introduction v13
+```
+
+## Adding Demo Content
+
+Test your extension with realistic content using the TYPO3 Introduction Package:
+
+```bash
+# Install Introduction Package
+ddev install-introduction v13
+```
+
+**Includes:**
+- 86+ pages with example content
+- 226+ content elements (text, images, forms, tables)
+- Multi-language support (EN, DE, DA)
+- Bootstrap Package responsive theme
+- Perfect for testing RTE features
+
+## Troubleshooting
+
+### Database Already Exists
+
+If reinstalling TYPO3:
+
+```bash
+ddev mysql -e "DROP DATABASE IF EXISTS v13; CREATE DATABASE v13;"
+ddev install-v13
+```
+
+### Services Not Starting
+
+Check and restart services:
+
+```bash
+docker ps --filter "name=ddev-your-ext"
+ddev restart
+```
+
+### Extension Not Visible
+
+Flush caches:
+
+```bash
+ddev exec -d /var/www/html/v13 vendor/bin/typo3 cache:flush
 ```
 
 ## Architecture
