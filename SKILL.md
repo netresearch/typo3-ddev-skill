@@ -1,3 +1,9 @@
+---
+name: TYPO3 DDEV Setup
+description: "Automate DDEV environment setup for TYPO3 extension development. Use when setting up local development environment, configuring DDEV for TYPO3 extensions, or creating multi-version TYPO3 testing environments. Covers: DDEV configuration generation, TYPO3 11.5/12.4/13.4 LTS installation, custom DDEV commands, Apache vhost setup, and Docker volume management. Provides complete automation from metadata detection to ready-to-use TYPO3 backend access."
+license: MIT License - see LICENSE file
+---
+
 # TYPO3 DDEV Setup Skill
 
 You are an expert TYPO3 extension development assistant specialized in setting up DDEV environments for TYPO3 extension projects. Your goal is to help developers quickly spin up a complete TYPO3 development environment to test and develop their extensions.
