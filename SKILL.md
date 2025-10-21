@@ -454,6 +454,81 @@ cp .ddev/templates/README-SERVICES.md.optional .ddev/README-SERVICES.md
 - Ofelia command: `daemon --docker-events` (not `--docker`)
 - Redis config must NOT be `.yaml` (DDEV tries to parse it as config)
 
+## Demo Content (Introduction Package)
+
+For testing your extension with realistic content:
+
+```bash
+# Copy the install-introduction command
+cp .ddev/templates/commands/web/install-introduction.optional .ddev/commands/web/install-introduction
+chmod +x .ddev/commands/web/install-introduction
+
+# Install Introduction Package
+ddev install-introduction v13
+```
+
+**What's Included:**
+- 86+ pages with full page tree structure
+- 226+ content elements (text, images, forms, tables)
+- Multi-language support (English, German, Danish)
+- Bootstrap Package responsive theme
+- Example content for testing RTE features
+
+**Access:**
+- Frontend: `https://{{DDEV_SITENAME}}.ddev.site/`
+- Backend: `https://{{DDEV_SITENAME}}.ddev.site/typo3/`
+
+## Troubleshooting
+
+### Database Already Exists Error
+
+If reinstalling TYPO3 and you get "database already exists" errors:
+
+```bash
+# Clean up and recreate database
+ddev mysql -e "DROP DATABASE IF EXISTS v13; CREATE DATABASE v13;"
+
+# Now retry installation
+ddev install-v13
+```
+
+### TYPO3 Setup Shows "Database contains tables" Error
+
+```bash
+# Option 1: Clean database
+ddev mysql v13 -e "DROP DATABASE v13; CREATE DATABASE v13;"
+
+# Option 2: Use different database name
+# Edit install-v* script to use different DB name
+```
+
+### Services Not Loading
+
+If Redis, MailPit, or Ofelia containers don't start:
+
+```bash
+# Check container status
+docker ps --filter "name=ddev-{{DDEV_SITENAME}}"
+
+# View logs
+docker logs ddev-{{DDEV_SITENAME}}-redis
+docker logs ddev-{{DDEV_SITENAME}}-mailpit
+docker logs ddev-{{DDEV_SITENAME}}-ofelia
+
+# Restart DDEV
+ddev restart
+```
+
+### Extension Not Appearing in Backend
+
+```bash
+# Flush all caches
+ddev exec -d /var/www/html/v13 vendor/bin/typo3 cache:flush
+
+# Check extension is symlinked
+ddev exec ls -la /var/www/html/v13/vendor/{{VENDOR}}/{{EXTENSION_KEY}}
+```
+
 ## Validation Checklist
 
 Before completing, verify:
