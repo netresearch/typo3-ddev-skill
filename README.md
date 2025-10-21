@@ -85,7 +85,7 @@ After setup, you'll have:
 project-root/
 ├── .ddev/
 │   ├── config.yaml
-│   ├── docker-compose.web.yaml
+│   ├── compose.web.yaml
 │   ├── apache/
 │   │   └── apache-site.conf
 │   ├── web-build/
@@ -185,7 +185,7 @@ ddev xdebug on   # Enable
 ddev xdebug off  # Disable
 ```
 
-**Additional Services** (add to `.ddev/docker-compose.services.yaml`):
+**Additional Services** (add to `.ddev/compose.services.yaml`):
 ```yaml
 # Example: Add Redis, Elasticsearch, etc.
 ```

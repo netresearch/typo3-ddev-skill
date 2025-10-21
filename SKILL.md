@@ -93,7 +93,7 @@ Create the following directory structure and files:
 ```
 .ddev/
 ├── config.yaml
-├── docker-compose.web.yaml
+├── compose.web.yaml
 ├── apache/
 │   └── apache-site.conf
 ├── web-build/
@@ -131,7 +131,7 @@ additional_fqdns: []
 use_dns_when_possible: true
 ```
 
-#### 3.2: .ddev/docker-compose.web.yaml
+#### 3.2: .ddev/compose.web.yaml
 
 Replace these variables:
 - `{{EXTENSION_KEY}}` → Extension key with underscores (e.g., `my_ext`)
@@ -342,7 +342,7 @@ ddev xdebug on
 
 ### Customize TYPO3 Versions
 
-Edit `.ddev/docker-compose.web.yaml` and installation scripts to add/remove versions.
+Edit `.ddev/compose.web.yaml` and installation scripts to add/remove versions.
 
 ### Database Access
 
@@ -367,7 +367,7 @@ Add high-performance caching to TYPO3:
 
 ```bash
 # Copy optional template
-cp .ddev/templates/docker-compose.services.yaml.optional .ddev/docker-compose.services.yaml
+cp .ddev/templates/compose.services.yaml.optional .ddev/compose.services.yaml
 cp .ddev/templates/config.redis.yaml.optional .ddev/config.redis.yaml
 
 # Restart DDEV
@@ -388,13 +388,13 @@ redis-cli -h redis ping  # Should return: PONG
 Catch all emails sent by TYPO3 for testing:
 
 ```bash
-# Already included in docker-compose.services.yaml.optional
+# Already included in compose.services.yaml.optional
 # Access Web UI after ddev restart:
 # http://{{DDEV_SITENAME}}.ddev.site:8025
 ```
 
 **Image**: `mailhog/mailhog:latest`
-**SMTP**: `mailhog:1025` (automatically configured in docker-compose.web.yaml)
+**SMTP**: `mailhog:1025` (automatically configured in compose.web.yaml)
 
 #### Ofelia (TYPO3 Scheduler Automation)
 
@@ -402,7 +402,7 @@ Automate TYPO3 scheduler tasks with **netresearch/ofelia**:
 
 ```bash
 # Copy Ofelia configuration
-cp .ddev/templates/docker-compose.ofelia.yaml.optional .ddev/docker-compose.ofelia.yaml
+cp .ddev/templates/compose.ofelia.yaml.optional .ddev/compose.ofelia.yaml
 
 # Restart DDEV
 ddev restart

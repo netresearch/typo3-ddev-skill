@@ -249,7 +249,7 @@ After setup, your project should look like:
 my-typo3-extension/
 ├── .ddev/                      # DDEV configuration (generated)
 │   ├── config.yaml
-│   ├── docker-compose.web.yaml
+│   ├── compose.web.yaml
 │   ├── apache/
 │   ├── web-build/
 │   └── commands/

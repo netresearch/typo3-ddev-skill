@@ -50,7 +50,7 @@ redis-cli -h redis ping
 - **SMTP**: `mailhog:1025` (from containers)
 
 **TYPO3 Configuration**:
-Already configured in `.ddev/docker-compose.web.yaml`:
+Already configured in `.ddev/compose.web.yaml`:
 ```yaml
 TYPO3_INSTALL_MAIL_TRANSPORT: smtp
 TYPO3_INSTALL_MAIL_TRANSPORT_SMTP_SERVER: mailhog:1025
@@ -82,7 +82,7 @@ open http://rte-ckeditor-image.ddev.site:8025
 
 **Purpose**: Run TYPO3 scheduler tasks automatically
 
-**Configuration**: `.ddev/docker-compose.ofelia.yaml`
+**Configuration**: `.ddev/compose.ofelia.yaml`
 
 **Scheduled Jobs**:
 - TYPO3 scheduler for v11, v12, v13: Every 1 minute
@@ -233,7 +233,7 @@ vendor/bin/typo3 scheduler:list --verbose
 
 To adjust:
 ```yaml
-# .ddev/docker-compose.services.yaml
+# .ddev/compose.services.yaml
 environment:
   - REDIS_MAXMEMORY=512mb  # Increase if needed
 ```
@@ -245,7 +245,7 @@ No tuning needed for development. All emails are stored in memory.
 ### Ofelia/Cron
 
 **Frequency**: Default is every 1 minute
-To adjust, edit `.ddev/docker-compose.ofelia.yaml`:
+To adjust, edit `.ddev/compose.ofelia.yaml`:
 
 ```yaml
 # Every 5 minutes instead
@@ -300,7 +300,7 @@ vendor/bin/typo3 scheduler:list --verbose
 
 ### Remove Service
 
-To remove a service, comment it out in `.ddev/docker-compose.services.yaml` and restart:
+To remove a service, comment it out in `.ddev/compose.services.yaml` and restart:
 
 ```bash
 ddev restart
@@ -321,7 +321,7 @@ ddev restart
 ### Elasticsearch
 
 ```yaml
-# Add to .ddev/docker-compose.services.yaml
+# Add to .ddev/compose.services.yaml
 elasticsearch:
   image: elasticsearch:8.10.2
   environment:
@@ -334,7 +334,7 @@ elasticsearch:
 ### Solr
 
 ```yaml
-# Add to .ddev/docker-compose.services.yaml
+# Add to .ddev/compose.services.yaml
 solr:
   image: solr:9
   ports:
