@@ -195,6 +195,7 @@ Generate the following files using the templates from this skill repository:
 - `.ddev/commands/web/install-v12` (make executable)
 - `.ddev/commands/web/install-v13` (make executable)
 - `.ddev/commands/web/install-all` (make executable)
+- `.ddev/commands/host/docs` (make executable) - for rendering documentation
 
 #### 3.8: .envrc (direnv Configuration)
 
@@ -667,6 +668,41 @@ cp .ddev/templates/README-SERVICES.md.optional .ddev/README-SERVICES.md
 - Ofelia image: `ghcr.io/netresearch/ofelia:latest` (not Docker Hub)
 - Ofelia command: `daemon --docker-events` (not `--docker`)
 - Redis config must NOT be `.yaml` (DDEV tries to parse it as config)
+
+## Documentation Rendering
+
+### Rendering Extension Documentation
+
+If the extension has a `Documentation/` directory with reStructuredText (.rst) files:
+
+```bash
+ddev docs
+```
+
+**What it does:**
+- Renders `.rst` documentation files to HTML using TYPO3's official render-guides Docker image
+- Outputs to `Documentation-GENERATED-temp/`
+- Makes documentation accessible at `https://docs.{{DDEV_SITENAME}}.ddev.site/`
+
+**Requirements:**
+- `Documentation/Index.rst` must exist
+- Docker must be running on the host
+
+**Output:**
+```
+📚 Rendering TYPO3 Extension Documentation
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📖 Source:  Documentation/
+📦 Output:  Documentation-GENERATED-temp/
+
+🔨 Rendering documentation with TYPO3 render-guides...
+
+✅ Documentation rendered successfully!
+
+🌐 View at: https://docs.{{DDEV_SITENAME}}.ddev.site/
+```
+
+**Note:** The docs subdomain is automatically configured in `.ddev/apache/apache-site.conf` and accessible after running `ddev docs`.
 
 ## Demo Content (Introduction Package)
 
