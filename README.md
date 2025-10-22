@@ -261,6 +261,38 @@ ddev xdebug on   # Enable
 ddev xdebug off  # Disable
 ```
 
+**Database** (MariaDB/PostgreSQL/MySQL):
+
+The skill defaults to MariaDB 10.11 (production-aligned, 95%+ TYPO3 hosting):
+
+```yaml
+# Default configuration (.ddev/config.yaml)
+database:
+  type: mariadb
+  version: "10.11"
+```
+
+Alternatives for specific needs:
+
+```yaml
+# PostgreSQL 16 (for GIS, analytics, full-text search)
+database:
+  type: postgres
+  version: "16"
+
+# MariaDB 11 (forward-looking performance)
+database:
+  type: mariadb
+  version: "11.4"
+
+# MySQL 8.0 (corporate/Oracle ecosystem)
+database:
+  type: mysql
+  version: "8.0"
+```
+
+**Why MariaDB 10.11?** Production standard (95% hosting), extension compatibility, 13-36% faster than MySQL 8. See `docs/adr/0002-mariadb-default-with-database-alternatives.md` for details.
+
 **Caching Service** (Valkey or Redis):
 
 The skill provides Valkey 8 as the default caching service (open source, future-proof):
