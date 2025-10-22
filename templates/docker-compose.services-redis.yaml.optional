@@ -1,22 +1,30 @@
 services:
-  # Valkey for TYPO3 caching (open source, wire-compatible with Redis)
-  # See docs/adr/0001-valkey-default-with-redis-alternative.md for rationale
-  # For Redis 7 alternative, see templates/docker-compose.services-redis.yaml.optional
-  valkey:
-    container_name: ddev-${DDEV_SITENAME}-valkey
-    image: valkey/valkey:8-alpine
+  # Redis 7 for TYPO3 caching (alternative to Valkey for legacy production parity)
+  # See docs/adr/0001-valkey-default-with-redis-alternative.md for context
+  #
+  # Use this template if:
+  # - Your production environment explicitly uses Redis 7.x
+  # - Corporate policy requires battle-tested technology only
+  # - You need exact production-development parity with existing infrastructure
+  #
+  # To use this instead of Valkey:
+  # 1. Copy this file: cp docker-compose.services-redis.yaml.optional docker-compose.services.yaml
+  # 2. Restart DDEV: ddev restart
+  redis:
+    container_name: ddev-${DDEV_SITENAME}-redis
+    image: redis:7-alpine
     restart: unless-stopped
     ports:
       - "6379"
     volumes:
-      - valkey-data:/data
+      - redis-data:/data
     labels:
       com.ddev.site-name: ${DDEV_SITENAME}
       com.ddev.approot: $DDEV_APPROOT
     environment:
-      - VALKEY_MAXMEMORY=256mb
-      - VALKEY_MAXMEMORY_POLICY=allkeys-lru
-    command: valkey-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+      - REDIS_MAXMEMORY=256mb
+      - REDIS_MAXMEMORY_POLICY=allkeys-lru
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
 
   # MailPit for email testing
   mailpit:
@@ -50,5 +58,5 @@ services:
     command: daemon --docker-events
 
 volumes:
-  valkey-data:
-    name: "${DDEV_SITENAME}-valkey-data"
+  redis-data:
+    name: "${DDEV_SITENAME}-redis-data"

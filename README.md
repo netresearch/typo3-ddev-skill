@@ -261,9 +261,27 @@ ddev xdebug on   # Enable
 ddev xdebug off  # Disable
 ```
 
+**Caching Service** (Valkey or Redis):
+
+The skill provides Valkey 8 as the default caching service (open source, future-proof):
+
+```bash
+# Default: Valkey 8
+cp .ddev/templates/docker-compose.services.yaml.optional .ddev/docker-compose.services.yaml
+
+# Alternative: Redis 7 (for legacy production parity)
+cp .ddev/templates/docker-compose.services-redis.yaml.optional .ddev/docker-compose.services.yaml
+
+# Restart DDEV
+ddev restart
+```
+
+**Why Valkey?** True open source (BSD-3), AWS/Google/Oracle backing, 30% smaller than Redis 8, cost-effective. See `docs/adr/0001-valkey-default-with-redis-alternative.md` for details.
+
 **Additional Services** (add to `.ddev/docker-compose.services.yaml`):
 ```yaml
-# Example: Add Redis, Elasticsearch, etc.
+# The services template includes: Valkey/Redis, MailPit, Ofelia
+# See SKILL.md for complete documentation
 ```
 
 ## Troubleshooting

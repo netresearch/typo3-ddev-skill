@@ -361,14 +361,30 @@ ddev import-db --file=backup.sql.gz
 
 The skill includes optional service templates for enhanced TYPO3 development:
 
-#### Redis (Caching)
+#### Valkey / Redis (Caching)
 
-Add high-performance caching to TYPO3:
+Add high-performance caching to TYPO3 using **Valkey** (default) or **Redis** (alternative).
+
+**Default: Valkey 8** (Open Source, Future-Proof)
 
 ```bash
-# Copy optional template
+# Copy Valkey template (default)
 cp .ddev/templates/docker-compose.services.yaml.optional .ddev/docker-compose.services.yaml
 cp .ddev/templates/config.redis.php.example .ddev/config.redis.php.example
+
+# Restart DDEV
+ddev restart
+
+# Test Valkey (wire-compatible with Redis)
+ddev ssh
+redis-cli -h valkey ping  # Should return: PONG
+```
+
+**Alternative: Redis 7** (For Legacy Production Parity)
+
+```bash
+# Use Redis 7 alternative template
+cp .ddev/templates/docker-compose.services-redis.yaml.optional .ddev/docker-compose.services.yaml
 
 # Restart DDEV
 ddev restart
@@ -378,10 +394,30 @@ ddev ssh
 redis-cli -h redis ping  # Should return: PONG
 ```
 
-**Configuration**: Add Redis backend to TYPO3 `AdditionalConfiguration.php` (see `.ddev/config.redis.php.example` for examples)
+**Why Valkey Default?**
 
-**Image**: `redis:7-alpine`
+Valkey is wire-protocol compatible with Redis but offers:
+- ✅ **True Open Source**: BSD-3-Clause license (Redis 7.4+ is proprietary)
+- ✅ **Industry Adoption**: AWS, Google Cloud, Oracle backing (Linux Foundation project)
+- ✅ **Smaller Image**: 69.7 MB (vs 100 MB Redis 8, 60.6 MB Redis 7)
+- ✅ **Cost-Effective**: 20-33% cheaper on AWS ElastiCache
+- ✅ **Future-Proof**: Strategic direction for cloud/managed hosting
+
+**When to Use Redis 7 Instead:**
+- Your production environment explicitly uses Redis 7.x
+- Corporate policy requires battle-tested technology only (Redis has 15 years vs Valkey 1 year)
+- Exact production-development parity needed with existing infrastructure
+
+**Technical Details:**
+
+**Valkey**: `valkey/valkey:8-alpine` (69.7 MB)
+**Redis**: `redis:7-alpine` (60.6 MB)
 **Memory**: 256MB with LRU eviction policy
+**Port**: 6379 (same for both)
+
+**Configuration**: Both use identical TYPO3 configuration. Add cache backend to `AdditionalConfiguration.php` (see `.ddev/config.redis.php.example`)
+
+**For detailed rationale**, see: `docs/adr/0001-valkey-default-with-redis-alternative.md`
 
 #### MailPit (Email Testing)
 
