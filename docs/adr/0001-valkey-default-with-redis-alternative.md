@@ -2,7 +2,7 @@
 
 **Status:** Accepted
 
-**Date:** 2024-12-22
+**Date:** 2025-10-22
 
 **Decision Makers:** TYPO3 DDEV Skill Maintainers
 
@@ -291,9 +291,109 @@ This decision is **strategic and forward-looking** rather than purely technical:
 
 ---
 
+## Valkey 9.0 Consideration (October 2025)
+
+**Release Information:**
+- **Valkey 9.0 GA:** Released October 21, 2025
+- **Status:** Stable production release
+- **Docker Image:** `valkey/valkey:9-alpine` available
+
+### Performance Improvements
+
+**Throughput:**
+- **40% higher throughput** compared to Valkey 8.1
+- Supports **over 1 billion requests per second** in cluster configurations
+- Memory prefetching for pipelined commands
+- Zero-copy responses for large requests
+- SIMD optimizations (up to 200% faster BITCOUNT, hyperloglog)
+- Multipath TCP support (up to 25% lower latency)
+
+### Major New Features
+
+**Hash Field Expiration:**
+- TTL on individual fields within a hash
+- Automatic expired data removal
+- Improved memory efficiency
+
+**Atomic Slot Migration:**
+- Snapshot-based migration for horizontal scaling
+- Zero-downtime scaling
+- Source and target nodes remain active during transfer
+
+**Multiple Databases in Cluster Mode:**
+- Multiple logical namespaces on single cluster
+- Better keyspace organization
+- Reduced memory waste
+
+### Production Adoption Status
+
+**Cloud Provider Support (as of October 2025):**
+- ❌ **AWS ElastiCache:** Not yet supported (latest: Valkey 8.1 - July 2025)
+- ❌ **Google Cloud:** No announcement
+- ❌ **Oracle Cloud:** No announcement
+
+**Docker Hub:**
+- ✅ Official images available: `valkey/valkey:9.0-alpine`
+- ✅ Wire-protocol compatible with Valkey 8.x and Redis 7.x
+
+### Decision: Stay with Valkey 8 for Now
+
+**Rationale:**
+
+This differs from the original Valkey vs Redis decision:
+- **Valkey vs Redis (Original):** Industry was MIGRATING → Lead with Valkey 8
+- **Valkey 8 vs 9 (Now):** Industry STABLE on 8 → Follow production
+
+**Why wait for Valkey 9:**
+
+1. **Production Parity:** AWS ElastiCache only supports up to Valkey 8.1
+2. **Very New:** Released October 21, 2025 (1 day old at time of writing)
+3. **Hosting Adoption:** No TYPO3 hosting providers using Valkey 9 yet
+4. **Upgrade Urgency:** GitHub release notes state "LOW" urgency
+5. **Battle-Testing:** Valkey 8.x more production-proven
+
+**Benefits of Staying on Valkey 8:**
+
+- ✅ Cloud provider support (AWS ElastiCache available)
+- ✅ Production-aligned (matches hosting environments)
+- ✅ Battle-tested (in production since November 2024)
+- ✅ Conservative approach (let others find bugs first)
+
+**When to Upgrade to Valkey 9:**
+
+Monitor for these signals:
+1. **AWS ElastiCache announces Valkey 9 support**
+2. **3+ months of production stability reports**
+3. **Major TYPO3 hosting providers adopt Valkey 9**
+4. **Performance improvements become critical for use case**
+
+### Upgrade Path
+
+**Seamless Migration (when ready):**
+
+Valkey 8 → 9 upgrade is simple (wire-compatible):
+
+```yaml
+# Change from:
+image: valkey/valkey:8-alpine
+
+# To:
+image: valkey/valkey:9-alpine
+```
+
+No configuration changes required. No data migration needed. Restart container.
+
+**Trade-offs:**
+- **Wait:** Production parity, battle-tested, conservative (recommended)
+- **Upgrade Now:** 40% faster, cutting-edge, slightly risky
+
+**Recommendation:** Wait for AWS ElastiCache support before defaulting to Valkey 9 in skill templates.
+
+---
+
 ## Review and Updates
 
-**Next Review Date:** 2025-06-01 (6 months)
+**Next Review Date:** 2026-04-01 (6 months from October 2025)
 
 **Trigger for Re-evaluation:**
 - Major TYPO3 hosting providers publicly announce Redis-only support policies
