@@ -18,6 +18,10 @@ echo "✅ Activating Introduction extension..."
 cd $INSTALL_DIR
 vendor/bin/typo3 extension:setup --extension=introduction
 
+# Remove default "main" site created by typo3 setup (Introduction creates its own site)
+echo "🧹 Removing default site (Introduction package provides its own)..."
+rm -rf $INSTALL_DIR/config/sites/main
+
 # Optional: Create site package for extension-specific configuration
 # Uncomment and customize for extensions needing RTE, TsConfig, or TypoScript setup
 
@@ -42,6 +46,9 @@ vendor/bin/typo3 extension:setup --extension=introduction
 # EOF
 
 # Example: RTE configuration for CKEditor plugins
+# IMPORTANT: When defining editor.config, YAML replaces the entire block instead of merging.
+# You must explicitly include importModules and externalPlugins from your Plugin.yaml
+#
 # mkdir -p $INSTALL_DIR/public/typo3conf/ext/site_config/Configuration/RTE
 #
 # cat > $INSTALL_DIR/public/typo3conf/ext/site_config/Configuration/RTE/Default.yaml << 'EOF'
@@ -50,7 +57,16 @@ vendor/bin/typo3 extension:setup --extension=introduction
 #   - { resource: "EXT:{{EXTENSION_KEY}}/Configuration/RTE/Plugin.yaml" }
 #
 # editor:
+#   # If your extension provides external plugins, register them here
+#   externalPlugins:
+#     myplugin: { route: "my_plugin_route" }
+#
 #   config:
+#     # CRITICAL: Must explicitly include importModules from Plugin.yaml
+#     # because YAML replaces the entire editor.config block instead of merging
+#     importModules:
+#       - '@vendor/my-extension/Plugins/myplugin.js'
+#
 #     toolbar:
 #       items:
 #         - heading
