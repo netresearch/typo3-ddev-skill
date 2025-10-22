@@ -36,3 +36,10 @@ sed -i -e "s/base: ht\//base: \//g" /var/www/html/$VERSION/config/sites/main/con
 sed -i -e 's/base: \/en\//base: \//g' /var/www/html/$VERSION/config/sites/main/config.yaml
 
 vendor/bin/typo3 cache:flush
+
+# Auto-configure extension if configure script exists
+if [ -f "/mnt/ddev_config/commands/web/configure-{{EXTENSION_KEY}}" ]; then
+    echo ""
+    echo "🔧 Auto-configuring {{EXTENSION_KEY}} extension..."
+    /mnt/ddev_config/commands/web/configure-{{EXTENSION_KEY}} $VERSION
+fi

@@ -17,6 +17,7 @@ composer req t3/cms:'^13' $PACKAGE_NAME:'*@dev' --no-progress -n -d /var/www/htm
 
 cd /var/www/html/$VERSION
 
+mysql -h db -u root -p"root" -e "DROP DATABASE IF EXISTS ${VERSION};"
 mysql -h db -u root -p"root" -e "CREATE DATABASE ${VERSION};"
 
 vendor/bin/typo3 setup -n --dbname=$VERSION --password=$TYPO3_DB_PASSWORD --create-site="https://${VERSION}.{{DDEV_SITENAME}}.ddev.site" --admin-user-password=$TYPO3_SETUP_ADMIN_PASSWORD
@@ -35,3 +36,10 @@ vendor/bin/typo3 configuration:set 'GFX/processor_path' '/usr/bin/'
 sed -i "/'deprecations'/,/^[[:space:]]*'disabled' => true,/s/'disabled' => true,/'disabled' => false,/" /var/www/html/$VERSION/config/system/settings.php
 
 vendor/bin/typo3 cache:flush
+
+# Auto-configure extension if configure script exists
+if [ -f "/mnt/ddev_config/commands/web/configure-{{EXTENSION_KEY}}" ]; then
+    echo ""
+    echo "🔧 Auto-configuring {{EXTENSION_KEY}} extension..."
+    /mnt/ddev_config/commands/web/configure-{{EXTENSION_KEY}} $VERSION
+fi
