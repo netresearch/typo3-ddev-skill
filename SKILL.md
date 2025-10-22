@@ -333,6 +333,70 @@ If extension requires different PHP version:
 php_version: "8.1"  # or "8.3"
 ```
 
+### Database Selection
+
+**Default: MariaDB 10.11** (Production-aligned, 95%+ TYPO3 hosting)
+
+The skill defaults to MariaDB 10.11 for maximum production parity and extension compatibility.
+
+**Why MariaDB 10.11?**
+
+- ✅ **Production Standard**: 95%+ TYPO3 hosting uses MariaDB
+- ✅ **Extension Compatibility**: 99%+ TYPO3 extensions tested on MariaDB
+- ✅ **Performance**: 13-36% faster than MySQL 8 for transactional workloads
+- ✅ **TYPO3 Ecosystem**: Documentation, tutorials, community standard
+- ✅ **DDEV Standard**: DDEV defaults to MariaDB for TYPO3 projects
+
+**Alternative Databases:**
+
+**PostgreSQL 16** - Use when your extension requires:
+```yaml
+# In .ddev/config.yaml
+database:
+  type: postgres
+  version: "16"
+```
+
+- GIS/spatial data (PostGIS)
+- Advanced full-text search
+- Analytics/complex queries
+- Explicit PostgreSQL requirement
+
+**MariaDB 11** - Use for forward-looking performance:
+```yaml
+# In .ddev/config.yaml
+database:
+  type: mariadb
+  version: "11.4"
+```
+
+- Latest MariaDB features (+40% performance vs 10.11)
+- Forward compatibility testing
+- Production uses MariaDB 11.x
+
+**MySQL 8.0** - Use for corporate/Oracle ecosystem:
+```yaml
+# In .ddev/config.yaml
+database:
+  type: mysql
+  version: "8.0"
+```
+
+- Oracle enterprise integration
+- Production specifically uses MySQL 8
+
+**Auto-Detection:**
+
+The skill will detect PostgreSQL requirements from:
+- Extension name contains: `postgres`, `pgsql`, `pg_`
+- composer.json requires: `typo3/cms-pgsql`
+- Extension category: `services` + keywords: `analytics`, `GIS`, `search`
+
+**NOT RECOMMENDED:**
+- ❌ SQLite - Demo/testing only, not production-viable
+
+**For detailed rationale**, see: `docs/adr/0002-mariadb-default-with-database-alternatives.md`
+
 ### XDebug Setup
 
 Enable XDebug for debugging:
