@@ -80,8 +80,26 @@ rm -rf $INSTALL_DIR/config/sites/main
 # # Example: RTE.default.preset = default
 # EOF
 
+# IMPORTANT: If creating site_config extension, you must register it!
+# Since site_config is not a composer-installed extension, ext_localconf.php
+# and ext_tables.php won't be loaded automatically. Instead:
+#
+# 1. Register RTE preset in AdditionalConfiguration.php:
+# cat >> $INSTALL_DIR/config/system/additional.php << 'EOF'
+#
+# // Register custom RTE preset
+# $GLOBALS['TYPO3_CONF_VARS']['RTE']['Presets']['default'] = 'EXT:site_config/Configuration/RTE/Default.yaml';
+# EOF
+#
+# 2. Add Page TSConfig to site configuration:
+# cat >> $INSTALL_DIR/config/sites/introduction/config.yaml << 'EOF'
+# pagesTsConfig:
+#   'RTE.default.preset': 'default'
+# EOF
+
 # Flush caches
 echo "🧹 Flushing caches..."
+cd $INSTALL_DIR
 vendor/bin/typo3 cache:flush
 
 echo "✅ Extension configuration complete!"
