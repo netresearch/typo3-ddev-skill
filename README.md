@@ -261,18 +261,41 @@ ddev xdebug on   # Enable
 ddev xdebug off  # Disable
 ```
 
-**Database** (MariaDB/PostgreSQL/MySQL):
+**Database** (Tiered Selection: SQLite/MariaDB/PostgreSQL/MySQL):
 
-The skill defaults to MariaDB 10.11 (production-aligned, 95%+ TYPO3 hosting):
+The skill uses **intelligent tiered database selection** based on extension complexity:
+
+**🎯 Tier 1: SQLite (Simple Extensions - Development Optimized)**
+
+For extensions using only TYPO3 Core APIs (no custom tables, no raw SQL):
 
 ```yaml
-# Default configuration (.ddev/config.yaml)
+# No .ddev/config.yaml database config needed
+# TYPO3 installation automatically uses SQLite
+```
+
+**Benefits:**
+- ⚡ Startup: 5-10 seconds faster per ddev start
+- 💾 RAM: 900 MB saved (no container)
+- 💿 Disk: 744 MB saved
+- 🔒 Perfect v11/v12/v13 isolation
+
+**⚠️ Development ONLY** - Never use SQLite in production. Switch to MariaDB for final testing.
+
+**🔧 Tier 2: MariaDB 10.11 (Complex Extensions - Production Parity)**
+
+For extensions with custom tables, raw SQL, or unknown complexity:
+
+```yaml
+# Default for complex extensions (.ddev/config.yaml)
 database:
   type: mariadb
   version: "10.11"
 ```
 
-Alternatives for specific needs:
+**Why MariaDB 10.11?** Production standard (95% hosting), extension compatibility, 13-36% faster than MySQL 8.
+
+**🌐 Tier 3 & 4: Specialized Databases**
 
 ```yaml
 # PostgreSQL 16 (for GIS, analytics, full-text search)
@@ -291,7 +314,7 @@ database:
   version: "8.0"
 ```
 
-**Why MariaDB 10.11?** Production standard (95% hosting), extension compatibility, 13-36% faster than MySQL 8. See `docs/adr/0002-mariadb-default-with-database-alternatives.md` for details.
+**For detailed rationale**, see `docs/adr/0002-mariadb-default-with-database-alternatives.md`.
 
 **Caching Service** (Valkey or Redis):
 
