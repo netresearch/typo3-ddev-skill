@@ -1,0 +1,83 @@
+#!/bin/bash
+
+## Description: Auto-configure your TYPO3 extension with demo content and settings
+## Usage: configure-extension [VERSION]
+## Example: ddev configure-extension v13
+
+VERSION=${1:-v13}
+INSTALL_DIR=/var/www/html/$VERSION
+
+echo "🔧 Configuring {{EXTENSION_KEY}} extension for $VERSION..."
+
+# Install Introduction Package for demo content
+echo "📦 Installing TYPO3 Introduction Package..."
+composer require typo3/cms-introduction --no-progress -d $INSTALL_DIR
+
+# Activate Introduction extension
+echo "✅ Activating Introduction extension..."
+cd $INSTALL_DIR
+vendor/bin/typo3 extension:setup --extension=introduction
+
+# Optional: Create site package for extension-specific configuration
+# Uncomment and customize for extensions needing RTE, TsConfig, or TypoScript setup
+
+# echo "📝 Creating site configuration package..."
+# mkdir -p $INSTALL_DIR/public/typo3conf/ext/site_config/Configuration
+#
+# cat > $INSTALL_DIR/public/typo3conf/ext/site_config/ext_emconf.php << 'EOF'
+# <?php
+# $EM_CONF[$_EXTKEY] = [
+#     'title' => 'Site Configuration',
+#     'description' => 'Configuration for {{EXTENSION_KEY}}',
+#     'category' => 'templates',
+#     'state' => 'stable',
+#     'version' => '1.0.0',
+#     'constraints' => [
+#         'depends' => [
+#             'typo3' => '13.4.0-13.4.99',
+#             '{{EXTENSION_KEY}}' => '',
+#         ],
+#     ],
+# ];
+# EOF
+
+# Example: RTE configuration for CKEditor plugins
+# mkdir -p $INSTALL_DIR/public/typo3conf/ext/site_config/Configuration/RTE
+#
+# cat > $INSTALL_DIR/public/typo3conf/ext/site_config/Configuration/RTE/Default.yaml << 'EOF'
+# imports:
+#   - { resource: "EXT:rte_ckeditor/Configuration/RTE/Default.yaml" }
+#   - { resource: "EXT:{{EXTENSION_KEY}}/Configuration/RTE/Plugin.yaml" }
+#
+# editor:
+#   config:
+#     toolbar:
+#       items:
+#         - heading
+#         - '|'
+#         - bold
+#         - italic
+#         # Add your custom toolbar buttons here
+# EOF
+
+# Example: Page TSConfig
+# mkdir -p $INSTALL_DIR/public/typo3conf/ext/site_config/Configuration/TsConfig/Page
+#
+# cat > $INSTALL_DIR/public/typo3conf/ext/site_config/Configuration/TsConfig/Page/Config.tsconfig << 'EOF'
+# # Add your Page TSConfig here
+# # Example: RTE.default.preset = default
+# EOF
+
+# Flush caches
+echo "🧹 Flushing caches..."
+vendor/bin/typo3 cache:flush
+
+echo "✅ Extension configuration complete!"
+echo ""
+echo "📌 Access your TYPO3 installation:"
+echo "   Frontend: https://$VERSION.{{DDEV_SITENAME}}.ddev.site/"
+echo "   Backend:  https://$VERSION.{{DDEV_SITENAME}}.ddev.site/typo3/"
+echo "   Username: admin"
+echo "   Password: Password:joh316"
+echo ""
+echo "🎨 Your extension is now configured and ready to test!"
