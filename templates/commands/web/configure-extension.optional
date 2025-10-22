@@ -46,8 +46,8 @@ rm -rf $INSTALL_DIR/config/sites/main
 # EOF
 
 # Example: RTE configuration for CKEditor plugins
-# IMPORTANT: When defining editor.config, YAML replaces the entire block instead of merging.
-# You must explicitly include importModules and externalPlugins from your Plugin.yaml
+# IMPORTANT: When defining editor.config, YAML replaces the entire block instead of merging!
+# DO NOT override importModules or externalPlugins - let Plugin.yaml handle them.
 #
 # mkdir -p $INSTALL_DIR/public/typo3conf/ext/site_config/Configuration/RTE
 #
@@ -57,15 +57,11 @@ rm -rf $INSTALL_DIR/config/sites/main
 #   - { resource: "EXT:{{EXTENSION_KEY}}/Configuration/RTE/Plugin.yaml" }
 #
 # editor:
-#   # If your extension provides external plugins, register them here
-#   externalPlugins:
-#     myplugin: { route: "my_plugin_route" }
-#
 #   config:
-#     # CRITICAL: Must explicitly include importModules from Plugin.yaml
-#     # because YAML replaces the entire editor.config block instead of merging
-#     importModules:
-#       - '@vendor/my-extension/Plugins/myplugin.js'
+#     # IMPORTANT: DO NOT override importModules here!
+#     # Plugin.yaml provides: importModules: ['@vendor/extension/Plugins/myplugin.js']
+#     # Plugin.yaml provides: externalPlugins: { myplugin: { route: ... } }
+#     # If you need html-support, add it to Plugin.yaml or merge arrays properly
 #
 #     toolbar:
 #       items:
