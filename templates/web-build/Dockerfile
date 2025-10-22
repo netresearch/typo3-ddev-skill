@@ -31,7 +31,7 @@ RUN echo "<div class=\"version-card\"><strong>TYPO3 12.4 LTS</strong><div class=
 RUN echo "<div class=\"version-card\"><strong>TYPO3 13.4 LTS</strong><div class=\"links\"><a href=\"https://v13.${DDEV_SITENAME}.ddev.site/\" class=\"btn\">Frontend</a><a href=\"https://v13.${DDEV_SITENAME}.ddev.site/typo3/\" class=\"btn\">Backend</a></div></div>" >> /var/www/html/index.html
 RUN echo "</div>" >> /var/www/html/index.html
 RUN echo "<div class=\"card\"><h3>🔑 Backend Credentials</h3><ul><li><strong>Username:</strong> <code>admin</code></li><li><strong>Password:</strong> <code>Password:joh316</code></li><li><em>(also works for Install Tool)</em></li></ul></div>" >> /var/www/html/index.html
-RUN echo "<div class=\"card\"><h3>⚙️ Quick Commands</h3><ul><li><code>ddev start</code> - Start DDEV environment</li><li><code>ddev docs</code> - Render documentation</li><li><code>ddev install-v11</code> - Install TYPO3 11.5 LTS</li><li><code>ddev install-v12</code> - Install TYPO3 12.4 LTS</li><li><code>ddev install-v13</code> - Install TYPO3 13.4 LTS</li><li><code>ddev install-all</code> - Install all TYPO3 versions</li></ul></div>" >> /var/www/html/index.html
+RUN echo "<div class=\"card\"><h3>⚙️ Quick Commands</h3><ul><li><code>ddev setup</code> - <strong>Complete setup (all-in-one)</strong></li><li><code>ddev docs</code> - Render documentation</li><li><code>ddev install-v11</code> - Install TYPO3 11.5 LTS</li><li><code>ddev install-v12</code> - Install TYPO3 12.4 LTS</li><li><code>ddev install-v13</code> - Install TYPO3 13.4 LTS</li><li><code>ddev install-all</code> - Install all TYPO3 versions</li></ul></div>" >> /var/www/html/index.html
 RUN echo "</div></body></html>" >> /var/www/html/index.html
 
 
