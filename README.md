@@ -163,6 +163,35 @@ ddev install-introduction v13
 - Bootstrap Package responsive theme
 - Perfect for testing RTE features
 
+## Extension Auto-Configuration
+
+For extensions needing additional setup (RTE config, TSconfig, TypoScript), create a custom configuration command:
+
+```bash
+# Copy template
+cp .ddev/templates/commands/web/configure-extension.optional \
+   .ddev/commands/web/configure-myext
+
+# Customize for your extension's needs
+# Add: RTE YAML, Page TSConfig, TypoScript, site package setup
+
+# Run after TYPO3 installation
+ddev configure-myext v13
+```
+
+**Use Cases:**
+- **RTE/CKEditor plugins** - Configure toolbar, import plugin YAML
+- **Backend modules** - Set up TSconfig, permissions
+- **Frontend plugins** - TypoScript configuration, example content
+
+**Pattern Benefits:**
+- One-command post-install setup
+- Consistent team configuration
+- Includes demo content automatically
+- Reduces manual configuration errors
+
+See `SKILL.md` for detailed examples and template structure.
+
 ## Troubleshooting
 
 ### Database Already Exists

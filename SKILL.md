@@ -478,6 +478,93 @@ ddev install-introduction v13
 - Frontend: `https://{{DDEV_SITENAME}}.ddev.site/`
 - Backend: `https://{{DDEV_SITENAME}}.ddev.site/typo3/`
 
+## Extension Auto-Configuration
+
+For extensions requiring additional setup (RTE configuration, Page TSConfig, TypoScript), create a custom configuration command:
+
+```bash
+# Copy the configure-extension template
+cp .ddev/templates/commands/web/configure-extension.optional .ddev/commands/web/configure-{{EXTENSION_KEY}}
+chmod +x .ddev/commands/web/configure-{{EXTENSION_KEY}}
+
+# Edit to add your extension-specific configuration
+# Examples: RTE YAML, Page TSConfig, site package setup
+
+# Run after TYPO3installation
+ddev configure-{{EXTENSION_KEY}} v13
+```
+
+### Use Cases for Auto-Configuration
+
+**RTE/CKEditor Extensions:**
+- Create RTE YAML configuration importing your plugin
+- Set up toolbar buttons and editor config
+- Configure Page TSConfig for RTE presets
+- Example: `rte_ckeditor_image` with custom image handling
+
+**Backend Module Extensions:**
+- Set up Page TSConfig for module access
+- Configure user permissions
+- Create initial database records
+
+**Frontend Plugin Extensions:**
+- Set up TypoScript configuration
+- Create example content elements
+- Configure plugin settings
+
+### Template Structure
+
+The `configure-extension.optional` template includes:
+
+1. **Introduction Package Installation** - Demo content for testing
+2. **Site Package Creation** - Programmatic extension setup with:
+   - `ext_emconf.php` - Extension metadata
+   - `ext_localconf.php` - Global configuration
+   - `ext_tables.php` - Table definitions and TSConfig loading
+3. **Configuration Files** - RTE YAML, Page TSConfig, TypoScript
+4. **Cache Flushing** - Ensure changes take effect
+5. **Success Message** - Clear next steps for developer
+
+### Example: RTE Configuration Command
+
+For a CKEditor plugin extension:
+
+```bash
+#!/bin/bash
+VERSION=${1:-v13}
+INSTALL_DIR=/var/www/html/$VERSION
+
+# Install demo content
+composer require typo3/cms-introduction -d $INSTALL_DIR
+vendor/bin/typo3 extension:setup --extension=introduction
+
+# Create site package
+mkdir -p $INSTALL_DIR/public/typo3conf/ext/site_rte/Configuration/RTE
+
+# Create RTE YAML importing your plugin
+cat > .../Configuration/RTE/Default.yaml << 'EOF'
+imports:
+  - { resource: "EXT:rte_ckeditor/Configuration/RTE/Default.yaml" }
+  - { resource: "EXT:your_extension/Configuration/RTE/Plugin.yaml" }
+
+editor:
+  config:
+    toolbar:
+      items:
+        - your_custom_button
+        - ...
+EOF
+
+# Flush caches
+vendor/bin/typo3 cache:flush
+```
+
+**Benefits:**
+- One-command setup after TYPO3 installation
+- Consistent configuration across team
+- Demo content ready for testing
+- Reduces manual configuration errors
+
 ## Troubleshooting
 
 ### Database Already Exists Error
