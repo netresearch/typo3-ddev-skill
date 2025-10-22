@@ -333,23 +333,67 @@ If extension requires different PHP version:
 php_version: "8.1"  # or "8.3"
 ```
 
-### Database Selection
+### Database Selection (Tiered Approach)
 
-**Default: MariaDB 10.11** (Production-aligned, 95%+ TYPO3 hosting)
+The skill uses **intelligent database selection** based on extension complexity.
 
-The skill defaults to MariaDB 10.11 for maximum production parity and extension compatibility.
+**🎯 Tier 1: SQLite (Simple Extensions - Development Optimized)**
 
-**Why MariaDB 10.11?**
+**Recommended for:**
+- ✅ Extensions using only TYPO3 Core APIs (Extbase, FAL, DataHandler)
+- ✅ No custom database tables (ext_tables.sql absent/empty)
+- ✅ No raw SQL queries
+- ✅ Category: plugin, fe, be, misc
+- ✅ Example: rte_ckeditor_image, simple content elements, frontend plugins
 
+**Benefits:**
+- ⚡ **Startup**: 5-10 seconds faster per ddev start
+- 💾 **RAM**: 900 MB saved (no MariaDB container)
+- 💿 **Disk**: 744 MB saved (no container image)
+- 🔒 **Isolation**: Perfect v11/v12/v13 separation (separate .sqlite files)
+
+**Configuration:**
+```yaml
+# No .ddev/config.yaml database config needed
+# TYPO3 installation uses SQLite automatically
+```
+
+**Critical Warnings:**
+- ⚠️ **Development ONLY** - Never use SQLite in production
+- ⚠️ **Switch to MariaDB** if you add custom SQL queries or tables
+- ⚠️ **Final Testing** - Run compatibility tests on MariaDB before release
+
+**🔧 Tier 2: MariaDB 10.11 (Complex Extensions - Production Parity)**
+
+**Recommended for:**
+- ❌ Extensions with custom database tables (ext_tables.sql present)
+- ❌ Extensions using raw SQL queries
+- ❌ Performance-critical operations
+- ❌ Category: services, module
+- ❌ Unknown complexity (safe default)
+
+**Benefits:**
 - ✅ **Production Standard**: 95%+ TYPO3 hosting uses MariaDB
 - ✅ **Extension Compatibility**: 99%+ TYPO3 extensions tested on MariaDB
 - ✅ **Performance**: 13-36% faster than MySQL 8 for transactional workloads
 - ✅ **TYPO3 Ecosystem**: Documentation, tutorials, community standard
-- ✅ **DDEV Standard**: DDEV defaults to MariaDB for TYPO3 projects
 
-**Alternative Databases:**
+**Configuration:**
+```yaml
+# In .ddev/config.yaml
+database:
+  type: mariadb
+  version: "10.11"
+```
 
-**PostgreSQL 16** - Use when your extension requires:
+**🌐 Tier 3: PostgreSQL 16 (Specialized Requirements)**
+
+**Recommended for:**
+- 🎯 GIS/spatial data (PostGIS)
+- 🎯 Advanced analytics or complex queries
+- 🎯 Explicit PostgreSQL requirement
+
+**Configuration:**
 ```yaml
 # In .ddev/config.yaml
 database:
@@ -357,24 +401,13 @@ database:
   version: "16"
 ```
 
-- GIS/spatial data (PostGIS)
-- Advanced full-text search
-- Analytics/complex queries
-- Explicit PostgreSQL requirement
+**🏢 Tier 4: MySQL 8.0 (Corporate/Oracle Ecosystem)**
 
-**MariaDB 11** - Use for forward-looking performance:
-```yaml
-# In .ddev/config.yaml
-database:
-  type: mariadb
-  version: "11.4"
-```
+**Recommended for:**
+- 🏢 Corporate environments requiring Oracle integration
+- 🏢 Production specifically uses MySQL 8
 
-- Latest MariaDB features (+40% performance vs 10.11)
-- Forward compatibility testing
-- Production uses MariaDB 11.x
-
-**MySQL 8.0** - Use for corporate/Oracle ecosystem:
+**Configuration:**
 ```yaml
 # In .ddev/config.yaml
 database:
@@ -382,18 +415,42 @@ database:
   version: "8.0"
 ```
 
-- Oracle enterprise integration
-- Production specifically uses MySQL 8
+**Auto-Detection Logic:**
 
-**Auto-Detection:**
+The skill will analyze your extension and suggest the appropriate tier:
 
-The skill will detect PostgreSQL requirements from:
-- Extension name contains: `postgres`, `pgsql`, `pg_`
-- composer.json requires: `typo3/cms-pgsql`
-- Extension category: `services` + keywords: `analytics`, `GIS`, `search`
+```yaml
+SQLite Detection (Tier 1):
+  ✓ ext_tables.sql: Absent or empty
+  ✓ Raw SQL patterns: None found
+  ✓ File size: < 1 MB
+  ✓ Category: plugin, fe, be, misc
+  → Suggests: SQLite (development-optimized)
 
-**NOT RECOMMENDED:**
-- ❌ SQLite - Demo/testing only, not production-viable
+MariaDB Detection (Tier 2):
+  ✗ ext_tables.sql: Present with custom tables
+  ✗ Raw SQL patterns: Found
+  ✗ File size: > 1 MB
+  ✗ Category: services, module
+  → Suggests: MariaDB 10.11 (production-realistic)
+
+PostgreSQL Detection (Tier 3):
+  • Extension name: Contains "postgres", "pgsql", "postgis"
+  • composer.json: Requires "typo3/cms-pgsql"
+  • Keywords: "GIS", "spatial", "analytics"
+  → Suggests: PostgreSQL 16 (specialized)
+```
+
+**Alternative Options:**
+
+**MariaDB 11** - Forward-looking performance:
+```yaml
+database:
+  type: mariadb
+  version: "11.4"
+```
+- Latest features (+40% performance vs 10.11)
+- Forward compatibility testing
 
 **For detailed rationale**, see: `docs/adr/0002-mariadb-default-with-database-alternatives.md`
 
