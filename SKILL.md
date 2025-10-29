@@ -325,6 +325,91 @@ After successful installation, display:
    ddev delete           # Remove containers (keeps volumes)
 ```
 
+### Step 7: Generate Makefile (Optional but Recommended)
+
+After DDEV setup, generate a standardized Makefile following Netresearch's pattern for convenient command access:
+
+```bash
+ddev generate-makefile
+```
+
+#### Makefile Features
+
+The generated Makefile provides a unified interface with 30+ targets:
+
+**DDEV Management:**
+```bash
+make up              # Complete startup (start DDEV + install all TYPO3 versions)
+make start           # Start DDEV environment
+make stop            # Stop DDEV environment
+make install-v11     # Install TYPO3 11.5 LTS
+make install-v12     # Install TYPO3 12.4 LTS
+make install-v13     # Install TYPO3 13.4 LTS
+make install-all     # Install all TYPO3 versions
+make urls            # Show all access URLs
+```
+
+**Testing & Quality:**
+```bash
+make test            # Run all tests (unit + functional)
+make test-unit       # Run unit tests only
+make test-functional # Run functional tests
+make lint            # Run all linters (PHP syntax + PHPStan + code style)
+make format          # Auto-fix code style issues
+make typecheck       # Run PHPStan static analysis
+make ci              # Complete CI pipeline (pre-commit checks)
+```
+
+**Developer Convenience:**
+```bash
+make help            # Show all available commands (default target)
+make ssh             # SSH into DDEV web container
+make clean           # Clean temporary files and caches
+```
+
+**Extension-Specific Commands:**
+
+The Makefile includes a customizable section for extension-specific commands. Developers can add their own targets following the pattern:
+
+```makefile
+.PHONY: my-command
+my-command: ## Description of my command
+	ddev ssh -d v12 "vendor/bin/typo3 extension:command"
+```
+
+#### Why Use the Makefile?
+
+1. **Consistency** - Follows Netresearch's established pattern across TYPO3 extensions
+2. **Single Command Setup** - `make up` does everything (DDEV start + install all versions)
+3. **Discoverability** - `make help` shows all available commands with descriptions
+4. **CI Integration** - Standardized `make ci`, `make test`, `make lint` for pipelines
+5. **Developer Experience** - Familiar interface, shorter commands than `ddev` equivalents
+6. **Documentation** - Self-documenting with auto-generated help
+
+#### Example Workflow
+
+```bash
+# Initial setup
+make up              # Start DDEV + install all TYPO3 versions
+
+# Development
+make lint            # Check code quality
+make test            # Run tests
+make format          # Fix code style
+
+# Check URLs
+make urls            # Show all access URLs
+
+# Complete CI check before commit
+make ci              # Run full quality pipeline
+```
+
+#### Customization
+
+After generation, edit the Makefile to add project-specific commands while keeping core targets (up, start, test, lint, ci) unchanged for consistency across projects.
+
+The Makefile is optional but highly recommended for improved developer experience.
+
 ## Error Handling
 
 ### Common Issues and Solutions
