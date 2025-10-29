@@ -410,6 +410,74 @@ After generation, edit the Makefile to add project-specific commands while keepi
 
 The Makefile is optional but highly recommended for improved developer experience.
 
+### Step 8: Generate Project Index Page (Optional but Recommended)
+
+After DDEV setup, generate a beautiful overview page for easy access to all TYPO3 versions and development tools:
+
+```bash
+ddev generate-index
+```
+
+#### Index Page Features
+
+The generated `index.html` provides a centralized dashboard with:
+
+**Visual Overview:**
+- Modern, responsive design with gradient background
+- Card-based layout for each TYPO3 version
+- Clear visual hierarchy and hover effects
+- Mobile-friendly responsive grid
+
+**Quick Access Links:**
+```
+TYPO3 v12 LTS:
+  - Frontend: https://v12.{project}.ddev.site/
+  - Backend:  https://v12.{project}.ddev.site/typo3/
+
+TYPO3 v13 LTS:
+  - Frontend: https://v13.{project}.ddev.site/
+  - Backend:  https://v13.{project}.ddev.site/typo3/
+```
+
+**Development Tools:**
+- Backend credentials display (admin / Password:joh316)
+- Mailpit access link
+- Documentation link (if available)
+
+#### Why Use the Index Page?
+
+1. **Single Entry Point** - Access all TYPO3 versions from one beautiful page
+2. **Eliminates URL Guessing** - No need to remember subdomain patterns
+3. **Professional Presentation** - Polished interface for the development environment
+4. **Credential Reference** - Backend login info always visible
+5. **Tool Discovery** - Links to Mailpit and other development tools
+6. **Multi-Version Testing** - Easy switching between TYPO3 12 and 13
+
+#### Example Usage
+
+```bash
+# After DDEV setup
+ddev generate-index
+
+# Access the overview page
+open https://{project}.ddev.site/
+# or
+open http://{project}.ddev.site/
+```
+
+The index page is accessible at both the main domain (e.g., `temporal-cache.ddev.site`) and serves as the landing page for the entire development environment.
+
+#### Customization
+
+After generation, you can edit `index.html` to:
+- Add extension-specific documentation links
+- Include CI/CD status badges
+- Add custom tool links (PHPMyAdmin, Redis Commander, etc.)
+- Customize colors, branding, or layout
+- Add project-specific information or notes
+
+The index page is optional but highly recommended for improved developer experience, especially in multi-version testing environments.
+
 ## Error Handling
 
 ### Common Issues and Solutions
