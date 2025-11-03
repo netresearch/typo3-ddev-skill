@@ -2,7 +2,14 @@
 name: typo3-ddev
 description: "Automate DDEV environment setup for TYPO3 extension development. Use when setting up local development environment, configuring DDEV for TYPO3 extensions, or creating multi-version TYPO3 testing environments. Covers: DDEV configuration generation, TYPO3 11.5/12.4/13.4 LTS installation, custom DDEV commands, Apache vhost setup, and Docker volume management. Provides complete automation from metadata detection to ready-to-use TYPO3 backend access."
 license: MIT License - see LICENSE file
-allowed-tools: "Bash, Read, Write, Edit, Glob, Grep, TodoWrite"
+allowed-tools:
+  - Bash
+  - Read
+  - Write
+  - Edit
+  - Glob
+  - Grep
+  - TodoWrite
 metadata:
   author: Netresearch
   repository: https://github.com/netresearch/typo3-ddev-skill
