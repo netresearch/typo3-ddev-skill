@@ -479,6 +479,13 @@ After generation, you can edit `index.html` to:
 
 The index page is optional but highly recommended for improved developer experience, especially in multi-version testing environments.
 
+**For advanced branding and customization details including:**
+- Automatic branding detection (Netresearch/TYPO3/generic)
+- Brand-specific color schemes and typography
+- Design specifications
+
+See: `references/index-page-generation.md`
+
 ## Error Handling
 
 Common issues and their solutions are documented in the troubleshooting guide.
@@ -497,6 +504,14 @@ Common issues and their solutions are documented in the troubleshooting guide.
 - Step-by-step resolution guides
 
 See: `references/troubleshooting.md`
+
+**Windows-specific issues:**
+- DDEV health check failures with custom Apache configs
+- CRLF vs LF line ending issues in scripts
+- PowerShell commands for file conversion
+- Performance optimizations for Windows/WSL2
+
+See: `references/windows-fixes.md` and `references/windows-optimizations.md`
 
 ## Advanced Options
 
