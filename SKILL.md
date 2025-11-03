@@ -1,258 +1,52 @@
 ---
 name: typo3-ddev
-description: "Automate DDEV environment setup for TYPO3 extension development. Use when setting up local development environment, configuring DDEV for TYPO3 extensions, or creating multi-version TYPO3 testing environments. Covers: DDEV configuration generation, TYPO3 11.5/12.4/13.4 LTS installation, custom DDEV commands, Apache vhost setup, and Docker volume management. Provides complete automation from metadata detection to ready-to-use TYPO3 backend access."
+description: "Automate DDEV environment setup for TYPO3 extension development. Use when setting up local development environment, configuring DDEV for TYPO3 extensions, or creating multi-version TYPO3 testing environments."
 license: MIT License - see LICENSE file
 metadata:
   author: Netresearch
-  repository: https://github.com/netresearch/typo3-ddev-skill
   version: 1.4.0
-  tags:
-    - typo3
-    - ddev
-    - docker
-    - development
-    - testing
-    - devops
-  platforms:
-    - linux
-    - macos
-    - windows
-  typo3-versions:
-    - 11.5-lts
-    - 12.4-lts
-    - 13.4-lts
 ---
+# TYPO3 DDEV Setup Skill
 
-**If Docker daemon is NOT running:**
+This skill automates DDEV environment setup for TYPO3 extension development projects. It creates a complete TYPO3 development environment for testing and developing extensions across multiple TYPO3 versions.
 
-```
-❌ Docker daemon is not running.
+## Purpose
 
-Start Docker daemon based on your platform:
+This skill automates the setup of DDEV for TYPO3 extension development projects. It creates a multi-version TYPO3 testing environment where the extension can be developed and tested across TYPO3 11.5 LTS, 12.4 LTS, and 13.4 LTS simultaneously.
 
-🐧 Linux/WSL2:
-   sudo service docker start
-   # or
-   sudo systemctl start docker
-   # Verify:
-   sudo systemctl status docker
+## When to Use This Skill
 
-🍎 macOS:
-   - Open Docker Desktop application
-   - Wait for whale icon to show "Docker Desktop is running"
-   # Verify from terminal:
-   docker info
+Use this skill when:
+- Developer has a TYPO3 extension project and wants to set up DDEV
+- Project contains `ext_emconf.php` or is identified as a TYPO3 extension in `composer.json`
+- Developer needs to test extension across multiple TYPO3 versions
+- Quick development environment spin-up is needed
 
-🪟 Windows:
-   - Open Docker Desktop application
-   - Wait for notification "Docker Desktop is running"
-   # Verify from PowerShell/CMD:
-   docker info
+## Prerequisites Validation
 
-After starting Docker, please retry the command.
-```
+Before proceeding with ANY DDEV commands, especially on first DDEV command during a session, perform comprehensive prerequisite validation.
 
-### 2. Docker CLI Version
-
-**Check Docker version (minimum: 20.10):**
+**Quick validation using the included script:**
 ```bash
-docker version --format '{{.Client.Version}}'
+scripts/validate-prerequisites.sh
 ```
 
-**Expected output:** Version >= 20.10 (e.g., `24.0.7`, `25.0.0`)
+The script validates:
+- ✅ Docker daemon status
+- ✅ Docker CLI version (>= 20.10)
+- ✅ Docker Compose version (>= 2.0)
+- ✅ DDEV installation
+- ✅ TYPO3 extension project structure
 
-**If version is too old or missing:**
+**For detailed prerequisite information including:**
+- Platform-specific installation instructions (Linux/WSL2, macOS, Windows)
+- Version requirements and rationale
+- Manual validation steps
+- Troubleshooting common issues
 
-```
-❌ Docker CLI is outdated or missing.
+See: `references/prerequisites-validation.md`
 
-Minimum required version: 20.10
-Current version: [detected or "not found"]
-
-Update Docker:
-
-🐧 Linux:
-   # Ubuntu/Debian
-   curl -fsSL https://get.docker.com | sh
-
-   # Or follow: https://docs.docker.com/engine/install/
-
-🍎 macOS:
-   brew upgrade --cask docker
-   # Or download from: https://www.docker.com/products/docker-desktop/
-
-🪟 Windows:
-   # Update via Docker Desktop app or download from:
-   https://www.docker.com/products/docker-desktop/
-```
-
-### 3. Docker Compose Version
-
-**Check Docker Compose version (minimum: 2.0):**
-```bash
-docker compose version --short
-```
-
-**Expected output:** Version >= 2.0 (e.g., `2.23.3`, `2.24.0`)
-
-**Note:** Modern Docker includes Compose v2 as `docker compose` (not `docker-compose`)
-
-**If version is too old or missing:**
-
-```
-❌ Docker Compose is outdated or using legacy v1.
-
-Minimum required version: 2.0
-Current version: [detected or "not found"]
-
-Docker Compose v2 is included with Docker Desktop 3.4+ and Docker CLI 20.10+
-
-Solutions:
-
-🐧 Linux:
-   # If using legacy docker-compose v1:
-   sudo apt remove docker-compose
-
-   # Compose v2 is included with Docker 20.10+
-   # Verify installation:
-   docker compose version
-
-   # If missing, install Docker CLI with Compose plugin:
-   sudo apt-get install docker-compose-plugin
-
-🍎 macOS / 🪟 Windows:
-   # Included in Docker Desktop - update to latest:
-   brew upgrade --cask docker  # macOS
-
-   # Or download latest Docker Desktop
-```
-
-### 4. DDEV Installation
-
-**Check if DDEV is installed:**
-```bash
-ddev version
-```
-
-**If DDEV is not installed:**
-
-```
-❌ DDEV is not installed.
-
-Install DDEV based on your platform:
-
-🍎 macOS:
-   brew install ddev/ddev/ddev
-
-🐧 Linux:
-   # Ubuntu/Debian
-   curl -fsSL https://raw.githubusercontent.com/ddev/ddev/master/scripts/install_ddev.sh | bash
-
-   # Or see: https://ddev.readthedocs.io/en/stable/users/install/ddev-installation/
-
-🪟 Windows:
-   choco install ddev
-   # Or see: https://ddev.readthedocs.io/en/stable/users/install/ddev-installation/
-```
-
-### 5. TYPO3 Extension Project Validation
-
-**Confirm current directory is a TYPO3 extension:**
-- Check for `ext_emconf.php` file
-- OR check `composer.json` has `type: "typo3-cms-extension"`
-- Check for typical TYPO3 extension structure (Classes/, Configuration/, Resources/)
-
-**If not a TYPO3 extension:**
-
-```
-❌ This doesn't appear to be a TYPO3 extension project.
-
-Requirements:
-  - ext_emconf.php file present
-  OR
-  - composer.json with "type": "typo3-cms-extension"
-
-Current directory: [show path]
-```
-
-### 6. Existing DDEV Setup Check
-
-**Check if `.ddev/` directory already exists:**
-
-```bash
-test -d .ddev && echo "DDEV config exists" || echo "No DDEV config"
-```
-
-**If `.ddev/` exists:**
-
-```
-⚠️  DDEV configuration already exists.
-
-Do you want to:
-  1. Keep existing configuration (skip setup)
-  2. Overwrite with new configuration
-  3. Backup existing and create new
-
-Please choose: [1/2/3]
-```
-
-### Prerequisites Validation Summary
-
-**Run ALL checks before proceeding:**
-
-```bash
-# Quick validation script
-echo "🔍 Validating prerequisites..."
-
-# 1. Docker daemon
-if docker info >/dev/null 2>&1; then
-    echo "✅ Docker daemon: Running"
-else
-    echo "❌ Docker daemon: Not running"
-    exit 1
-fi
-
-# 2. Docker version
-DOCKER_VERSION=$(docker version --format '{{.Client.Version}}' 2>/dev/null | cut -d. -f1,2)
-if [ -n "$DOCKER_VERSION" ] && [ "$(printf '%s\n' "20.10" "$DOCKER_VERSION" | sort -V | head -n1)" = "20.10" ]; then
-    echo "✅ Docker CLI: $DOCKER_VERSION (>= 20.10)"
-else
-    echo "❌ Docker CLI: Version check failed (need >= 20.10)"
-    exit 1
-fi
-
-# 3. Docker Compose version
-COMPOSE_VERSION=$(docker compose version --short 2>/dev/null | cut -d. -f1)
-if [ -n "$COMPOSE_VERSION" ] && [ "$COMPOSE_VERSION" -ge 2 ]; then
-    echo "✅ Docker Compose: $(docker compose version --short) (>= 2.0)"
-else
-    echo "❌ Docker Compose: Version check failed (need >= 2.0)"
-    exit 1
-fi
-
-# 4. DDEV
-if command -v ddev >/dev/null 2>&1; then
-    echo "✅ DDEV: $(ddev version | head -n1)"
-else
-    echo "❌ DDEV: Not installed"
-    exit 1
-fi
-
-# 5. TYPO3 Extension
-if [ -f "ext_emconf.php" ] || grep -q '"type".*"typo3-cms-extension"' composer.json 2>/dev/null; then
-    echo "✅ TYPO3 Extension: Detected"
-else
-    echo "❌ TYPO3 Extension: Not detected"
-    exit 1
-fi
-
-echo ""
-echo "✅ All prerequisites validated successfully!"
-```
-
-**Critical:** Always run these checks on the FIRST DDEV command in a session to catch environment issues early.
-
-If any prerequisite fails, provide clear instructions on how to resolve it before proceeding.
+**Critical:** Always run prerequisite checks on the FIRST DDEV command in a session to catch environment issues early.
 
 ## Step-by-Step Workflow
 
@@ -687,368 +481,65 @@ After generation, you can edit `index.html` to:
 
 The index page is optional but highly recommended for improved developer experience, especially in multi-version testing environments.
 
+**For advanced branding and customization details including:**
+- Automatic branding detection (Netresearch/TYPO3/generic)
+- Brand-specific color schemes and typography
+- Design specifications
+
+See: `references/index-page-generation.md`
+
 ## Error Handling
 
-### Common Issues and Solutions
+Common issues and their solutions are documented in the troubleshooting guide.
 
-**1. Prerequisites Not Met**
-```
-❌ Prerequisites validation failed.
+**Most frequent issues:**
+- Prerequisites not met (Docker daemon, version mismatches)
+- Port conflicts (80/443 already in use)
+- TYPO3 installation failures
+- Service configuration issues
 
-One or more requirements are not met:
-  - Docker daemon not running
-  - Docker CLI outdated (need >= 20.10)
-  - Docker Compose outdated (need >= 2.0)
-  - DDEV not installed
+**For comprehensive troubleshooting including:**
+- Prerequisites validation failures
+- Database setup errors
+- Extension detection issues
+- Service container problems
+- Step-by-step resolution guides
 
-See "Prerequisites Validation" section above for detailed:
-  - Platform-specific installation instructions
-  - Version requirement details
-  - Validation script you can run
+See: `references/troubleshooting.md`
 
-Run the validation script to identify which prerequisite is failing.
-```
+**Windows-specific issues:**
+- DDEV health check failures with custom Apache configs
+- CRLF vs LF line ending issues in scripts
+- PowerShell commands for file conversion
+- Performance optimizations for Windows/WSL2
 
-**2. Docker Daemon Not Running (Most Common)**
-```
-❌ Docker daemon is not running.
-
-Quick fix for your platform:
-
-🐧 Linux/WSL2:
-   sudo service docker start
-
-🍎 macOS:
-   Open Docker Desktop application
-
-🪟 Windows:
-   Open Docker Desktop application
-
-For detailed instructions, see Prerequisites Validation section.
-After starting Docker, run: docker info
-```
-
-**3. Not a TYPO3 Extension**
-```
-❌ This doesn't appear to be a TYPO3 extension project.
-
-Requirements:
-  - ext_emconf.php file present
-  OR
-  - composer.json with "type": "typo3-cms-extension"
-
-Current directory: /path/to/project
-```
-
-**4. Port Conflicts**
-```
-❌ DDEV failed to start (port 80/443 conflict)
-
-Solutions:
-  - Stop other local web servers (Apache, Nginx, MAMP)
-  - Or use different ports in .ddev/config.yaml:
-    router_http_port: "8080"
-    router_https_port: "8443"
-```
-
-**5. Installation Failures**
-```
-❌ TYPO3 installation failed
-
-Troubleshooting:
-  1. Check logs: ddev logs
-  2. SSH into container: ddev ssh
-  3. Check Composer: ddev composer diagnose
-  4. Try reinstalling: rm -rf /var/www/html/v13/* && ddev install-v13
-```
+See: `references/windows-fixes.md` and `references/windows-optimizations.md`
 
 ## Advanced Options
 
-### Custom PHP Version
-
-If extension requires different PHP version:
-```yaml
-# In .ddev/config.yaml
-php_version: "8.1"  # or "8.3"
-```
-
-### Database Selection (Tiered Approach)
-
-The skill uses **intelligent database selection** based on extension complexity.
-
-**🎯 Tier 1: SQLite (Simple Extensions - Development Optimized)**
-
-**Recommended for:**
-- ✅ Extensions using only TYPO3 Core APIs (Extbase, FAL, DataHandler)
-- ✅ No custom database tables (ext_tables.sql absent/empty)
-- ✅ No raw SQL queries
-- ✅ Category: plugin, fe, be, misc
-- ✅ Example: rte_ckeditor_image, simple content elements, frontend plugins
-
-**Benefits:**
-- ⚡ **Startup**: 5-10 seconds faster per ddev start
-- 💾 **RAM**: 900 MB saved (no MariaDB container)
-- 💿 **Disk**: 744 MB saved (no container image)
-- 🔒 **Isolation**: Perfect v11/v12/v13 separation (separate .sqlite files)
-
-**Configuration:**
-```yaml
-# No .ddev/config.yaml database config needed
-# TYPO3 installation uses SQLite automatically
-```
-
-**Critical Warnings:**
-- ⚠️ **Development ONLY** - Never use SQLite in production
-- ⚠️ **Switch to MariaDB** if you add custom SQL queries or tables
-- ⚠️ **Final Testing** - Run compatibility tests on MariaDB before release
-
-**🔧 Tier 2: MariaDB 10.11 (Complex Extensions - Production Parity)**
-
-**Recommended for:**
-- ❌ Extensions with custom database tables (ext_tables.sql present)
-- ❌ Extensions using raw SQL queries
-- ❌ Performance-critical operations
-- ❌ Category: services, module
-- ❌ Unknown complexity (safe default)
-
-**Benefits:**
-- ✅ **Production Standard**: 95%+ TYPO3 hosting uses MariaDB
-- ✅ **Extension Compatibility**: 99%+ TYPO3 extensions tested on MariaDB
-- ✅ **Performance**: 13-36% faster than MySQL 8 for transactional workloads
-- ✅ **TYPO3 Ecosystem**: Documentation, tutorials, community standard
-
-**Configuration:**
-```yaml
-# In .ddev/config.yaml
-database:
-  type: mariadb
-  version: "10.11"
-```
-
-**🌐 Tier 3: PostgreSQL 16 (Specialized Requirements)**
-
-**Recommended for:**
-- 🎯 GIS/spatial data (PostGIS)
-- 🎯 Advanced analytics or complex queries
-- 🎯 Explicit PostgreSQL requirement
-
-**Configuration:**
-```yaml
-# In .ddev/config.yaml
-database:
-  type: postgres
-  version: "16"
-```
-
-**🏢 Tier 4: MySQL 8.0 (Corporate/Oracle Ecosystem)**
-
-**Recommended for:**
-- 🏢 Corporate environments requiring Oracle integration
-- 🏢 Production specifically uses MySQL 8
-
-**Configuration:**
-```yaml
-# In .ddev/config.yaml
-database:
-  type: mysql
-  version: "8.0"
-```
-
-**Auto-Detection Logic:**
-
-The skill will analyze your extension and suggest the appropriate tier:
-
-```yaml
-SQLite Detection (Tier 1):
-  ✓ ext_tables.sql: Absent or empty
-  ✓ Raw SQL patterns: None found
-  ✓ File size: < 1 MB
-  ✓ Category: plugin, fe, be, misc
-  → Suggests: SQLite (development-optimized)
-
-MariaDB Detection (Tier 2):
-  ✗ ext_tables.sql: Present with custom tables
-  ✗ Raw SQL patterns: Found
-  ✗ File size: > 1 MB
-  ✗ Category: services, module
-  → Suggests: MariaDB 10.11 (production-realistic)
-
-PostgreSQL Detection (Tier 3):
-  • Extension name: Contains "postgres", "pgsql", "postgis"
-  • composer.json: Requires "typo3/cms-pgsql"
-  • Keywords: "GIS", "spatial", "analytics"
-  → Suggests: PostgreSQL 16 (specialized)
-```
-
-**Alternative Options:**
-
-**MariaDB 11** - Forward-looking performance:
-```yaml
-database:
-  type: mariadb
-  version: "11.4"
-```
-- Latest features (+40% performance vs 10.11)
-- Forward compatibility testing
-
-**For detailed rationale**, see: `docs/adr/0002-mariadb-default-with-database-alternatives.md`
-
-### XDebug Setup
-
-Enable XDebug for debugging:
-```bash
-ddev xdebug on
-```
-
-### Customize TYPO3 Versions
-
-Edit `.ddev/docker-compose.web.yaml` and installation scripts to add/remove versions.
-
-### Database Access
-
-```bash
-# Direct database access
-ddev mysql
-
-# Export database
-ddev export-db > backup.sql.gz
-
-# Import database
-ddev import-db --file=backup.sql.gz
-```
-
-### Optional Services
-
-The skill includes optional service templates for enhanced TYPO3 development:
-
-#### Valkey / Redis (Caching)
-
-Add high-performance caching to TYPO3 using **Valkey** (default) or **Redis** (alternative).
-
-**Default: Valkey 8** (Open Source, Future-Proof)
-
-```bash
-# Copy Valkey template (default)
-cp .ddev/templates/docker-compose.services.yaml.optional .ddev/docker-compose.services.yaml
-cp .ddev/templates/config.redis.php.example .ddev/config.redis.php.example
-
-# Restart DDEV
-ddev restart
-
-# Test Valkey (wire-compatible with Redis)
-ddev ssh
-redis-cli -h valkey ping  # Should return: PONG
-```
-
-**Alternative: Redis 7** (For Legacy Production Parity)
-
-```bash
-# Use Redis 7 alternative template
-cp .ddev/templates/docker-compose.services-redis.yaml.optional .ddev/docker-compose.services.yaml
-
-# Restart DDEV
-ddev restart
-
-# Test Redis
-ddev ssh
-redis-cli -h redis ping  # Should return: PONG
-```
-
-**Why Valkey Default?**
-
-Valkey is wire-protocol compatible with Redis but offers:
-- ✅ **True Open Source**: BSD-3-Clause license (Redis 7.4+ is proprietary)
-- ✅ **Industry Adoption**: AWS, Google Cloud, Oracle backing (Linux Foundation project)
-- ✅ **Smaller Image**: 69.7 MB (vs 100 MB Redis 8, 60.6 MB Redis 7)
-- ✅ **Cost-Effective**: 20-33% cheaper on AWS ElastiCache
-- ✅ **Future-Proof**: Strategic direction for cloud/managed hosting
-
-**When to Use Redis 7 Instead:**
-- Your production environment explicitly uses Redis 7.x
-- Corporate policy requires battle-tested technology only (Redis has 15 years vs Valkey 1 year)
-- Exact production-development parity needed with existing infrastructure
-
-**Technical Details:**
-
-**Valkey**: `valkey/valkey:8-alpine` (69.7 MB)
-**Redis**: `redis:7-alpine` (60.6 MB)
-**Memory**: 256MB with LRU eviction policy
-**Port**: 6379 (same for both)
-
-**Configuration**: Both use identical TYPO3 configuration. Add cache backend to `AdditionalConfiguration.php` (see `.ddev/config.redis.php.example`)
-
-**For detailed rationale**, see: `docs/adr/0001-valkey-default-with-redis-alternative.md`
-
-#### MailPit (Email Testing)
-
-Catch all emails sent by TYPO3 for testing:
-
-```bash
-# Already included in docker-compose.services.yaml.optional
-# Access Web UI after ddev restart:
-# http://{{DDEV_SITENAME}}.ddev.site:8025
-```
-
-**Image**: `axllent/mailpit:latest`
-**SMTP**: `mailpit:1025` (automatically configured in docker-compose.web.yaml)
-
-#### Ofelia (TYPO3 Scheduler Automation)
-
-Automate TYPO3 scheduler tasks with **ghcr.io/netresearch/ofelia**:
-
-```bash
-# Copy Ofelia configuration
-cp .ddev/templates/docker-compose.ofelia.yaml.optional .ddev/docker-compose.ofelia.yaml
-
-# Restart DDEV
-ddev restart
-
-# View scheduler logs
-docker logs -f ddev-{{DDEV_SITENAME}}-ofelia
-```
-
-**Image**: `ghcr.io/netresearch/ofelia:latest` (GitHub Container Registry - TYPO3-optimized fork)
-**Default Schedule**: TYPO3 scheduler runs every 1 minute for all versions
-**Cache Warmup**: Every 1 hour for v13
-
-**DDEV Naming**: Uses `docker-compose.*.yaml` naming (DDEV v1.24.8 requirement, not Compose v2 standard)
-**No Version Field**: All service files omit `version:` declaration per Compose v2 spec
-
-#### Shell Aliases
-
-Add convenient shortcuts:
-
-```bash
-# Copy bash additions
-cp .ddev/templates/homeadditions/.bashrc_additions.optional .ddev/homeadditions/.bashrc_additions
-
-# Restart DDEV to load aliases
-ddev restart
-
-# Available aliases:
-ddev ssh
-t3-scheduler-v11    # Run TYPO3 11 scheduler
-t3-scheduler-v12    # Run TYPO3 12 scheduler
-t3-scheduler-v13    # Run TYPO3 13 scheduler
-t3-scheduler-all    # Run scheduler on all versions
-redis               # Access Redis CLI
-t3-cache-flush-v13  # Flush TYPO3 13 cache
-```
-
-#### Complete Services Documentation
-
-For detailed service configuration, troubleshooting, and performance tuning:
-
-```bash
-# Copy services README
-cp .ddev/templates/README-SERVICES.md.optional .ddev/README-SERVICES.md
-```
-
-**Important Notes**:
-- DDEV v1.24.8 requires `docker-compose.*.yaml` naming (auto-loads from `.ddev/`)
-- Ofelia image: `ghcr.io/netresearch/ofelia:latest` (not Docker Hub)
-- Ofelia command: `daemon --docker-events` (not `--docker`)
-- Redis config must NOT be `.yaml` (DDEV tries to parse it as config)
+For advanced configuration and optional features, see the comprehensive guide.
+
+**Available customizations:**
+- Custom PHP versions (8.1, 8.2, 8.3)
+- Intelligent database selection (SQLite, MariaDB, PostgreSQL, MySQL)
+- XDebug setup for debugging
+- Custom TYPO3 versions
+- Database management (export/import)
+
+**Optional services:**
+- Valkey/Redis for caching (default: Valkey 8)
+- MailPit for email testing
+- Ofelia for TYPO3 scheduler automation
+- Shell aliases for convenience
+
+**For detailed information including:**
+- Tiered database selection logic with auto-detection
+- Service configuration and templates
+- Performance tuning guidelines
+- ADR references for architectural decisions
+- Complete service documentation
+
+See: `references/advanced-options.md`
 
 ## Documentation Rendering
 
@@ -1195,57 +686,6 @@ vendor/bin/typo3 cache:flush
 - Consistent configuration across team
 - Demo content ready for testing
 - Reduces manual configuration errors
-
-## Troubleshooting
-
-### Database Already Exists Error
-
-If reinstalling TYPO3 and you get "database already exists" errors:
-
-```bash
-# Clean up and recreate database
-ddev mysql -e "DROP DATABASE IF EXISTS v13; CREATE DATABASE v13;"
-
-# Now retry installation
-ddev install-v13
-```
-
-### TYPO3 Setup Shows "Database contains tables" Error
-
-```bash
-# Option 1: Clean database
-ddev mysql v13 -e "DROP DATABASE v13; CREATE DATABASE v13;"
-
-# Option 2: Use different database name
-# Edit install-v* script to use different DB name
-```
-
-### Services Not Loading
-
-If Redis, MailPit, or Ofelia containers don't start:
-
-```bash
-# Check container status
-docker ps --filter "name=ddev-{{DDEV_SITENAME}}"
-
-# View logs
-docker logs ddev-{{DDEV_SITENAME}}-redis
-docker logs ddev-{{DDEV_SITENAME}}-mailpit
-docker logs ddev-{{DDEV_SITENAME}}-ofelia
-
-# Restart DDEV
-ddev restart
-```
-
-### Extension Not Appearing in Backend
-
-```bash
-# Flush all caches
-ddev exec -d /var/www/html/v13 vendor/bin/typo3 cache:flush
-
-# Check extension is symlinked
-ddev exec ls -la /var/www/html/v13/vendor/{{VENDOR}}/{{EXTENSION_KEY}}
-```
 
 ## Validation Checklist
 
