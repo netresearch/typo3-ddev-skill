@@ -4,7 +4,23 @@ description: "Automate DDEV environment setup for TYPO3 extension development. U
 license: MIT License - see LICENSE file
 metadata:
   author: Netresearch
+  repository: https://github.com/netresearch/typo3-ddev-skill
   version: 1.4.0
+  tags:
+    - typo3
+    - ddev
+    - docker
+    - development
+    - testing
+    - devops
+  platforms:
+    - linux
+    - macos
+    - windows
+  typo3-versions:
+    - 11.5-lts
+    - 12.4-lts
+    - 13.4-lts
 ---
 # TYPO3 DDEV Setup Skill
 
