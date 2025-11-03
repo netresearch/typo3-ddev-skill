@@ -6,7 +6,7 @@ allowed-tools: "Bash, Read, Write, Edit, Glob, Grep, TodoWrite"
 metadata:
   author: Netresearch
   repository: https://github.com/netresearch/typo3-ddev-skill
-  version: 1.0.0
+  version: 1.4.0
   tags:
     - typo3
     - ddev
