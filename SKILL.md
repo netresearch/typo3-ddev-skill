@@ -307,7 +307,7 @@ Installation time: ~2-5 minutes per version (depending on network speed)
 - ✅ Your extension (activated and ready to use)
 - ✅ TYPO3 Backend Styleguide (for UI pattern reference)
 - ✅ Extension Manager
-- ❌ Introduction Package (optional, see "Demo Content" section below)
+- ✅ Introduction Package (86+ pages with demo content for testing)
 
 ### Step 6: Provide Access Information
 
@@ -599,20 +599,11 @@ ddev docs
 
 **Note:** The docs subdomain is automatically configured in `.ddev/apache/apache-site.conf` and accessible after running `ddev docs`.
 
-## Demo Content (Introduction Package) - Optional
+## Demo Content (Introduction Package)
 
-**Note:** The introduction package is NOT installed automatically. Follow these steps to install it manually.
+**Note:** The introduction package is automatically installed with every TYPO3 version.
 
-For testing your extension with realistic content:
-
-```bash
-# Copy the install-introduction command
-cp .ddev/templates/commands/web/install-introduction.optional .ddev/commands/web/install-introduction
-chmod +x .ddev/commands/web/install-introduction
-
-# Install Introduction Package
-ddev install-introduction v13
-```
+The Introduction Package provides realistic demo content for testing your extension:
 
 **What's Included:**
 - 86+ pages with full page tree structure
@@ -622,8 +613,10 @@ ddev install-introduction v13
 - Example content for testing RTE features
 
 **Access:**
-- Frontend: `https://{{DDEV_SITENAME}}.ddev.site/`
-- Backend: `https://{{DDEV_SITENAME}}.ddev.site/typo3/`
+- Frontend: `https://v13.{{DDEV_SITENAME}}.ddev.site/`
+- Backend: `https://v13.{{DDEV_SITENAME}}.ddev.site/typo3/`
+
+The introduction package is installed during the initial `ddev install-v13` (or `install-v11`, `install-v12`, `install-all`) setup, so no additional steps are required.
 
 ## Extension Auto-Configuration
 
