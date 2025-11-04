@@ -5,7 +5,7 @@ license: MIT License - see LICENSE file
 metadata:
   author: Netresearch
   repository: https://github.com/netresearch/typo3-ddev-skill
-  version: 1.4.0
+  version: 1.5.0
   tags:
     - typo3
     - ddev
