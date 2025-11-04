@@ -302,6 +302,13 @@ ddev install-v13    # TYPO3 13.4 LTS
 
 Installation time: ~2-5 minutes per version (depending on network speed)
 
+**What gets installed automatically:**
+- ✅ TYPO3 Core (specified version)
+- ✅ Your extension (activated and ready to use)
+- ✅ TYPO3 Backend Styleguide (for UI pattern reference)
+- ✅ Extension Manager
+- ❌ Introduction Package (optional, see "Demo Content" section below)
+
 ### Step 6: Provide Access Information
 
 After successful installation, display:
@@ -592,7 +599,9 @@ ddev docs
 
 **Note:** The docs subdomain is automatically configured in `.ddev/apache/apache-site.conf` and accessible after running `ddev docs`.
 
-## Demo Content (Introduction Package)
+## Demo Content (Introduction Package) - Optional
+
+**Note:** The introduction package is NOT installed automatically. Follow these steps to install it manually.
 
 For testing your extension with realistic content:
 
