@@ -1,28 +1,12 @@
-ARG BASE_IMAGE
-FROM $BASE_IMAGE
-
-ENV EXTENSION_KEY "{{EXTENSION_KEY}}"
-ENV DDEV_SITENAME "{{DDEV_SITENAME}}"
-ENV EXTENSION_TITLE "{{EXTENSION_TITLE}}"
-ENV EXTENSION_DESCRIPTION "{{EXTENSION_DESCRIPTION}}"
-ENV GITHUB_URL "{{GITHUB_URL}}"
-
-# Get git info from build context (captured on host before build)
-ARG GIT_BRANCH="unknown"
-ARG GIT_COMMIT="unknown"
-ARG GIT_PR="unknown"
-
-# Create PHP-based landing page with dynamic git info from build args
-RUN cat > /var/www/html/index.php << PHPEOF
 <?php
-// Get git info from environment (set during build)
-\$gitBranch = '${GIT_BRANCH}';
-\$gitCommit = '${GIT_COMMIT}';
-\$prNumber = '${GIT_PR}' !== 'unknown' ? '${GIT_PR}' : null;
+// Get git info from Docker build args (set during container build)
+$gitBranch = '{{GIT_BRANCH}}';
+$gitCommit = '{{GIT_COMMIT}}';
+$prNumber = '{{GIT_PR}}' !== 'unknown' ? '{{GIT_PR}}' : null;
 
-\$githubUrl = '{{GITHUB_URL}}';
-\$branchUrl = \$githubUrl . '/tree/' . urlencode(\$gitBranch);
-\$prUrl = \$prNumber ? \$githubUrl . '/pull/' . \$prNumber : null;
+$githubUrl = '{{GITHUB_URL}}';
+$branchUrl = $githubUrl . '/tree/' . urlencode($gitBranch);
+$prUrl = $prNumber ? $githubUrl . '/pull/' . $prNumber : null;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -52,13 +36,13 @@ RUN cat > /var/www/html/index.php << PHPEOF
                 <h1>{{EXTENSION_TITLE}}</h1>
                 <p>{{EXTENSION_DESCRIPTION}}</p>
                 <div class="git-info">
-                    <a href="<?= htmlspecialchars(\$branchUrl) ?>" target="_blank" title="View branch on GitHub">
-                        🌿 <?= htmlspecialchars(\$gitBranch) ?> @ <?= htmlspecialchars(\$gitCommit) ?>
+                    <a href="<?= htmlspecialchars($branchUrl) ?>" target="_blank" title="View branch on GitHub">
+                        🌿 <?= htmlspecialchars($gitBranch) ?> @ <?= htmlspecialchars($gitCommit) ?>
                     </a>
-                    <?php if (\$prUrl): ?>
+                    <?php if ($prUrl): ?>
                         <span class="separator">|</span>
-                        <a href="<?= htmlspecialchars(\$prUrl) ?>" target="_blank" title="View pull request">
-                            🔀 PR #<?= htmlspecialchars(\$prNumber) ?>
+                        <a href="<?= htmlspecialchars($prUrl) ?>" target="_blank" title="View pull request">
+                            🔀 PR #<?= htmlspecialchars($prNumber) ?>
                         </a>
                     <?php endif; ?>
                 </div>
@@ -103,23 +87,3 @@ RUN cat > /var/www/html/index.php << PHPEOF
 </div>
 </body>
 </html>
-PHPEOF
-
-# Setup TYPO3 v11 placeholder pages
-RUN mkdir -p /var/www/html/v11/public/typo3
-RUN echo "<h1>Perform this first</h1> <code>ddev install-v11</code>" > /var/www/html/v11/public/index.html
-RUN echo "<h1>Perform this first</h1> <code>ddev install-v11</code>" > /var/www/html/v11/public/typo3/index.html
-
-# Setup TYPO3 v12 placeholder pages
-RUN mkdir -p /var/www/html/v12/public/typo3
-RUN echo "<h1>Perform this first</h1> <code>ddev install-v12</code>" > /var/www/html/v12/public/index.html
-RUN echo "<h1>Perform this first</h1> <code>ddev install-v12</code>" > /var/www/html/v12/public/typo3/index.html
-
-# Setup TYPO3 v13 placeholder pages
-RUN mkdir -p /var/www/html/v13/public/typo3
-RUN echo "<h1>Perform this first</h1> <code>ddev install-v13</code>" > /var/www/html/v13/public/index.html
-RUN echo "<h1>Perform this first</h1> <code>ddev install-v13</code>" > /var/www/html/v13/public/typo3/index.html
-
-ARG uid
-ARG gid
-RUN chown -R $uid:$gid /var/www/html
