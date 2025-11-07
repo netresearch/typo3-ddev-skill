@@ -1,11 +1,11 @@
 ---
 name: typo3-ddev
-version: 1.5.0
 description: "Automate DDEV environment setup for TYPO3 extension development. Use when setting up local development environment, configuring DDEV for TYPO3 extensions, or creating multi-version TYPO3 testing environments."
 license: MIT License - see LICENSE file
 metadata:
   author: Netresearch
   repository: https://github.com/netresearch/typo3-ddev-skill
+  version: 1.5.0
   tags:
     - typo3
     - ddev
