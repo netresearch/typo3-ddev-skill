@@ -1,6 +1,6 @@
 ---
 name: typo3-ddev
-description: "Automate DDEV environment setup for TYPO3 extension development. Use when setting up local development environment, configuring DDEV for TYPO3 extensions, or creating multi-version TYPO3 testing environments."
+description: "Automate DDEV environment setup for TYPO3 extension development. Use when setting up local development environment, configuring DDEV for TYPO3 extensions, or creating multi-version TYPO3 testing environments. Covers: DDEV configuration generation, TYPO3 11.5/12.4/13.4 LTS installation, custom DDEV commands, Apache vhost setup, Docker volume management, and .gitignore best practices (avoid double-ignore anti-pattern). Provides complete automation from metadata detection to ready-to-use TYPO3 backend access."
 license: MIT License - see LICENSE file
 metadata:
   author: Netresearch
@@ -705,6 +705,147 @@ vendor/bin/typo3 cache:flush
 - Demo content ready for testing
 - Reduces manual configuration errors
 
+## Troubleshooting
+
+### Database Already Exists Error
+
+If reinstalling TYPO3 and you get "database already exists" errors:
+
+```bash
+# Clean up and recreate database
+ddev mysql -e "DROP DATABASE IF EXISTS v13; CREATE DATABASE v13;"
+
+# Now retry installation
+ddev install-v13
+```
+
+### TYPO3 Setup Shows "Database contains tables" Error
+
+```bash
+# Option 1: Clean database
+ddev mysql v13 -e "DROP DATABASE v13; CREATE DATABASE v13;"
+
+# Option 2: Use different database name
+# Edit install-v* script to use different DB name
+```
+
+### Services Not Loading
+
+If Redis, MailPit, or Ofelia containers don't start:
+
+```bash
+# Check container status
+docker ps --filter "name=ddev-{{DDEV_SITENAME}}"
+
+# View logs
+docker logs ddev-{{DDEV_SITENAME}}-redis
+docker logs ddev-{{DDEV_SITENAME}}-mailpit
+docker logs ddev-{{DDEV_SITENAME}}-ofelia
+
+# Restart DDEV
+ddev restart
+```
+
+### Extension Not Appearing in Backend
+
+```bash
+# Flush all caches
+ddev exec -d /var/www/html/v13 vendor/bin/typo3 cache:flush
+
+# Check extension is symlinked
+ddev exec ls -la /var/www/html/v13/vendor/{{VENDOR}}/{{EXTENSION_KEY}}
+```
+
+### .gitignore Configuration Best Practices
+
+**CRITICAL:** Ensure `.ddev/.gitignore` is committed to version control, NOT ignored!
+
+**The Double-Ignore Anti-Pattern:**
+
+DDEV often generates `.ddev/.gitignore` with this problematic structure:
+
+```
+#ddev-generated: Automatically generated ddev .gitignore.
+# You can remove the above line if you want to edit and maintain this file yourself.
+/.gitignore    ← File ignores ITSELF!
+```
+
+**The Problem:**
+
+1. `.ddev/.gitignore` ignores itself (`/.gitignore`)
+2. Root `.gitignore` also ignores it (`.ddev/.gitignore`)
+3. Result: DDEV ignore rules NOT shared with team
+4. Each developer must generate their own DDEV config
+5. Inconsistent git behavior across team members
+
+**The Fix:**
+
+1. **Remove from root `.gitignore`:**
+   ```diff
+   # .gitignore (ROOT)
+   .ddev/.homeadditions
+   .ddev/.ddev-docker-compose-full.yaml
+   - .ddev/.gitignore    ← REMOVE THIS LINE
+   ```
+
+2. **Fix `.ddev/.gitignore` to not self-ignore:**
+   ```diff
+   # .ddev/.gitignore (UPDATED)
+   - #ddev-generated: Automatically generated ddev .gitignore.
+   - # You can remove the above line if you want to edit and maintain this file yourself.
+   - /.gitignore
+   + # DDEV gitignore rules
+   + # Manually maintained to ensure consistency across team
+
+   /**/*.example
+   /.dbimageBuild
+   /.ddev-docker-*.yaml
+   ```
+
+3. **Commit DDEV configuration to share with team:**
+   ```bash
+   git add .ddev/.gitignore .ddev/config.yaml .ddev/docker-compose.*.yaml
+   git add .ddev/apache/ .ddev/commands/ .ddev/web-build/
+   git commit -m "[TASK] Add DDEV configuration for development environment"
+   ```
+
+**What to Commit vs. Ignore:**
+
+✅ **Commit (share with team):**
+- `.ddev/.gitignore` (ignore rules)
+- `.ddev/config.yaml` (main config)
+- `.ddev/docker-compose.*.yaml` (custom services)
+- `.ddev/apache/` (custom Apache config)
+- `.ddev/commands/` (custom DDEV commands)
+- `.ddev/web-build/` (custom Dockerfile)
+
+❌ **Ignore (personal/generated):**
+- `.ddev/.homeadditions` (personal shell config)
+- `.ddev/.ddev-docker-compose-full.yaml` (auto-generated)
+- `.ddev/db_snapshots/` (database snapshots)
+- `.ddev/.sshimageBuild` (build artifacts)
+- `.ddev/.webimageBuild` (build artifacts)
+
+**Validation:**
+
+After fixing, verify:
+```bash
+# Should show .ddev/.gitignore as tracked
+git ls-files .ddev/.gitignore
+
+# Should list DDEV files to be committed
+git status .ddev/
+```
+
+**Benefits:**
+
+- ✅ Consistent environment across all developers
+- ✅ Shared DDEV ignore rules
+- ✅ Quick onboarding: `git clone && ddev start`
+- ✅ No manual DDEV configuration needed
+- ✅ Team follows same git patterns
+
+>>>>>>> d23c50b ([FEATURE] Add .gitignore configuration best practices section)
 ## Validation Checklist
 
 Before completing, verify:
