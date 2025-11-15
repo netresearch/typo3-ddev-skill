@@ -15,3 +15,5 @@ additional_hostnames:
     - v13.{{DDEV_SITENAME}}
 additional_fqdns: []
 use_dns_when_possible: true
+webimage_extra_dockerfiles:
+  - web-build

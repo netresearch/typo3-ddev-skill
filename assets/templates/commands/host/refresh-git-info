@@ -1,0 +1,39 @@
+#!/bin/bash
+
+## Description: Rebuild web container with current git branch/PR info for landing page
+## Usage: refresh-git-info
+## Example: "ddev refresh-git-info"
+
+# Capture current git information
+BRANCH=$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "unknown")
+COMMIT=$(git rev-parse --short HEAD 2>/dev/null || echo "unknown")
+PR=$(gh pr view --json number -q .number 2>/dev/null || echo "unknown")
+
+echo "🔍 Detected git information:"
+echo "   📌 Branch:  $BRANCH"
+echo "   📝 Commit:  $COMMIT"
+echo "   🔀 PR:      $PR"
+echo ""
+echo "🔄 Rebuilding web container with git info..."
+
+# Create docker-compose override to pass build args
+cat > .ddev/docker-compose.gitinfo.yaml << EOF
+version: '3.6'
+services:
+  web:
+    build:
+      args:
+        GIT_BRANCH: "$BRANCH"
+        GIT_COMMIT: "$COMMIT"
+        GIT_PR: "$PR"
+EOF
+
+# Restart and rebuild the web container
+ddev restart
+
+# Clean up
+rm -f .ddev/docker-compose.gitinfo.yaml
+
+echo ""
+echo "✅ Landing page updated!"
+echo "   Visit https://{{DDEV_SITENAME}}.ddev.site to see current branch/PR info"
