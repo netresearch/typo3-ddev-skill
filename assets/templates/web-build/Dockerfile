@@ -12,13 +12,13 @@ RUN cat > /var/www/html/index.php << 'PHPEOF'
 $gitInfoFile = '/var/www/html/.git-info.json';
 $gitInfo = file_exists($gitInfoFile) ? json_decode(file_get_contents($gitInfoFile), true) : [];
 
-\$gitBranch = $gitInfo['branch'] ?? 'unknown';
-\$gitCommit = $gitInfo['commit'] ?? 'unknown';
-\$prNumber = isset($gitInfo['pr']) && $gitInfo['pr'] !== 'unknown' ? $gitInfo['pr'] : null;
+$gitBranch = $gitInfo['branch'] ?? 'unknown';
+$gitCommit = $gitInfo['commit'] ?? 'unknown';
+$prNumber = isset($gitInfo['pr']) && $gitInfo['pr'] !== 'unknown' ? $gitInfo['pr'] : null;
 
-\$githubUrl = '{{GITHUB_URL}}';
-\$branchUrl = \$githubUrl && \$gitBranch !== 'unknown' ? \$githubUrl . '/tree/' . urlencode(\$gitBranch) : null;
-\$prUrl = \$githubUrl && \$prNumber ? \$githubUrl . '/pull/' . \$prNumber : null;
+$githubUrl = '{{GITHUB_URL}}';
+$branchUrl = $githubUrl && $gitBranch !== 'unknown' ? $githubUrl . '/tree/' . urlencode($gitBranch) : null;
+$prUrl = $githubUrl && $prNumber ? $githubUrl . '/pull/' . $prNumber : null;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -53,19 +53,19 @@ $gitInfo = file_exists($gitInfoFile) ? json_decode(file_get_contents($gitInfoFil
 <body>
     <div class="container">
         <h1>🚀 EXT:{{EXTENSION_KEY}} Development Environment</h1>
-        <?php if (\$gitBranch !== 'unknown' || \$prNumber): ?>
+        <?php if ($gitBranch !== 'unknown' || $prNumber): ?>
         <div class="git-info">
-            <?php if (\$branchUrl): ?>
-                <a href="<?= htmlspecialchars(\$branchUrl) ?>" target="_blank" title="View branch on GitHub">
-                    🌿 <?= htmlspecialchars(\$gitBranch) ?><?php if (\$gitCommit !== 'unknown'): ?> @ <?= htmlspecialchars(\$gitCommit) ?><?php endif; ?>
+            <?php if ($branchUrl): ?>
+                <a href="<?= htmlspecialchars($branchUrl) ?>" target="_blank" title="View branch on GitHub">
+                    🌿 <?= htmlspecialchars($gitBranch) ?><?php if ($gitCommit !== 'unknown'): ?> @ <?= htmlspecialchars($gitCommit) ?><?php endif; ?>
                 </a>
-            <?php elseif (\$gitBranch !== 'unknown'): ?>
-                🌿 <?= htmlspecialchars(\$gitBranch) ?><?php if (\$gitCommit !== 'unknown'): ?> @ <?= htmlspecialchars(\$gitCommit) ?><?php endif; ?>
+            <?php elseif ($gitBranch !== 'unknown'): ?>
+                🌿 <?= htmlspecialchars($gitBranch) ?><?php if ($gitCommit !== 'unknown'): ?> @ <?= htmlspecialchars($gitCommit) ?><?php endif; ?>
             <?php endif; ?>
-            <?php if (\$prUrl): ?>
+            <?php if ($prUrl): ?>
                 <span class="separator">|</span>
-                <a href="<?= htmlspecialchars(\$prUrl) ?>" target="_blank" title="View pull request">
-                    🔀 PR #<?= htmlspecialchars(\$prNumber) ?>
+                <a href="<?= htmlspecialchars($prUrl) ?>" target="_blank" title="View pull request">
+                    🔀 PR #<?= htmlspecialchars($prNumber) ?>
                 </a>
             <?php endif; ?>
         </div>
