@@ -5,7 +5,8 @@ ENV EXTENSION_KEY "{{EXTENSION_KEY}}"
 ENV DDEV_SITENAME "{{DDEV_SITENAME}}"
 ENV GITHUB_URL "{{GITHUB_URL}}"
 
-# Create PHP-based landing page with dynamic git info from runtime file
+# Remove default Apache index.html and create PHP-based landing page
+RUN rm -f /var/www/html/index.html
 RUN cat > /var/www/html/index.php << 'PHPEOF'
 <?php
 // Get git info from runtime file (updated automatically on each ddev start)
