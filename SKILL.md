@@ -624,6 +624,70 @@ The `configure-extension.optional` template includes:
 4. **Cache Flushing** - Ensure changes take effect
 5. **Success Message** - Clear next steps for developer
 
+### TYPO3 v13 Site Sets Approach
+
+**Important:** TYPO3 v13 introduces site sets as the modern approach for TypoScript and configuration loading, replacing static templates.
+
+**Site Sets vs Static Templates:**
+
+| Feature | Site Sets (TYPO3 v13+) | Static Templates (Legacy) |
+|---------|------------------------|---------------------------|
+| Configuration | `config.yaml` in site config | `sys_template` database records |
+| Loading Order | Dependency-based | Include order in template |
+| Type Safety | Schema-validated | No validation |
+| Maintenance | Version-controlled files | Database-stored |
+| Best Practice | ✅ Use for TYPO3 v13+ | ⚠️ Legacy approach |
+
+**How Extensions Should Provide Configuration:**
+
+1. **Create a Site Set** in your extension:
+   ```
+   Configuration/Sets/YourExtensionName/
+   ├── config.yaml          # Site set metadata
+   ├── setup.typoscript     # TypoScript configuration
+   └── page.tsconfig        # Page TSConfig (optional)
+   ```
+
+2. **Define Site Set** in `config.yaml`:
+   ```yaml
+   name: vendor/extension-name
+   label: 'Your Extension Name'
+   # Optional dependencies load BEFORE your set
+   optionalDependencies:
+     - typo3/fluid-styled-content
+     - bk2k/bootstrap-package
+   ```
+
+3. **Import TypoScript** in `setup.typoscript`:
+   ```typoscript
+   @import 'EXT:your_extension/Configuration/TypoScript/*.typoscript'
+   ```
+
+4. **Users Add to Site Configuration** (`config/sites/main/config.yaml`):
+   ```yaml
+   dependencies:
+     - bootstrap-package/full      # Frontend rendering
+     - vendor/extension-name        # Your extension
+   ```
+
+**Benefits:**
+- ✅ No sys_template database records needed
+- ✅ Proper dependency ordering
+- ✅ Version-controlled configuration
+- ✅ No static template conflicts
+- ✅ Type-safe settings with schema
+
+**Common Pitfall:** Avoid loading TypoScript via BOTH site sets AND static templates - this causes double-loading and configuration conflicts (e.g., duplicate `lib.parseFunc_RTE.tags.img` processors causing unexpected behavior).
+
+**Debugging Site Sets:**
+```bash
+# Check active site sets for a site
+ddev exec vendor/bin/typo3 site:show <siteIdentifier>
+
+# View resolved TypoScript (TYPO3 v13)
+Backend → Site Management → Sites → [Your Site] → Dependencies
+```
+
 ### Example: RTE Configuration Command
 
 For a CKEditor plugin extension:
