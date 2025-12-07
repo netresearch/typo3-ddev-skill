@@ -2,18 +2,18 @@
 
 Render TYPO3 extension documentation locally using DDEV.
 
-## The `ddev render-docs` Command
+## The `ddev docs` Command
 
 Create a host command that renders documentation using the official TYPO3 render-guides Docker image:
 
-### Command File: `.ddev/commands/host/render-docs`
+### Command File: `.ddev/commands/host/docs`
 
 ```bash
 #!/bin/bash
 
 ## Description: Render extension documentation using TYPO3 render-guides
-## Usage: render-docs
-## Example: ddev render-docs
+## Usage: docs
+## Example: ddev docs
 
 set -e
 
@@ -130,7 +130,7 @@ sudo rm -rf "${DOCS_OUTPUT}"/* 2>/dev/null || rm -rf "${DOCS_OUTPUT}"/* 2>/dev/n
 - [ ] `DirectoryIndex Index.html index.html` directive
 - [ ] DocumentRoot pointing to `Documentation-GENERATED-temp`
 - [ ] No Docker volume for docs (use bind mount)
-- [ ] `render-docs` command in `.ddev/commands/host/`
+- [ ] `docs` command in `.ddev/commands/host/`
 - [ ] `--user "$(id -u):$(id -g)"` in Docker run command
 
 ## Integration with docs.typo3.org

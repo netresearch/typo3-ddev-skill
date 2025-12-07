@@ -122,7 +122,7 @@ Creates overview dashboard at main domain.
 
 ### Render Documentation
 ```bash
-ddev render-docs
+ddev docs
 ```
 Renders `Documentation/*.rst` to `Documentation-GENERATED-temp/`.
 
