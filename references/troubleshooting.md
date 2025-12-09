@@ -90,7 +90,7 @@ Required:
   - At least one special character (!@#$%^&*...)
 
 Examples:
-  ✅ Password:joh316  (default, meets all requirements)
+  ✅ joh316  (default, meets all requirements)
   ✅ Password123!
   ✅ MySecure#Pass1
   ❌ password         (no uppercase, no digit, no special char)
