@@ -1,10 +1,11 @@
 # TYPO3 DDEV Skill
 
-> A Claude Code skill for automating DDEV environment setup in TYPO3 extension projects
+> An Agent Skill for automating DDEV environment setup in TYPO3 extension projects
 
 [![TYPO3](https://img.shields.io/badge/TYPO3-11%20%7C%2012%20%7C%2013-orange.svg)](https://typo3.org/)
 [![DDEV](https://img.shields.io/badge/DDEV-Local%20Development-blue.svg)](https://ddev.com/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Agent Skill](https://img.shields.io/badge/Agent%20Skill-Compatible-blueviolet.svg)](https://agentskills.io)
 
 ## 🔌 Compatibility
 
@@ -13,6 +14,7 @@ This is an **Agent Skill** following the [open standard](https://agentskills.io)
 **Supported Platforms:**
 - ✅ Claude Code (Anthropic)
 - ✅ Cursor
+- ✅ Windsurf
 - ✅ GitHub Copilot
 - ✅ Other skills-compatible AI agents
 
@@ -46,44 +48,41 @@ Before using this skill, ensure you have:
 - [DDEV](https://ddev.readthedocs.io/en/stable/users/install/ddev-installation/) installed
 - [Docker](https://www.docker.com/get-started) running
 - A TYPO3 extension project (with `ext_emconf.php` or `composer.json`)
-- [Claude Code](https://claude.com/claude-code) installed
+- A skills-compatible AI agent (Claude Code, Cursor, Windsurf, GitHub Copilot, etc.)
 
 ## Installation
 
-### Option 1: Via Netresearch Marketplace (Recommended)
+### Option 1: Download Release (Recommended)
+
+Download the [latest release](https://github.com/netresearch/typo3-ddev-skill/releases/latest) and extract to your agent's skills directory.
+
+**Common skills directories:**
+- **Claude Code**: `~/.claude/skills/typo3-ddev/`
+- **Cursor**: `.cursor/skills/typo3-ddev/` (project) or `~/.cursor/skills/typo3-ddev/` (global)
+- **Windsurf**: `.windsurf/skills/typo3-ddev/` (project) or `~/.windsurf/skills/typo3-ddev/` (global)
+
+### Option 2: Manual Installation
 
 ```bash
-/plugin marketplace add netresearch/claude-code-marketplace
-```
-
-Then browse skills with `/plugin`.
-
-### Option 2: Download Release
-
-Download the [latest release](https://github.com/netresearch/typo3-ddev-skill/releases/latest) and extract to `~/.claude/skills/typo3-ddev/`
-
-### Option 3: Manual Installation
-
-```bash
-# Clone this repository into your Claude Code skills directory
+# Clone to your agent's skills directory (example: Claude Code)
 cd ~/.claude/skills/
-git clone https://github.com/netresearch/typo3-ddev-skill.git
+git clone https://github.com/netresearch/typo3-ddev-skill.git typo3-ddev
 
-# The skill is now available in Claude Code
+# The skill is now available in your AI agent
 ```
 
 ## Usage
 
-### In Claude Code
+### Invoking the Skill
 
-Once installed, simply invoke the skill in your TYPO3 extension project:
+Once installed, invoke the skill in your TYPO3 extension project directory:
 
+**Via slash command:**
 ```
 /typo3-ddev
 ```
 
-Or ask Claude:
-
+**Via natural language:**
 ```
 Set up DDEV for my TYPO3 extension
 ```
