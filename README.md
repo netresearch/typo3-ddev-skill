@@ -6,6 +6,19 @@
 [![DDEV](https://img.shields.io/badge/DDEV-Local%20Development-blue.svg)](https://ddev.com/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
+## 🔌 Compatibility
+
+This is an **Agent Skill** following the [open standard](https://agentskills.io) originally developed by Anthropic and released for cross-platform use.
+
+**Supported Platforms:**
+- ✅ Claude Code (Anthropic)
+- ✅ Cursor
+- ✅ GitHub Copilot
+- ✅ Other skills-compatible AI agents
+
+> Skills are portable packages of procedural knowledge that work across any AI agent supporting the Agent Skills specification.
+
+
 ## Overview
 
 This skill helps TYPO3 extension developers quickly set up a complete DDEV development environment with multiple TYPO3 versions. Instead of manually configuring DDEV, this skill automates the entire process - from detecting your extension metadata to generating all configuration files and installing TYPO3.
