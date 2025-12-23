@@ -271,7 +271,30 @@ After generation, you can customize:
 
 **PHP Version** (`.ddev/config.yaml`):
 ```yaml
-php_version: "8.3"  # Change to 8.1 or 8.3 if needed
+php_version: "8.3"  # Change to 8.1, 8.3, or 8.5 if needed
+```
+
+**PHP Patch Upgrades** (`.ddev/web-build/Dockerfile.apt`):
+
+When DDEV ships an older PHP patch (e.g., 8.5.0RC3) and you need a newer one (e.g., 8.5.1):
+```dockerfile
+# .ddev/web-build/Dockerfile.apt
+RUN apt-get update
+RUN apt-get install --only-upgrade -y php${PHP_VERSION}-*
+```
+Then run `ddev restart`.
+
+**PHP Extensions** (`.ddev/web-build/Dockerfile`):
+```dockerfile
+# Use apt-get, NOT pecl (pecl not available in DDEV)
+RUN apt-get update && apt-get install -y php${PHP_VERSION}-pcov
+RUN apt-get update && apt-get install -y php${PHP_VERSION}-redis
+```
+
+**Custom PHP Settings** (`.ddev/php/custom.ini`):
+```ini
+memory_limit = 512M
+max_execution_time = 300
 ```
 
 **XDebug** (enable/disable):
@@ -374,6 +397,32 @@ router_http_port: "8080"
 router_https_port: "8443"
 ```
 
+### PHP Version Outdated
+
+If DDEV ships with an older PHP patch version:
+```bash
+# Create .ddev/web-build/Dockerfile.apt
+echo 'RUN apt-get update' > .ddev/web-build/Dockerfile.apt
+echo 'RUN apt-get install --only-upgrade -y php${PHP_VERSION}-*' >> .ddev/web-build/Dockerfile.apt
+ddev restart
+```
+
+### PCOV/Extension Installation Fails
+
+DDEV doesn't include `pecl`. Use `apt-get` instead:
+```dockerfile
+# In .ddev/web-build/Dockerfile
+RUN apt-get update && apt-get install -y php${PHP_VERSION}-pcov
+```
+
+### PHP Settings Not Applied
+
+Place settings in `.ddev/php/custom.ini`, NOT in `/usr/local/etc/php/conf.d/`:
+```ini
+# .ddev/php/custom.ini (correct location)
+memory_limit = 512M
+```
+
 ### Installation Fails
 
 **Check Composer Issues:**
@@ -410,6 +459,8 @@ ddev ssh
 cd /var/www/html/v13
 composer config repositories
 ```
+
+For complete troubleshooting guide, see `references/troubleshooting.md`.
 
 ## Contributing
 
