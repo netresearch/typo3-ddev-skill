@@ -17,10 +17,58 @@ Check for branding skills in this priority order:
 3. **Generic clean design** (last resort - neutral colors)
 
 **Detection Method:**
+
+For Claude Code / AI agents, check available skills:
 ```bash
-# Check if branding skill exists
-list-skills | grep -i branding
+# In Claude Code context
+/sc:help | grep -i branding
+# Or check skill directories
+ls ~/.claude/plugins/cache/*/netresearch-branding/*/SKILL.md 2>/dev/null
 ```
+
+For manual detection, check if the project is a Netresearch project:
+```bash
+# Check composer.json vendor
+grep -q '"netresearch/' composer.json && echo "Netresearch project"
+# Check git remote
+git remote -v | grep -q 'netresearch' && echo "Netresearch repo"
+```
+
+### Branding Detection Troubleshooting
+
+**Common Issue: Landing page generated without proper branding**
+
+Symptoms:
+- Generic colors instead of Netresearch turquoise (#2F99A4)
+- Missing logo
+- Wrong fonts (system fonts instead of Raleway/Open Sans)
+- Extension name shows underscores (`nr_llm`) instead of hyphens (`nr-llm`)
+
+**Root Causes and Fixes:**
+
+1. **Branding skill not read** - The agent generated a page without consulting branding references
+   - Fix: Explicitly invoke `netresearch-branding` skill before generating
+   - Fix: Read the branding SKILL.md file for color/font values
+
+2. **Logo not embedded** - The logo SVG wasn't included
+   - Fix: Use the embedded SVG provided in this document (see below)
+   - Fix: Do NOT rely on external logo URLs - embed inline
+
+3. **Wrong extension name format** - Used internal key instead of display name
+   - Fix: Read `composer.json` "name" field for authoritative name
+   - Fix: Use hyphens (`nr-llm`) not underscores (`nr_llm`)
+
+4. **Fallback to generic design** - Branding detection returned false negative
+   - Fix: Check if repo URL or composer vendor contains "netresearch"
+   - Fix: If Netresearch project, ALWAYS apply Netresearch branding
+
+**Verification Checklist:**
+- [ ] Header background is turquoise gradient (#2F99A4 → #247a82)
+- [ ] Logo SVG is embedded (turquoise frame, grey "n")
+- [ ] Headlines use Raleway font
+- [ ] Body uses Open Sans font
+- [ ] Extension name uses hyphens (from composer.json)
+- [ ] Git branch and commit are displayed
 
 ### Step 2: Apply Branding Based on Detection
 
@@ -61,6 +109,56 @@ This pre-built template includes:
 - Compact header: 20px padding
 - High white space: 40px container padding
 - Card shadows: subtle with turquoise glow on hover
+
+**Official Netresearch Logo SVG:**
+
+The logo MUST be included when Netresearch branding is detected. Embed this SVG directly:
+
+```svg
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="40" height="40">
+  <!-- Turquoise frame -->
+  <rect x="5" y="5" width="90" height="90" rx="8" ry="8"
+        fill="none" stroke="#2999A4" stroke-width="6"/>
+  <!-- Grey "n" letter -->
+  <text x="50" y="72" text-anchor="middle"
+        font-family="Arial, sans-serif" font-size="60" font-weight="bold"
+        fill="#595A62">n</text>
+</svg>
+```
+
+**CSS for logo in header:**
+```css
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.logo svg {
+    flex-shrink: 0;
+}
+.logo-text {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: #2F99A4;
+}
+```
+
+**Complete header example:**
+```html
+<header style="background: linear-gradient(135deg, #2F99A4 0%, #247a82 100%); padding: 20px;">
+    <div class="logo">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="40" height="40">
+            <rect x="5" y="5" width="90" height="90" rx="8" ry="8"
+                  fill="none" stroke="#ffffff" stroke-width="6"/>
+            <text x="50" y="72" text-anchor="middle"
+                  font-family="Arial, sans-serif" font-size="60" font-weight="bold"
+                  fill="#ffffff">n</text>
+        </svg>
+        <span class="logo-text" style="color: #ffffff;">Extension Name</span>
+    </div>
+</header>
+```
 
 #### If TYPO3 Branding (Fallback)
 

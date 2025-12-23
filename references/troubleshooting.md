@@ -219,3 +219,44 @@ name format (hyphens) as the authoritative display name:
   ❌ nr_llm (only for internal TYPO3 references)
 ```
 
+**12. Landing Page Missing Branding**
+```
+❌ Landing page has generic styling instead of Netresearch branding
+
+Symptoms:
+  - Generic blue/grey colors instead of turquoise (#2F99A4)
+  - Missing Netresearch logo
+  - System fonts instead of Raleway/Open Sans
+  - Extension name shows underscores instead of hyphens
+
+Causes:
+  1. Branding skill not consulted before generating page
+  2. Logo SVG not embedded (relying on external URL)
+  3. Extension name taken from ext_emconf instead of composer.json
+
+Solutions:
+  1. For Netresearch projects, ALWAYS check composer.json vendor:
+     grep '"netresearch/' composer.json
+
+  2. Apply Netresearch branding if detected:
+     - Primary color: #2F99A4 (turquoise)
+     - Accent color: #FF4D00 (orange)
+     - Text color: #585961 (anthracite)
+     - Headlines: Raleway font
+     - Body: Open Sans font
+
+  3. Embed logo SVG directly (don't use external URLs):
+     <svg viewBox="0 0 100 100" width="40" height="40">
+       <rect x="5" y="5" width="90" height="90" rx="8"
+             fill="none" stroke="#2999A4" stroke-width="6"/>
+       <text x="50" y="72" text-anchor="middle"
+             font-family="Arial" font-size="60" font-weight="bold"
+             fill="#595A62">n</text>
+     </svg>
+
+  4. Get extension name from composer.json "name" field:
+     jq -r '.name' composer.json  # Returns: netresearch/nr-llm
+
+See: references/index-page-generation.md for complete branding guide
+```
+
