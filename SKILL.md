@@ -131,11 +131,39 @@ Renders `Documentation/*.rst` to `Documentation-GENERATED-temp/`.
 See `references/documentation-rendering.md` for detailed setup.
 
 ### Install PCOV for Code Coverage
+
+PCOV is faster than Xdebug for code coverage collection.
+
 ```bash
 # In .ddev/web-build/Dockerfile
-RUN pecl install pcov && docker-php-ext-enable pcov
+RUN apt-get update && apt-get install -y php${PHP_VERSION}-pcov
 ```
-PCOV is faster than Xdebug for code coverage collection.
+
+**Note**: DDEV containers don't include `pecl`. Use `apt-get` for PHP extensions instead.
+
+### Upgrade PHP Packages
+
+To get the latest PHP patch version (e.g., PHP 8.5.1 when DDEV ships 8.5.0):
+
+```bash
+# Create .ddev/web-build/Dockerfile.apt
+RUN apt-get update
+RUN apt-get install --only-upgrade -y php${PHP_VERSION}-*
+```
+
+This is useful when a new PHP patch release fixes bugs but DDEV hasn't updated yet.
+
+### Custom PHP Configuration
+
+Place custom PHP settings in `.ddev/php/custom.ini`:
+
+```ini
+# .ddev/php/custom.ini
+memory_limit = 512M
+max_execution_time = 300
+```
+
+**Note**: Do NOT place `.ini` files in `/usr/local/etc/php/conf.d/` directly - DDEV manages that path internally.
 
 ## What Gets Installed
 
