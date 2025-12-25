@@ -120,6 +120,8 @@ ddev generate-index
 ```
 Creates overview dashboard at main domain.
 
+**Branding**: When generating visual content (landing pages, dashboards), check if a company/organization branding skill is available (e.g., `netresearch-branding`) and apply brand identity: logo, colors, fonts. This ensures consistent visual identity across all generated assets.
+
 ### Render Documentation
 ```bash
 ddev docs
@@ -247,3 +249,8 @@ See `references/advanced-options.md` for site set configuration details.
 | Script | Purpose |
 |--------|---------|
 | `scripts/validate-prerequisites.sh` | Check Docker, DDEV, project structure |
+
+---
+
+> **Contributing:** Improvements to this skill should be submitted to the source repository:
+> https://github.com/netresearch/typo3-ddev-skill
