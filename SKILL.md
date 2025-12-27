@@ -29,7 +29,7 @@ ddev install-v13                     # Single version
 | TYPO3 v13 | `https://v13.{sitename}.ddev.site/typo3/` |
 | Docs | `https://docs.{sitename}.ddev.site/` |
 
-**Credentials**: admin / Joh316!
+**Credentials**: admin / Joh316!! (TYPO3 requires 8+ chars)
 
 ## Generated Files
 
