@@ -88,7 +88,7 @@ ddev exec -d /var/www/html/v13 vendor/bin/typo3 backend:lock:status
 | TYPO3 v13 | `https://v13.{sitename}.ddev.site/typo3/` |
 | Docs | `https://docs.{sitename}.ddev.site/` |
 
-**Credentials**: admin / Joh316!
+**Credentials**: admin / Joh316!!
 
 ## Generated Files
 
