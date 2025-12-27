@@ -145,7 +145,7 @@ https://your-ext.ddev.site/
 
 ```
 Username: admin
-Password: Joh316!
+Password: Joh316!!
 ```
 
 ### Branded Landing Page
