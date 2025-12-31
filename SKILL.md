@@ -65,6 +65,7 @@ ddev docs                 # Render Documentation/*.rst
 | Advanced options | `references/advanced-options.md` |
 | Windows fixes | `references/windows-fixes.md` |
 | Troubleshooting | `references/troubleshooting.md` |
+| PHP version management | `references/0003-php-version-management.md` |
 
 ---
 
