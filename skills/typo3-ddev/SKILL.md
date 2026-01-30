@@ -49,11 +49,18 @@ Copy templates from `assets/templates/` to project's `.ddev/`:
 .ddev/
 ├── config.yaml
 ├── docker-compose.web.yaml
-├── apache/apache-site.conf
+├── apache/
+│   ├── apache-site.conf     (main site - gitignored by ddev!)
+│   ├── v12.conf             (committable - copy for TYPO3 v12)
+│   ├── v13.conf             (committable - copy for TYPO3 v13)
+│   └── docs.conf            (committable - for docs subdomain)
 ├── index.html.netresearch.template  (for netresearch/* packages)
 ├── index.html.typo3.template        (for all other packages)
 └── commands/web/install-v{11,12,13,14}
 ```
+
+**IMPORTANT:** `apache-site.conf` is gitignored by ddev's default `.gitignore`.
+For multi-version setups, copy the separate `v{11,12,13,14}.conf` files which CAN be committed.
 
 ## Optional Commands
 
