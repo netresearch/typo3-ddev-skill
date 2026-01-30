@@ -30,37 +30,41 @@ mechanical:
   - id: DD-04
     type: regex
     target: .ddev/config.yaml
-    pattern: "php_version:\\s*[\"']?[0-9]+\\.[0-9]+"
+    pattern: 'php_version:\s*"?[0-9]+\.[0-9]+"?'
     severity: error
     desc: "PHP version must be explicitly configured"
 
   - id: DD-05
     type: regex
     target: .ddev/config.yaml
-    pattern: "php_version:\\s*[\"']?8\\.[1-9]"
+    pattern: 'php_version:\s*"?8\.[1-9]"?'
     severity: warning
     desc: "PHP version should be 8.1 or higher for modern TYPO3"
 
   # === DATABASE CONFIGURATION ===
+  # DDEV uses nested database config:
+  # database:
+  #     type: mariadb
+  #     version: "10.11"
   - id: DD-06
     type: regex
     target: .ddev/config.yaml
-    pattern: "database:\\s*(mariadb|mysql)"
+    pattern: 'database:\s*\n\s+type:\s*(mariadb|mysql)'
     severity: warning
     desc: "Database type should be explicitly set (mariadb or mysql)"
 
   - id: DD-07
     type: regex
     target: .ddev/config.yaml
-    pattern: "mariadb_version:\\s*[\"']?10\\.[4-9]|11\\.[0-9]|mysql_version:\\s*[\"']?8\\.[0-9]"
+    pattern: 'database:\s*\n\s+type:\s*\w+\s*\n\s+version:\s*"?(10\.[4-9]|10\.1[0-9]|11\.[0-9]|8\.[0-9])"?'
     severity: info
-    desc: "Database version should be explicitly configured"
+    desc: "Database version should be explicitly configured (MariaDB 10.4+ or MySQL 8.0+)"
 
   # === WEBSERVER CONFIGURATION ===
   - id: DD-08
     type: regex
     target: .ddev/config.yaml
-    pattern: "webserver_type:\\s*(nginx-fpm|apache-fpm)"
+    pattern: 'webserver_type:\s*(nginx-fpm|apache-fpm)'
     severity: info
     desc: "Webserver type should be explicitly configured"
 
@@ -68,7 +72,7 @@ mechanical:
   - id: DD-09
     type: regex
     target: .ddev/config.yaml
-    pattern: "docroot:\\s*[\"']?(public|web|typo3)"
+    pattern: 'docroot:\s*(public|web|typo3)'
     severity: warning
     desc: "Docroot should be set to public, web, or typo3 for TYPO3 projects"
 
@@ -119,7 +123,7 @@ mechanical:
   - id: DD-16
     type: regex
     target: .ddev/config.yaml
-    pattern: "composer_version:\\s*[\"']?2"
+    pattern: 'composer_version:\s*"?2"?'
     severity: warning
     desc: "Composer version should be set to 2"
 
@@ -141,7 +145,7 @@ mechanical:
   - id: DD-19
     type: regex
     target: .ddev/config.yaml
-    pattern: "xdebug_enabled:\\s*(true|false)"
+    pattern: 'xdebug_enabled:\s*(true|false)'
     severity: info
     desc: "Xdebug setting should be explicitly configured"
 
