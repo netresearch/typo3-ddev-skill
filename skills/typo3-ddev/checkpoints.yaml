@@ -86,7 +86,7 @@ mechanical:
   - id: DD-11
     type: regex
     target: .ddev/config.yaml
-    pattern: "additional_hostnames:|additional_fqdns:"
+    pattern: 'additional_hostnames:|additional_fqdns:'
     severity: info
     desc: "Additional hostnames may be configured for multisite setups"
 
@@ -137,7 +137,7 @@ mechanical:
   - id: DD-18
     type: regex
     target: .ddev/config.yaml
-    pattern: "hooks:|post-start:"
+    pattern: 'hooks:|post-start:'
     severity: info
     desc: "DDEV hooks may be configured for automated setup"
 
@@ -153,7 +153,7 @@ mechanical:
   - id: DD-20
     type: regex
     target: .ddev/config.yaml
-    pattern: "timezone:"
+    pattern: 'timezone:'
     severity: info
     desc: "Timezone may be explicitly configured"
 
