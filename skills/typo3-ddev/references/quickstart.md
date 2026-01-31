@@ -137,13 +137,28 @@ ddev export-db > backup.sql.gz
 
 ### Run Tests
 
+Use the Docker-based test runner for CI-compatible test execution:
+
 ```bash
-# Unit tests
-ddev exec vendor/bin/phpunit Tests/Unit/
+# Unit tests (Docker-based, recommended)
+./Build/Scripts/runTests.sh -s unit
 
 # Functional tests
-ddev exec vendor/bin/phpunit Tests/Functional/
+./Build/Scripts/runTests.sh -s functional
+
+# All available test suites
+./Build/Scripts/runTests.sh -h
 ```
+
+Alternatively, use composer scripts:
+
+```bash
+composer test:unit
+composer test:functional
+```
+
+> **Note**: Do NOT use `ddev exec vendor/bin/phpunit` for tests.
+> Tests should use `runTests.sh` for Docker-based, CI-compatible execution.
 
 ### Access Database
 
