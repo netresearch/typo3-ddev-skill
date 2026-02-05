@@ -7,6 +7,27 @@ description: "Agent Skill: DDEV setup for TYPO3 extension development. Use when 
 
 Automates DDEV environment for TYPO3 extension development with multi-version testing.
 
+## Why DDEV
+
+**Use DDEV when:**
+- You need a quick, standardized TYPO3 development environment
+- Testing extensions across multiple TYPO3/PHP versions
+- Onboarding new team members (consistent setup)
+- Working on multiple TYPO3 projects (DDEV isolates each)
+
+**Use Docker Compose directly when:**
+- Production-like environment testing (custom orchestration)
+- Complex multi-service setups beyond DDEV's scope
+- CI/CD pipelines with specific container requirements
+- You need fine-grained control over container configuration
+
+**Use plain Docker when:**
+- Running single isolated commands (e.g., one-off scripts)
+- Building/publishing custom images
+- Minimal overhead needed for simple tasks
+
+> **TL;DR**: DDEV = fast local development. Docker Compose = production-like or complex setups. Docker = single containers.
+
 ## When to Use
 
 - Setting up DDEV for a TYPO3 extension project
@@ -30,6 +51,34 @@ scripts/validate-prerequisites.sh    # Check Docker, DDEV
 ddev start
 ddev install-all                     # All versions (11/12/13/14)
 ddev install-v13                     # Single version
+```
+
+## Post-Setup Verification
+
+After `ddev start` and installation, verify TYPO3 is fully functional:
+
+```bash
+# 1. Check DDEV status
+ddev status                          # All services should be "running"
+
+# 2. Verify backend is accessible
+curl -sI https://v13.{sitename}.ddev.site/typo3/ | head -1
+# Expected: HTTP/2 200 or HTTP/2 302 (redirect to login)
+
+# 3. Verify extension is activated
+ddev exec -d /var/www/html/v13 vendor/bin/typo3 extension:list --active | grep {extension_key}
+
+# 4. Verify database is populated
+ddev mysql -e "SHOW DATABASES;" | grep v13
+ddev mysql v13 -e "SELECT COUNT(*) FROM be_users;"
+# Expected: At least 1 backend user
+```
+
+**Quick health check (all-in-one):**
+```bash
+ddev describe                        # Shows URLs, ports, database info
+ddev exec -d /var/www/html/v13 vendor/bin/typo3 backend:lock:status
+# Expected: "Backend is not locked"
 ```
 
 ## Access URLs
