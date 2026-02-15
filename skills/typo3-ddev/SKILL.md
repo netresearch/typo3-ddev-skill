@@ -1,6 +1,6 @@
 ---
 name: typo3-ddev
-description: "Use when setting up DDEV for TYPO3 extension development, testing across multiple TYPO3 versions (11.5/12.4/13.4/14.0), or spinning up local dev environments."
+description: "Use when setting up DDEV for TYPO3 extension development or testing across multiple TYPO3 versions (11.5/12.4/13.4/14.0)."
 ---
 
 # TYPO3 DDEV Setup Skill
