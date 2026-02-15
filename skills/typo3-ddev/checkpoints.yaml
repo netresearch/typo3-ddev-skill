@@ -48,13 +48,13 @@ mechanical:
   #     version: "10.11"
   - id: DD-06
     type: command
-    pattern: "grep -A2 '^database:' .ddev/config.yaml 2>/dev/null | grep -E 'type:\s*(mariadb|mysql)' || echo 'NOT_FOUND'"
+    pattern: "grep -A2 '^database:' .ddev/config.yaml 2>/dev/null | grep -E 'type:\\s*(mariadb|mysql)' || echo 'NOT_FOUND'"
     severity: warning
     desc: "Database type should be explicitly set (mariadb or mysql)"
 
   - id: DD-07
     type: command
-    pattern: "grep -A3 '^database:' .ddev/config.yaml 2>/dev/null | grep -E 'version:\s*' || echo 'NOT_FOUND'"
+    pattern: "grep -A3 '^database:' .ddev/config.yaml 2>/dev/null | grep -E 'version:\\s*' || echo 'NOT_FOUND'"
     severity: info
     desc: "Database version should be explicitly configured (MariaDB 10.4+ or MySQL 8.0+)"
 
