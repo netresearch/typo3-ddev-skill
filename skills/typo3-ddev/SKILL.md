@@ -1,6 +1,6 @@
 ---
 name: typo3-ddev
-description: "Agent Skill: DDEV setup for TYPO3 extension development. Use when setting up local dev environment or multi-version testing (11.5/12.4/13.4/14.0). By Netresearch."
+description: "Use when setting up DDEV for TYPO3 extension development, testing across multiple TYPO3 versions (11.5/12.4/13.4/14.0), or spinning up local dev environments."
 ---
 
 # TYPO3 DDEV Setup Skill
