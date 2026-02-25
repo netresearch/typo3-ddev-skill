@@ -1,5 +1,8 @@
 {
-  "name": "netresearch/agent-typo3-ddev",
+  "name": "netresearch/typo3-ddev-skill",
+  "replace": {
+    "netresearch/agent-typo3-ddev": "self.version"
+  },
   "description": "Netresearch AI skill for DDEV environment setup in TYPO3 extension development",
   "type": "ai-agent-skill",
   "license": "MIT",
