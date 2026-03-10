@@ -1,26 +1,26 @@
 {
-  "name": "netresearch/typo3-ddev-skill",
-  "replace": {
-    "netresearch/agent-typo3-ddev": "self.version"
-  },
-  "description": "Netresearch AI skill for DDEV environment setup in TYPO3 extension development",
-  "type": "ai-agent-skill",
-  "license": "MIT",
-  "authors": [
-    {
-      "name": "Netresearch DTT GmbH",
-      "homepage": "https://www.netresearch.de/",
-      "role": "Manufacturer"
+    "name": "netresearch/typo3-ddev-skill",
+    "replace": {
+        "netresearch/agent-typo3-ddev": "self.version"
+    },
+    "description": "Netresearch AI skill for DDEV environment setup in TYPO3 extension development",
+    "type": "ai-agent-skill",
+    "license": "(MIT AND CC-BY-SA-4.0)",
+    "authors": [
+        {
+            "name": "Netresearch DTT GmbH",
+            "homepage": "https://www.netresearch.de/",
+            "role": "Manufacturer"
+        }
+    ],
+    "require": {
+        "netresearch/composer-agent-skill-plugin": "*"
+    },
+    "extra": {
+        "ai-agent-skill": "skills/typo3-ddev/SKILL.md"
+    },
+    "support": {
+        "issues": "https://github.com/netresearch/typo3-ddev-skill/issues",
+        "source": "https://github.com/netresearch/typo3-ddev-skill"
     }
-  ],
-  "require": {
-    "netresearch/composer-agent-skill-plugin": "*"
-  },
-  "extra": {
-    "ai-agent-skill": "skills/typo3-ddev/SKILL.md"
-  },
-  "support": {
-    "issues": "https://github.com/netresearch/typo3-ddev-skill/issues",
-    "source": "https://github.com/netresearch/typo3-ddev-skill"
-  }
 }
