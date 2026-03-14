@@ -4,7 +4,7 @@
 
 [![TYPO3](https://img.shields.io/badge/TYPO3-11%20%7C%2012%20%7C%2013-orange.svg)](https://typo3.org/)
 [![DDEV](https://img.shields.io/badge/DDEV-Local%20Development-blue.svg)](https://ddev.com/)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![License](https://img.shields.io/badge/License-MIT%20%2B%20CC--BY--SA--4.0-blue.svg)](#license)
 [![Agent Skill](https://img.shields.io/badge/Agent%20Skill-Compatible-blueviolet.svg)](https://agentskills.io)
 
 ## 🔌 Compatibility
