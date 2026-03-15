@@ -20,11 +20,10 @@ mechanical:
 
   # === TYPO3 PROJECT TYPE ===
   - id: DD-03
-    type: contains
-    target: .ddev/config.yaml
-    pattern: "type: typo3"
-    severity: error
-    desc: "Project type must be set to typo3"
+    type: command
+    target: "grep -qE 'type:\\s*(typo3|php)' .ddev/config.yaml"
+    severity: warning
+    desc: "Project type should be typo3 or php. Use type: php for no_project_mount setups with custom docroots."
 
   # === PHP VERSION CONFIGURATION ===
   - id: DD-04
