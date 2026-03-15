@@ -77,7 +77,7 @@ mechanical:
   - id: DD-10
     type: regex
     target: .ddev/config.yaml
-    pattern: 'mailpit|no_mailpit:\s*true'
+    pattern: 'mailpit_enabled:|no_mailpit:'
     severity: info
     desc: "Mailpit is built-in since DDEV v1.22 (no separate docker-compose.mailpit.yaml needed); check if Mailpit is referenced in config or explicitly disabled"
 
