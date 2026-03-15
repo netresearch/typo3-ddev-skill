@@ -75,11 +75,11 @@ mechanical:
 
   # === ADDITIONAL SERVICES ===
   - id: DD-10
-    type: regex
+    type: not_contains
     target: .ddev/config.yaml
-    pattern: 'mailpit_enabled:|no_mailpit:'
-    severity: info
-    desc: "Mailpit is built-in since DDEV v1.22 (no separate docker-compose.mailpit.yaml needed); check if Mailpit is referenced in config or explicitly disabled"
+    pattern: 'no_mailpit: true'
+    severity: warning
+    desc: "Mailpit is enabled by default in DDEV v1.22+; if no_mailpit: true is set, email testing via Mailpit is disabled"
 
   - id: DD-11
     type: regex
