@@ -69,16 +69,17 @@ mechanical:
   - id: DD-09
     type: regex
     target: .ddev/config.yaml
-    pattern: 'docroot:\s*(public|web|typo3)'
+    pattern: 'docroot:\s*(public|web|typo3|""|'')|no_project_mount:\s*true'
     severity: warning
-    desc: "Docroot should be set to public, web, or typo3 for TYPO3 projects"
+    desc: "Docroot should be set to public, web, or typo3 for TYPO3 projects; empty docroot or no_project_mount: true is valid for custom multi-version extension setups with Apache vhosts"
 
   # === ADDITIONAL SERVICES ===
   - id: DD-10
-    type: file_exists
-    target: .ddev/docker-compose.mailpit.yaml
+    type: regex
+    target: .ddev/config.yaml
+    pattern: 'mailpit_enabled:|no_mailpit:'
     severity: info
-    desc: "Mailpit service config should exist for email testing"
+    desc: "Mailpit is built-in since DDEV v1.22 (no separate docker-compose.mailpit.yaml needed); check if Mailpit is referenced in config or explicitly disabled"
 
   - id: DD-11
     type: regex
