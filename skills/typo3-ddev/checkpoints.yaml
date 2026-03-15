@@ -155,6 +155,42 @@ mechanical:
     severity: info
     desc: "Timezone may be explicitly configured"
 
+  # === CUSTOM DDEV COMMANDS ===
+  - id: DD-25
+    type: file_exists
+    target: .ddev/commands/
+    severity: info
+    desc: "Custom DDEV commands directory should exist for project automation"
+
+  - id: DD-26
+    type: file_exists
+    target: .ddev/commands/web/
+    severity: info
+    desc: ".ddev/commands/web/ should exist for custom web container commands"
+
+  # === TYPO3 CONTEXT ENVIRONMENT ===
+  - id: DD-27
+    type: regex
+    target: .ddev/config.yaml
+    pattern: 'TYPO3_CONTEXT|web_environment'
+    severity: info
+    desc: "DDEV should configure TYPO3_CONTEXT via web_environment"
+
+  # === NODEJS FOR FRONTEND TOOLING ===
+  - id: DD-28
+    type: regex
+    target: .ddev/config.yaml
+    pattern: 'nodejs_version:'
+    severity: info
+    desc: "DDEV nodejs_version may be configured for frontend build tools"
+
+  # === MULTI-VERSION TESTING SETUP ===
+  - id: DD-29
+    type: command
+    pattern: "ls .ddev/commands/web/install-* 2>/dev/null | head -1 || echo 'NOT_FOUND'"
+    severity: info
+    desc: "DDEV install commands should exist for multi-version TYPO3 testing"
+
 llm_reviews:
   # === PHP VERSION ALIGNMENT ===
   - id: DD-21
