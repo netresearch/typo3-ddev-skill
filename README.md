@@ -52,25 +52,40 @@ Before using this skill, ensure you have:
 
 ## Installation
 
-### Option 1: Download Release (Recommended)
+### Marketplace (Recommended)
+
+Add the [Netresearch marketplace](https://github.com/netresearch/claude-code-marketplace) once, then browse and install skills:
+
+```bash
+# Claude Code
+/plugin marketplace add netresearch/claude-code-marketplace
+```
+
+### npx ([skills.sh](https://skills.sh))
+
+Install with any [Agent Skills](https://agentskills.io)-compatible agent:
+
+```bash
+npx skills add https://github.com/netresearch/typo3-ddev-skill --skill typo3-ddev
+```
+
+### Download Release
 
 Download the [latest release](https://github.com/netresearch/typo3-ddev-skill/releases/latest) and extract to your agent's skills directory.
 
-**Common skills directories:**
-- **Claude Code**: `~/.claude/skills/typo3-ddev/`
-- **Cursor**: `.cursor/skills/typo3-ddev/` (project) or `~/.cursor/skills/typo3-ddev/` (global)
-- **Windsurf**: `.windsurf/skills/typo3-ddev/` (project) or `~/.windsurf/skills/typo3-ddev/` (global)
-
-### Option 2: Manual Installation
+### Git Clone
 
 ```bash
-# Clone to your agent's skills directory (example: Claude Code)
-cd ~/.claude/skills/
-git clone https://github.com/netresearch/typo3-ddev-skill.git typo3-ddev
-
-# The skill is now available in your AI agent
+git clone https://github.com/netresearch/typo3-ddev-skill.git
 ```
 
+### Composer (PHP Projects)
+
+```bash
+composer require netresearch/typo3-ddev-skill
+```
+
+Requires [netresearch/composer-agent-skill-plugin](https://github.com/netresearch/composer-agent-skill-plugin).
 ## Usage
 
 ### Invoking the Skill
