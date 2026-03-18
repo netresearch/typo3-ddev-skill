@@ -1,0 +1,34 @@
+[
+  {
+    "name": "setup-ddev",
+    "prompt": "Set up DDEV for this TYPO3 extension",
+    "assertions": [
+      {
+        "type": "tool_use",
+        "tool": "Bash",
+        "description": "Runs ddev commands to configure environment"
+      },
+      {
+        "type": "content_contains",
+        "value": "ddev",
+        "description": "References DDEV setup steps"
+      }
+    ]
+  },
+  {
+    "name": "multi-version-testing",
+    "prompt": "Configure multi-version testing",
+    "assertions": [
+      {
+        "type": "tool_use",
+        "tool": "Read",
+        "description": "Reads existing configuration"
+      },
+      {
+        "type": "content_contains",
+        "value": "v13",
+        "description": "Covers TYPO3 v13 version setup"
+      }
+    ]
+  }
+]
