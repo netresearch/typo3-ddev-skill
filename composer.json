@@ -21,6 +21,7 @@
     },
     "support": {
         "issues": "https://github.com/netresearch/typo3-ddev-skill/issues",
-        "source": "https://github.com/netresearch/typo3-ddev-skill"
+        "source": "https://github.com/netresearch/typo3-ddev-skill",
+        "docs": "https://github.com/netresearch/typo3-ddev-skill/security"
     }
 }
