@@ -5,95 +5,97 @@ description: "Use when setting up DDEV for TYPO3 extension development, testing 
 
 # TYPO3 DDEV Setup Skill
 
-Automates DDEV environment for TYPO3 extension development with multi-version testing.
-
-## Why DDEV
-
-**Use DDEV when:**
-- You need a quick, standardized TYPO3 development environment
-- Testing extensions across multiple TYPO3/PHP versions
-- Onboarding new team members (consistent setup)
-- Working on multiple TYPO3 projects (DDEV isolates each)
-
-**Use Docker Compose directly when:**
-- Production-like environment testing (custom orchestration)
-- Complex multi-service setups beyond DDEV's scope
-- CI/CD pipelines with specific container requirements
-- You need fine-grained control over container configuration
-
-**Use plain Docker when:**
-- Running single isolated commands (e.g., one-off scripts)
-- Building/publishing custom images
-- Minimal overhead needed for simple tasks
-
-> **TL;DR**: DDEV = fast local development. Docker Compose = production-like or complex setups. Docker = single containers.
-
-## When to Use
-
-- Setting up DDEV for a TYPO3 extension project
-- Testing extension across multiple TYPO3 versions
-- Quick development environment spin-up
+DDEV automation for TYPO3 extension development with multi-version testing.
 
 ## Container Priority
 
-**Always check for existing containers first:**
+1. `.ddev/` exists -> `ddev exec`
+2. `docker-compose.yml` exists -> `docker compose exec`
+3. System tools only if no container
 
-1. Check `.ddev/` exists → use `ddev exec`
-2. Check `docker-compose.yml` exists → use `docker compose exec`
-3. Only use system tools if no container environment
-
-> **Critical**: Use the project's configured PHP version, not system PHP.
+> Always use the project's configured PHP, not system PHP.
 
 ## Quick Start
 
 ```bash
-scripts/validate-prerequisites.sh    # Check Docker, DDEV
+scripts/validate-prerequisites.sh    # Check Docker, DDEV prerequisites
 ddev start
 ddev install-all                     # All versions (11/12/13/14)
 ddev install-v13                     # Single version
 ```
 
-## Post-Setup Verification
+## Database Selection (Tiered)
 
-After setup, verify with `ddev status` (all running), then check backend URL and extension activation. See `references/post-setup-verification.md` for full verification commands and generated file structure.
+- **SQLite**: Simple extensions, no ext_tables.sql, development only
+- **MariaDB 10.11** (default): Extensions with ext_tables.sql or raw SQL
+- **PostgreSQL 16**: GIS/spatial data
+- **MySQL 8.0**: Corporate/Oracle parity
 
-## Access URLs
+See `references/advanced-options.md`.
+
+## PHP Management
+
+Set `php_version: "8.3"` in config.yaml. Upgrade beyond DDEV's bundled version via `.ddev/web-build/Dockerfile` using `apt-get dist-upgrade`. Install extensions with `apt-get` (pecl unavailable). Custom settings: `.ddev/php/custom.ini`.
+
+See `references/0003-php-version-management.md`.
+
+## TYPO3 Version Differences
+
+| | TYPO3 12 | TYPO3 13+ |
+|---|---|---|
+| Setup | `install:setup --use-existing-database` | `setup` |
+| Password flag | `--admin-user-password` | `--admin-user-password` |
+| Extension activation | Automatic (Composer) | `extension:setup` |
+
+See `references/typo3-12-cli-changes.md`.
+
+## Access URLs & Credentials
 
 | Environment | URL |
-|-------------|-----|
-| TYPO3 v13 | `https://v13.{sitename}.ddev.site/typo3/` |
+|---|---|
+| TYPO3 v13 Backend | `https://v13.{sitename}.ddev.site/typo3/` |
 | Docs | `https://docs.{sitename}.ddev.site/` |
 
 **Credentials**: admin / Joh316!!
 
-## Optional Commands
+## Post-Setup Verification
 
-```bash
-ddev generate-makefile    # Creates make up/test/lint/ci
-ddev generate-index       # Overview dashboard
-ddev docs                 # Render Documentation/*.rst
-```
+`ddev status`, `ddev exec -d /var/www/html/v13 vendor/bin/typo3 extension:list --active`, `ddev describe`. See `references/post-setup-verification.md`.
+
+## Optional Services & Commands
+
+- **Valkey 8** (default, wire-compatible with Redis) or Redis 7: `references/0001-valkey-default-with-redis-alternative.md`
+- **Ofelia** scheduler (`ghcr.io/netresearch/ofelia`): TYPO3 scheduler automation
+- `ddev generate-makefile` / `ddev generate-index` / `ddev docs` (renders `Documentation-GENERATED-temp/`)
+- `ddev xdebug on` / Cache: `ddev exec -d /var/www/html/v13 vendor/bin/typo3 cache:flush`
+
+## Extension Naming
+
+Hyphens for display/composer (`nr-llm`), underscores for internal TYPO3 key (`nr_llm`). Source: composer.json `name`.
 
 ## Troubleshooting
 
 | Issue | Solution |
-|-------|----------|
+|---|---|
+| Port 80/443 conflict | Set `router_http_port: "8080"` / `router_https_port: "8443"` in config.yaml |
 | Database exists | `ddev mysql -e "DROP DATABASE v13; CREATE DATABASE v13;"` |
-| Extension not appearing | `ddev exec -d /var/www/html/v13 vendor/bin/typo3 cache:flush` |
+| Extension not found | `ddev exec -d /var/www/html/v13 vendor/bin/typo3 cache:flush` |
+| Windows: health check hangs | Add `/phpstatus` endpoint with `php-fpm.sock` to Apache config |
+| Windows: CRLF errors | Convert to LF preserving UTF-8 encoding (for emoji support) |
+| PCOV/pecl fails | Use `apt-get install php${PHP_VERSION}-pcov` instead |
+| PHP settings ignored | Place in `.ddev/php/custom.ini`, not `/usr/local/etc/php/conf.d/` |
+| Full cleanup | `ddev delete --omit-snapshot --yes` then remove Docker volumes |
 
 ## References
 
 | Topic | File |
-|-------|------|
-| Post-setup verification | `references/post-setup-verification.md` |
+|---|---|
 | Prerequisites | `references/prerequisites-validation.md` |
 | Quick start | `references/quickstart.md` |
 | Advanced options | `references/advanced-options.md` |
-| Landing page templates | `references/index-page-generation.md` |
-| Windows fixes | `references/windows-fixes.md` |
+| Post-setup | `references/post-setup-verification.md` |
+| Branding/landing page | `references/index-page-generation.md` (Netresearch: #2F99A4, Raleway) |
+| Windows | `references/windows-fixes.md`, `references/windows-optimizations.md` |
+| Docs rendering | `references/documentation-rendering.md` |
+| PHP versions | `references/0003-php-version-management.md` |
 | Troubleshooting | `references/troubleshooting.md` |
-| PHP version management | `references/0003-php-version-management.md` |
-
----
-
-> **Contributing:** https://github.com/netresearch/typo3-ddev-skill
