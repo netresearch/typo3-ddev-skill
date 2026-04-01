@@ -1,33 +1,411 @@
 [
   {
-    "name": "setup-ddev",
-    "prompt": "Set up DDEV for this TYPO3 extension",
+    "name": "setup-ddev-basic",
+    "prompt": "Set up DDEV for this TYPO3 extension so I can develop locally",
     "assertions": [
       {
         "type": "tool_use",
         "tool": "Bash",
-        "description": "Runs ddev commands to configure environment"
+        "description": "Runs bash commands to validate prerequisites or configure DDEV"
       },
       {
         "type": "content_contains",
-        "value": "ddev",
-        "description": "References DDEV setup steps"
+        "value": "ddev start",
+        "description": "References the ddev start command"
+      },
+      {
+        "type": "content_contains",
+        "value": "config.yaml",
+        "description": "References DDEV config.yaml configuration"
       }
     ]
   },
   {
     "name": "multi-version-testing",
-    "prompt": "Configure multi-version testing",
+    "prompt": "Configure multi-version TYPO3 testing with DDEV for versions 12 and 13",
     "assertions": [
       {
-        "type": "tool_use",
-        "tool": "Read",
-        "description": "Reads existing configuration"
+        "type": "content_contains",
+        "value": "install-v",
+        "description": "References version-specific install commands"
+      },
+      {
+        "type": "content_contains",
+        "value": "v12",
+        "description": "Covers TYPO3 v12 setup"
       },
       {
         "type": "content_contains",
         "value": "v13",
-        "description": "Covers TYPO3 v13 version setup"
+        "description": "Covers TYPO3 v13 setup"
+      }
+    ]
+  },
+  {
+    "name": "prerequisites-check",
+    "prompt": "What do I need installed before using DDEV for TYPO3?",
+    "assertions": [
+      {
+        "type": "content_contains",
+        "value": "Docker",
+        "description": "Mentions Docker as prerequisite"
+      },
+      {
+        "type": "content_contains",
+        "value": "ddev",
+        "description": "Mentions DDEV as prerequisite"
+      },
+      {
+        "type": "content_contains",
+        "value": "validate-prerequisites",
+        "description": "References the validation script"
+      }
+    ]
+  },
+  {
+    "name": "database-selection",
+    "prompt": "My TYPO3 extension has custom database tables in ext_tables.sql. Which database should DDEV use?",
+    "assertions": [
+      {
+        "type": "content_contains",
+        "value": "MariaDB",
+        "description": "Recommends MariaDB for extensions with custom tables"
+      },
+      {
+        "type": "content_contains",
+        "value": "10.11",
+        "description": "Specifies MariaDB version 10.11"
+      }
+    ]
+  },
+  {
+    "name": "database-sqlite-simple",
+    "prompt": "I have a simple TYPO3 frontend plugin with no custom SQL. What database should I use in DDEV?",
+    "assertions": [
+      {
+        "type": "content_contains",
+        "value": "SQLite",
+        "description": "Suggests SQLite for simple extensions"
+      },
+      {
+        "type": "content_contains",
+        "value": "development",
+        "description": "Clarifies SQLite is for development only"
+      }
+    ]
+  },
+  {
+    "name": "php-version-management",
+    "prompt": "DDEV has PHP 8.5.0RC3 but I need the latest stable PHP 8.5. How do I upgrade?",
+    "assertions": [
+      {
+        "type": "content_contains",
+        "value": "Dockerfile",
+        "description": "References web-build Dockerfile for PHP upgrades"
+      },
+      {
+        "type": "content_contains",
+        "value": "dist-upgrade",
+        "description": "Uses apt-get dist-upgrade approach"
+      }
+    ]
+  },
+  {
+    "name": "windows-health-check",
+    "prompt": "ddev start hangs at 'Waiting for containers to become ready' on Windows. How do I fix it?",
+    "assertions": [
+      {
+        "type": "content_contains",
+        "value": "phpstatus",
+        "description": "Identifies PHP-FPM status endpoint as the fix"
+      },
+      {
+        "type": "content_contains",
+        "value": "php-fpm.sock",
+        "description": "References the correct socket path"
+      }
+    ]
+  },
+  {
+    "name": "windows-line-endings",
+    "prompt": "I get 'Command contains CRLF' error in DDEV on Windows. How to fix?",
+    "assertions": [
+      {
+        "type": "content_contains",
+        "value": "LF",
+        "description": "Mentions converting to LF line endings"
+      },
+      {
+        "type": "content_contains",
+        "value": "UTF8",
+        "description": "Emphasizes UTF-8 preservation for emojis"
+      }
+    ]
+  },
+  {
+    "name": "docs-rendering",
+    "prompt": "How do I render my TYPO3 extension documentation locally with DDEV?",
+    "assertions": [
+      {
+        "type": "content_contains",
+        "value": "ddev docs",
+        "description": "References the ddev docs command"
+      },
+      {
+        "type": "content_contains",
+        "value": "Documentation-GENERATED-temp",
+        "description": "Uses correct output directory convention"
+      }
+    ]
+  },
+  {
+    "name": "valkey-redis-setup",
+    "prompt": "I need caching for my TYPO3 extension in DDEV. Should I use Redis or Valkey?",
+    "assertions": [
+      {
+        "type": "content_contains",
+        "value": "Valkey",
+        "description": "Recommends Valkey as default"
+      },
+      {
+        "type": "content_contains",
+        "value": "wire-compatible",
+        "description": "Explains Valkey is wire-compatible with Redis"
+      }
+    ]
+  },
+  {
+    "name": "post-setup-verification",
+    "prompt": "How do I verify my DDEV TYPO3 setup is working correctly?",
+    "assertions": [
+      {
+        "type": "content_contains",
+        "value": "ddev status",
+        "description": "References ddev status command"
+      },
+      {
+        "type": "content_contains",
+        "value": "extension:list",
+        "description": "Checks extension activation"
+      }
+    ]
+  },
+  {
+    "name": "typo3-12-vs-13-cli",
+    "prompt": "What are the differences between TYPO3 12 and 13 setup commands in DDEV?",
+    "assertions": [
+      {
+        "type": "content_contains",
+        "value": "install:setup",
+        "description": "References TYPO3 12 install:setup command"
+      },
+      {
+        "type": "content_contains",
+        "value": "use-existing-database",
+        "description": "Mentions TYPO3 12 requires --use-existing-database"
+      }
+    ]
+  },
+  {
+    "name": "container-priority",
+    "prompt": "Should I run PHP commands directly on my system or through DDEV for this TYPO3 project?",
+    "assertions": [
+      {
+        "type": "content_contains",
+        "value": "ddev exec",
+        "description": "Recommends using ddev exec for commands"
+      },
+      {
+        "type": "content_contains",
+        "value": ".ddev",
+        "description": "Mentions checking for .ddev directory existence"
+      }
+    ]
+  },
+  {
+    "name": "port-conflict",
+    "prompt": "DDEV fails to start because port 80 is already in use. What should I do?",
+    "assertions": [
+      {
+        "type": "content_contains",
+        "value": "router_http_port",
+        "description": "Suggests changing router_http_port in config"
+      },
+      {
+        "type": "content_contains",
+        "value": "8080",
+        "description": "Suggests alternative port 8080"
+      }
+    ]
+  },
+  {
+    "name": "xdebug-setup",
+    "prompt": "How do I enable XDebug for debugging my TYPO3 extension in DDEV?",
+    "assertions": [
+      {
+        "type": "content_contains",
+        "value": "ddev xdebug on",
+        "description": "References the ddev xdebug on command"
+      }
+    ]
+  },
+  {
+    "name": "pcov-installation",
+    "prompt": "How do I install PCOV for code coverage in my DDEV TYPO3 project?",
+    "assertions": [
+      {
+        "type": "content_contains",
+        "value": "apt-get",
+        "description": "Uses apt-get instead of pecl"
+      },
+      {
+        "type": "content_contains",
+        "value": "pecl",
+        "description": "Warns that pecl is not available in DDEV"
+      }
+    ]
+  },
+  {
+    "name": "extension-naming",
+    "prompt": "My extension key is nr_llm but I need to reference it in composer and documentation. What names should I use?",
+    "assertions": [
+      {
+        "type": "content_contains",
+        "value": "hyphen",
+        "description": "Explains hyphenated naming for composer packages"
+      },
+      {
+        "type": "content_contains",
+        "value": "nr-llm",
+        "description": "Shows the correct hyphenated form"
+      }
+    ]
+  },
+  {
+    "name": "cache-flush",
+    "prompt": "How do I clear the TYPO3 cache in my DDEV environment?",
+    "assertions": [
+      {
+        "type": "content_contains",
+        "value": "cache:flush",
+        "description": "References the cache:flush TYPO3 CLI command"
+      },
+      {
+        "type": "content_contains",
+        "value": "ddev exec",
+        "description": "Uses ddev exec to run commands inside container"
+      }
+    ]
+  },
+  {
+    "name": "landing-page-branding",
+    "prompt": "Generate a landing page for my Netresearch TYPO3 extension DDEV project",
+    "assertions": [
+      {
+        "type": "content_contains",
+        "value": "#2F99A4",
+        "description": "Uses Netresearch turquoise primary color"
+      },
+      {
+        "type": "content_contains",
+        "value": "Raleway",
+        "description": "Uses Raleway font for headlines"
+      }
+    ]
+  },
+  {
+    "name": "ofelia-scheduler",
+    "prompt": "How do I automate TYPO3 scheduler tasks in my DDEV environment?",
+    "assertions": [
+      {
+        "type": "content_contains",
+        "value": "ofelia",
+        "description": "References Ofelia for scheduler automation"
+      },
+      {
+        "type": "content_contains",
+        "value": "ghcr.io/netresearch/ofelia",
+        "description": "Uses the correct Netresearch Ofelia image"
+      }
+    ]
+  },
+  {
+    "name": "credentials",
+    "prompt": "What are the default admin credentials for the TYPO3 backend in DDEV?",
+    "assertions": [
+      {
+        "type": "content_contains",
+        "value": "admin",
+        "description": "States admin as username"
+      },
+      {
+        "type": "content_contains",
+        "value": "Joh316",
+        "description": "States the default password"
+      }
+    ]
+  },
+  {
+    "name": "access-urls",
+    "prompt": "How do I access the TYPO3 v13 backend in my DDEV environment?",
+    "assertions": [
+      {
+        "type": "content_contains",
+        "value": "v13.",
+        "description": "Uses v13 subdomain prefix"
+      },
+      {
+        "type": "content_contains",
+        "value": "ddev.site",
+        "description": "Uses ddev.site domain"
+      },
+      {
+        "type": "content_contains",
+        "value": "/typo3/",
+        "description": "References /typo3/ backend path"
+      }
+    ]
+  },
+  {
+    "name": "php-custom-ini",
+    "prompt": "Where do I put custom PHP settings like memory_limit in my DDEV project?",
+    "assertions": [
+      {
+        "type": "content_contains",
+        "value": ".ddev/php/",
+        "description": "References the correct .ddev/php/ directory"
+      },
+      {
+        "type": "content_contains",
+        "value": "custom.ini",
+        "description": "References custom.ini filename"
+      }
+    ]
+  },
+  {
+    "name": "makefile-generation",
+    "prompt": "How can I generate a Makefile for common tasks in my DDEV TYPO3 project?",
+    "assertions": [
+      {
+        "type": "content_contains",
+        "value": "generate-makefile",
+        "description": "References the ddev generate-makefile command"
+      }
+    ]
+  },
+  {
+    "name": "full-cleanup",
+    "prompt": "How do I completely remove my DDEV TYPO3 environment and start fresh?",
+    "assertions": [
+      {
+        "type": "content_contains",
+        "value": "ddev delete",
+        "description": "References ddev delete command"
+      },
+      {
+        "type": "content_contains",
+        "value": "volume",
+        "description": "Mentions removing Docker volumes"
       }
     ]
   }
