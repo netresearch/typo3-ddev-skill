@@ -5,7 +5,7 @@
     "assertions": [
       {
         "type": "tool_use",
-        "tool": "Bash",
+        "value": "Bash",
         "description": "Runs bash commands to validate prerequisites or configure DDEV"
       },
       {
@@ -246,6 +246,11 @@
         "type": "content_contains",
         "value": "ddev xdebug on",
         "description": "References the ddev xdebug on command"
+      },
+      {
+        "type": "content_contains",
+        "value": "xdebug",
+        "description": "Explains XDebug configuration for DDEV"
       }
     ]
   },
@@ -390,6 +395,11 @@
         "type": "content_contains",
         "value": "generate-makefile",
         "description": "References the ddev generate-makefile command"
+      },
+      {
+        "type": "content_contains",
+        "value": "Makefile",
+        "description": "Explains Makefile generation for common DDEV tasks"
       }
     ]
   },
