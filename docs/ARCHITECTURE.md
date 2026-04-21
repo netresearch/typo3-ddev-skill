@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This skill automates DDEV environment setup for TYPO3 extension development. It generates a complete multi-version TYPO3 testing environment from extension metadata, allowing developers to test their extension across TYPO3 11.5, 12.4, and 13.4 LTS simultaneously.
+This skill automates DDEV environment setup for TYPO3 extension development. It generates a complete multi-version TYPO3 testing environment from extension metadata, allowing developers to test their extension across TYPO3 11.5, 12.4, 13.4, and **14.3 LTS** (default / gold standard) simultaneously.
 
 ## Skill Structure
 
@@ -26,7 +26,7 @@ The core of the skill. Contains all DDEV configuration files that get copied and
 - **config.yaml** — DDEV project configuration (PHP version, database, router)
 - **docker-compose.web.yaml** — web container with multi-docroot setup
 - **commands/** — custom DDEV commands for TYPO3 installation per version
-- **apache/** — virtual host config for multi-version routing (v11/v12/v13 subdomains)
+- **apache/** — virtual host config for multi-version routing (v11/v12/v13/v14 subdomains)
 - **web-build/** — Dockerfile for PHP extension installation
 - **\*.optional** — opt-in services (Valkey, Redis, Ofelia scheduler)
 
@@ -46,9 +46,10 @@ The generated environment uses a unique layout:
 /var/www/
 ├── <extension-key>/     # Extension source (mounted from host)
 ├── html/
-│   ├── v11/             # TYPO3 11.5 installation
+│   ├── v11/             # TYPO3 11.5 installation (ELTS)
 │   ├── v12/             # TYPO3 12.4 installation
-│   └── v13/             # TYPO3 13.4 installation
+│   ├── v13/             # TYPO3 13.4 installation
+│   └── v14/             # TYPO3 14.3 installation (default / gold standard)
 └── index.html           # Branded landing page
 ```
 

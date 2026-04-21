@@ -144,17 +144,21 @@ Once installed, access TYPO3 at:
 https://your-ext.ddev.site/
 ```
 
-**TYPO3 11.5 LTS:**
-- Frontend: `https://v11.your-ext.ddev.site/`
-- Backend: `https://v11.your-ext.ddev.site/typo3/`
+**TYPO3 14.3 LTS (default / gold standard):**
+- Frontend: `https://v14.your-ext.ddev.site/`
+- Backend: `https://v14.your-ext.ddev.site/typo3/`
+
+**TYPO3 13.4 LTS:**
+- Frontend: `https://v13.your-ext.ddev.site/`
+- Backend: `https://v13.your-ext.ddev.site/typo3/`
 
 **TYPO3 12.4 LTS:**
 - Frontend: `https://v12.your-ext.ddev.site/`
 - Backend: `https://v12.your-ext.ddev.site/typo3/`
 
-**TYPO3 13.4 LTS:**
-- Frontend: `https://v13.your-ext.ddev.site/`
-- Backend: `https://v13.your-ext.ddev.site/typo3/`
+**TYPO3 11.5 LTS (ELTS):**
+- Frontend: `https://v11.your-ext.ddev.site/`
+- Backend: `https://v11.your-ext.ddev.site/typo3/`
 
 ### Backend Credentials
 
@@ -198,9 +202,10 @@ The skill creates these custom commands:
 
 ```bash
 # Install specific TYPO3 version
-ddev install-v11  # TYPO3 11.5 LTS
-ddev install-v12  # TYPO3 12.4 LTS
+ddev install-v14  # TYPO3 14.3 LTS (default / gold standard)
 ddev install-v13  # TYPO3 13.4 LTS
+ddev install-v12  # TYPO3 12.4 LTS
+ddev install-v11  # TYPO3 11.5 LTS (ELTS)
 
 # Install all versions at once
 ddev install-all
@@ -302,9 +307,10 @@ This architecture allows you to:
 ### Supported TYPO3 Versions
 
 By default, the skill supports:
-- TYPO3 11.5 LTS (PHP 8.0+)
-- TYPO3 12.4 LTS (PHP 8.1+)
+- TYPO3 14.3 LTS (PHP 8.2+, up to 8.5) — **default / gold standard**
 - TYPO3 13.4 LTS (PHP 8.2+)
+- TYPO3 12.4 LTS (PHP 8.1+)
+- TYPO3 11.5 LTS (PHP 8.0+) — ELTS
 
 PHP version is set to 8.2 for maximum compatibility.
 

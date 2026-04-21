@@ -9,11 +9,11 @@ description: "Use when providing DDEV URLs, accessing TYPO3 backend in browser, 
 
 **NEVER guess URLs. Read `name:` from `.ddev/config.yaml`, then apply subdomain pattern:**
 
-`https://v{VERSION}.{sitename}.ddev.site/typo3/` — e.g., `https://v13.my-ext.ddev.site/typo3/`
+`https://v{VERSION}.{sitename}.ddev.site/typo3/` — e.g., `https://v14.my-ext.ddev.site/typo3/`
 
 Landing page: `https://{sitename}.ddev.site/` · Docs: `https://docs.{sitename}.ddev.site/`
 
-Each configured version gets its own Apache vhost (`/var/www/html/v{VERSION}`), routed via `additional_hostnames` in config.yaml. Check which versions are configured before presenting URLs. **Never infer URLs from directory listings.**
+Each version gets its own Apache vhost (`/var/www/html/v{VERSION}`), routed via `additional_hostnames`. Check configured versions before presenting URLs. **Never infer URLs from directory listings.**
 
 **Credentials**: admin / Joh316!!
 
@@ -27,7 +27,8 @@ Each configured version gets its own Apache vhost (`/var/www/html/v{VERSION}`), 
 
 ```bash
 ddev start && ddev install-all    # All versions (11/12/13/14)
-ddev install-v13                  # Single version
+ddev install-v14                  # v14.3 LTS (default / gold standard)
+ddev install-v13                  # v13.4 LTS
 ```
 
 ## Database Selection
@@ -40,10 +41,14 @@ ddev install-v13                  # Single version
 
 ## TYPO3 Version Differences
 
-| | TYPO3 12 | TYPO3 13+ |
-|---|---|---|
-| Setup | `install:setup --use-existing-database` | `setup` |
-| Extension activation | Automatic (Composer) | `extension:setup` |
+| | v12 | v13 | v14.3 LTS |
+|---|---|---|---|
+| Setup | `install:setup --use-existing-database` | `setup` | `setup` |
+| Activation | Auto (Composer) | `extension:setup` | `extension:setup` |
+| `composer.json` | optional | optional | **required** (classic mode, #108310) |
+| Default theme | bootstrap-package | bootstrap-package | **Camino** (#108539) |
+| Fluid | 2.x | 4.x | 5.x strict (#108148) |
+| CKEditor | 41–42 | 41–42 | 47 |
 
 See `references/typo3-12-cli-changes.md`.
 
