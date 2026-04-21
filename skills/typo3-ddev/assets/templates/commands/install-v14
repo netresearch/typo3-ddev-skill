@@ -13,7 +13,7 @@ composer config extra.typo3/cms.web-dir public -d /var/www/html/$VERSION
 composer config repositories.$EXTENSION_KEY path ../../$EXTENSION_KEY -d /var/www/html/$VERSION
 composer config --no-plugins allow-plugins.typo3/cms-composer-installers true -d /var/www/html/$VERSION
 composer config --no-plugins allow-plugins.typo3/class-alias-loader true -d /var/www/html/$VERSION
-composer req t3/cms:'^14.3' $PACKAGE_NAME:'*@dev' --no-progress -n -d /var/www/html/$VERSION
+composer req t3/cms:'^14' $PACKAGE_NAME:'*@dev' --no-progress -n -d /var/www/html/$VERSION
 composer req typo3/cms-extensionmanager --no-progress -n -d /var/www/html/$VERSION
 composer req --dev typo3/cms-styleguide --no-progress -n -d /var/www/html/$VERSION
 composer req typo3/cms-introduction --no-progress -n -d /var/www/html/$VERSION

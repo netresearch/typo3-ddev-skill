@@ -38,7 +38,7 @@ install-v14: ## Install TYPO3 v14.3 LTS with extension (default / gold standard)
 	ddev install-v14
 
 .PHONY: install-all
-install-all: ## Install all TYPO3 versions (v12 + v13 + v14)
+install-all: ## Install all TYPO3 versions (v11 + v12 + v13 + v14)
 	ddev install-all
 
 .PHONY: ddev-restart
