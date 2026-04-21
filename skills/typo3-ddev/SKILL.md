@@ -1,11 +1,35 @@
 ---
 name: typo3-ddev
-description: "Use when setting up DDEV for TYPO3 extension development, testing across multiple TYPO3 versions (11.5/12.4/13.4/14.0), configuring local dev environments, or multi-version testing. Also triggers on: ddev start, ddev config, local development, docker environment, PHP version management."
+description: "Use when providing DDEV URLs, accessing TYPO3 backend in browser, performing ANY ddev command (start, stop, restart, describe, exec, config), setting up DDEV for TYPO3 extension development, testing across TYPO3 versions (12.4/13.4/14.0), or reviewing changes in DDEV. Triggers on: ddev URLs, backend URLs, local development, docker environment, PHP version management, multi-version testing."
 ---
 
 # TYPO3 DDEV Setup Skill
 
 DDEV automation for TYPO3 extension development with multi-version testing.
+
+## CRITICAL: URL Scheme (subdomain-based routing)
+
+**NEVER guess DDEV URLs from directory listings or assumptions. ALWAYS use subdomain-based routing:**
+
+```
+https://v{VERSION}.{sitename}.ddev.site/typo3/
+```
+
+Where `{sitename}` is the `name:` field from `.ddev/config.yaml`.
+
+| Environment | URL Pattern | Example |
+|---|---|---|
+| Landing page | `https://{sitename}.ddev.site/` | `https://my-ext.ddev.site/` |
+| TYPO3 v12 Backend | `https://v12.{sitename}.ddev.site/typo3/` | `https://v12.my-ext.ddev.site/typo3/` |
+| TYPO3 v13 Backend | `https://v13.{sitename}.ddev.site/typo3/` | `https://v13.my-ext.ddev.site/typo3/` |
+| TYPO3 v14 Backend | `https://v14.{sitename}.ddev.site/typo3/` | `https://v14.my-ext.ddev.site/typo3/` |
+| Documentation | `https://docs.{sitename}.ddev.site/` | `https://docs.my-ext.ddev.site/` |
+
+**Why subdomains, not paths:** Each TYPO3 version has its own Apache vhost and document root (`/var/www/html/v12`, `/var/www/html/v13`, etc.). The `.ddev/config.yaml` defines these via `additional_hostnames: [v12.{sitename}, v13.{sitename}, ...]`.
+
+**Credentials**: admin / Joh316!!
+
+> **Rule: When presenting URLs to the user**, read `.ddev/config.yaml` to get the `name:` field. Apply the subdomain pattern. NEVER infer URL structure from directory listings like `ls /var/www/html/`.
 
 ## Container Priority
 
@@ -48,15 +72,6 @@ See `references/0003-php-version-management.md`.
 | Extension activation | Automatic (Composer) | `extension:setup` |
 
 See `references/typo3-12-cli-changes.md`.
-
-## Access URLs & Credentials
-
-| Environment | URL |
-|---|---|
-| TYPO3 v13 Backend | `https://v13.{sitename}.ddev.site/typo3/` |
-| Docs | `https://docs.{sitename}.ddev.site/` |
-
-**Credentials**: admin / Joh316!!
 
 ## Post-Setup Verification
 
