@@ -27,7 +27,8 @@ Each configured version gets its own Apache vhost (`/var/www/html/v{VERSION}`), 
 
 ```bash
 ddev start && ddev install-all    # All versions (11/12/13/14)
-ddev install-v13                  # Single version
+ddev install-v14                  # TYPO3 v14.3 LTS (default / gold standard)
+ddev install-v13                  # TYPO3 v13.4 LTS
 ```
 
 ## Database Selection
@@ -40,10 +41,14 @@ ddev install-v13                  # Single version
 
 ## TYPO3 Version Differences
 
-| | TYPO3 12 | TYPO3 13+ |
-|---|---|---|
-| Setup | `install:setup --use-existing-database` | `setup` |
-| Extension activation | Automatic (Composer) | `extension:setup` |
+| | TYPO3 12 | TYPO3 13 | TYPO3 14.3 LTS |
+|---|---|---|---|
+| Setup | `install:setup --use-existing-database` | `setup` | `setup` (Install Tool now in backend routing #107536) |
+| Extension activation | Automatic (Composer) | `extension:setup` | `extension:setup` |
+| `composer.json` | optional in classic mode | optional in classic mode | **required in classic mode** (#108310) |
+| Default theme | bootstrap-package | bootstrap-package | **Camino** (#108539, v14.1+) |
+| Fluid | 2.x | 4.x | 5.x (strict typing; #108148) |
+| CKEditor | 41–42 | 41–42 | 47 |
 
 See `references/typo3-12-cli-changes.md`.
 
