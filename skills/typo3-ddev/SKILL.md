@@ -1,6 +1,6 @@
 ---
 name: typo3-ddev
-description: "Use when providing DDEV URLs, accessing TYPO3 backend in browser, performing any ddev command (e.g. start, stop, restart, describe, exec), setting up DDEV for TYPO3 extension development, testing across TYPO3 versions (11.5/12.4/13.4, optionally 14.0), or reviewing changes in DDEV. Triggers on: ddev URLs, backend URLs, local development, docker environment, PHP version management, multi-version testing."
+description: "Use when providing DDEV URLs, accessing TYPO3 backend in browser, performing any ddev command (e.g. start, stop, restart, describe, exec), setting up DDEV for TYPO3 extension development, or testing across multiple TYPO3 versions. Triggers on: ddev URLs, backend URLs, local development, docker environment, PHP version management, multi-version testing."
 ---
 
 # TYPO3 DDEV Setup Skill
@@ -13,7 +13,7 @@ description: "Use when providing DDEV URLs, accessing TYPO3 backend in browser, 
 
 Landing page: `https://{sitename}.ddev.site/` · Docs: `https://docs.{sitename}.ddev.site/`
 
-Each version has its own Apache vhost (`/var/www/html/v{11,12,13}`; v14 if configured), routed via `additional_hostnames` in config.yaml. **Never infer URLs from directory listings.**
+Each configured version gets its own Apache vhost (`/var/www/html/v{VERSION}`), routed via `additional_hostnames` in config.yaml. Check which versions are configured before presenting URLs. **Never infer URLs from directory listings.**
 
 **Credentials**: admin / Joh316!!
 
