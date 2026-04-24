@@ -126,11 +126,16 @@ mechanical:
     desc: "Composer version should be set to 2"
 
   # === HOOKS CONFIGURATION ===
+  # `.ddev/commands/web/setup` is the Netresearch standard one-shot install
+  # entry point — runs inside the web container, performs `composer install`,
+  # database creation, docs render, asset preparation, etc. Single source of
+  # truth across all Netresearch TYPO3 projects. Makefile / shell aliases
+  # (e.g. `make up`) should delegate to `ddev setup`.
   - id: DD-17
     type: file_exists
     target: .ddev/commands/web/setup
-    severity: info
-    desc: "Custom setup command should exist for project initialization"
+    severity: warning
+    desc: ".ddev/commands/web/setup is the canonical one-shot install entry point (Netresearch convention — Makefile / aliases delegate to it)"
 
   - id: DD-18
     type: regex
