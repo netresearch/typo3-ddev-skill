@@ -88,6 +88,7 @@ Hyphens for composer (`nr-llm`), underscores for TYPO3 key (`nr_llm`). Source: c
 | Advanced options | `references/advanced-options.md` |
 | Post-setup | `references/post-setup-verification.md` |
 | Branding/landing page | `references/index-page-generation.md` |
+| Database tier (ADR) | `references/0002-mariadb-default-with-database-alternatives.md` |
 | Windows | `references/windows-fixes.md`, `references/windows-optimizations.md` |
 | Docs rendering | `references/documentation-rendering.md` |
 | PHP versions | `references/0003-php-version-management.md` |
