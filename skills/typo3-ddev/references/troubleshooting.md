@@ -260,3 +260,37 @@ Solutions:
 See: references/index-page-generation.md for complete branding guide
 ```
 
+**13. Backend 500 over HTTPS but 200 over HTTP (trusted hosts)**
+```
+❌ The TYPO3 backend returns HTTP 500 only over https://, while http:// works.
+   Exception #1396795884: "The current host header value does not match the
+   configured trusted hosts pattern!"
+
+Cause: trustedHostsPattern is unset or too narrow. Behind the DDEV router an
+   https:// request reaches TYPO3 with a host header (e.g. v14.<project>.ddev.site)
+   that TYPO3's default SERVER_NAME check rejects — http:// happens to pass.
+
+Fix: the install-v{12,13,14} templates already write a permissive default
+   ($GLOBALS['TYPO3_CONF_VARS']['SYS']['trustedHostsPattern'] = '.*') into
+   config/system/additional.php — verify it landed if you customised them.
+   Narrow it to '.*\.ddev\.site' if you prefer a stricter pattern, then flush
+   caches from the version's docroot (vendor/bin/typo3 lives there, not in
+   /var/www/html):
+
+   ddev exec -d /var/www/html/vXX vendor/bin/typo3 cache:flush
+```
+
+**14. Writing a multi-line file into the container**
+```
+❌ ddev exec "cat > /path/file <<'EOF' ... EOF"  fails with a shell syntax error.
+
+Cause: the nested heredoc is swallowed by the outer double-quotes of
+   ddev exec "...".
+
+Fix: pipe the host file through base64 into ddev exec's stdin. This is portable
+   across GNU and BSD/macOS hosts (no GNU-only `base64 -w0`) and avoids
+   word-splitting (no intermediate variable):
+
+   base64 < local-file | ddev exec "base64 -d > /var/www/html/path/file"
+```
+
