@@ -294,3 +294,44 @@ Fix: pipe the host file through base64 into ddev exec's stdin. This is portable
    base64 < local-file | ddev exec "base64 -d > /var/www/html/path/file"
 ```
 
+
+## Setup gotchas (from live extension verification)
+
+### `ddev start` panics: "assignment to entry in nil map"
+
+A Go panic in DDEV's remote-config state manager (`pkg/config/state/state_manager.go`) on `ddev start`
+means the global state file is empty/corrupt — common after a DDEV version bump (when
+`~/.ddev/global_config.yaml` `last_started_version` differs from the running binary). Fix by
+initialising it to an empty map:
+
+```bash
+echo '{}' > ~/.ddev/.state.yaml
+ddev start
+```
+
+DDEV repopulates the file on the next successful start.
+
+### `typo3 setup --no-interaction` fails: "The value must not be empty."
+
+With `--no-interaction`, the documented DB defaults (`--host=db`, `--dbname=db`, `--username=db`) are
+NOT auto-applied — pass them ALL explicitly, including `--password`:
+
+```bash
+ddev exec vendor/bin/typo3 setup --driver=mysqli --host=db --port=3306 --dbname=db \
+  --username=db --password=db --admin-username=admin --admin-user-password='Joh316!!' \
+  --admin-email=admin@example.com --project-name='My Project' \
+  --create-site='https://my-ext.ddev.site/' --server-type=other --no-interaction --force
+```
+
+`--create-site` is optional; v13 and v14 share the same `setup` command.
+
+### `ddev composer require <vendor>/<pkg>:dev-main` fails to clone (SSH auth)
+
+Requiring a dev branch makes Composer prefer the *source* (git clone), which fails inside the web
+container without SSH auth — even for public repos. Force the dist (zip) install:
+
+```bash
+ddev composer config preferred-install dist
+ddev composer require <vendor>/<pkg>:dev-main --prefer-dist -W
+# alternative: `ddev auth ssh` to forward your host SSH agent into the container
+```
