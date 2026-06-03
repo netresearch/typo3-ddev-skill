@@ -305,6 +305,7 @@ means the global state file is empty/corrupt — common after a DDEV version bum
 initialising it to an empty map:
 
 ```bash
+cp ~/.ddev/.state.yaml ~/.ddev/.state.yaml.bak 2>/dev/null || true  # back up first, in case the diagnosis is wrong
 echo '{}' > ~/.ddev/.state.yaml
 ddev start
 ```
@@ -317,7 +318,7 @@ With `--no-interaction`, the documented DB defaults (`--host=db`, `--dbname=db`,
 NOT auto-applied — pass them ALL explicitly, including `--password`:
 
 ```bash
-ddev exec vendor/bin/typo3 setup --driver=mysqli --host=db --port=3306 --dbname=db \
+ddev exec -d /var/www/html/v{VERSION} vendor/bin/typo3 setup --driver=mysqli --host=db --port=3306 --dbname=db \
   --username=db --password=db --admin-username=admin --admin-user-password='Joh316!!' \
   --admin-email=admin@example.com --project-name='My Project' \
   --create-site='https://my-ext.ddev.site/' --server-type=other --no-interaction --force
@@ -331,7 +332,9 @@ Requiring a dev branch makes Composer prefer the *source* (git clone), which fai
 container without SSH auth — even for public repos. Force the dist (zip) install:
 
 ```bash
-ddev composer config preferred-install dist
-ddev composer require <vendor>/<pkg>:dev-main --prefer-dist -W
+# Target the version's docroot; --prefer-dist alone usually suffices.
+ddev exec -d /var/www/html/v{VERSION} composer require <vendor>/<pkg>:dev-main --prefer-dist -W
+# If Composer still clones source, set it persistently (writes to that composer.json):
+# ddev exec -d /var/www/html/v{VERSION} composer config preferred-install dist
 # alternative: `ddev auth ssh` to forward your host SSH agent into the container
 ```
