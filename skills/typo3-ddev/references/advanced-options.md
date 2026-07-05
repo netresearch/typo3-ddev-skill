@@ -317,6 +317,10 @@ docker logs -f ddev-{{DDEV_SITENAME}}-ofelia
 #### Ollama (Local LLM Inference)
 
 Run a local LLM (e.g. for extensions integrating Ollama) as a ddev service.
+This skill does not ship an Ollama compose template; the steps below apply
+once you have added your own Ollama service (a `docker-compose.*.yaml` with an
+`ollama` service). The container name follows ddev's convention:
+`ddev-{{DDEV_SITENAME}}-ollama`.
 
 **GPU passthrough on WSL2 — the container needs the GPU explicitly**
 
@@ -349,9 +353,11 @@ services:
 ```
 
 ```bash
-# 3. ddev restart, then verify offload:
-docker exec ddev-${DDEV_SITENAME}-ollama nvidia-smi          # container sees the GPU
-docker exec ddev-${DDEV_SITENAME}-ollama ollama ps           # PROCESSOR column shows GPU, not CPU
+# 3. ddev restart, then verify offload. `ollama ps` is the authoritative check:
+docker exec ddev-{{DDEV_SITENAME}}-ollama ollama ps   # PROCESSOR column shows GPU, not CPU
+# Optional: nvidia-smi (the NVIDIA Container Toolkit injects it into the
+# container when the GPU is attached; may be absent in a stripped image):
+docker exec ddev-{{DDEV_SITENAME}}-ollama nvidia-smi
 ```
 
 Keep the override untracked (add it to `.git/info/exclude` or `.gitignore`).
