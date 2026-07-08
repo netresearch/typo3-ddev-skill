@@ -361,3 +361,20 @@ ddev exec -d /var/www/html/v{VERSION} bash -c 'rm -rf var/cache/code/* && \
 Flush BEFORE trusting (or screenshotting) the rendered backend after a branch switch, or
 when the extension's PHP/templates/XLF changed — "it rendered before the switch" is not
 evidence about the current state.
+
+## Backend JS/CSS change not visible after edit
+
+TYPO3 serves backend ES modules (and CSS) at a **content-stable `_assets/<hash>/…`
+URL** — the hash is of the package path, not the file content. So after you edit
+a backend `.js`/`.css`, `vendor/bin/typo3 cache:flush` regenerates the importmap
+but the URL is unchanged, and the browser's HTTP cache keeps serving the **old**
+module on a normal reload — which reads as "not deployed" when the server is fine.
+
+Fixes:
+
+- **Hard-reload** (`Ctrl/Cmd+Shift+R`) or clear the browser HTTP cache.
+- **Playwright:** a plain `navigate` isn't enough — clear the cache via CDP:
+  `await page.context().newCDPSession(page); cdp.send('Network.clearBrowserCache')`.
+- **Confirm what's actually served** (independent of any browser) before
+  concluding "not deployed":
+  `curl -sk https://…/_assets/<hash>/JavaScript/…/Foo.js | head`.
