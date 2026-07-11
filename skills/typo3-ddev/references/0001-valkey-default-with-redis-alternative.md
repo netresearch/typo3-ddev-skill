@@ -86,7 +86,7 @@ For existing projects with `.ddev/docker-compose.services.yaml`: preserve whatev
 
 ## Valkey 9.0 (October 2025) — Staying on Valkey 8
 
-Valkey 9.0 GA released 2025-10-21 (`valkey/valkey:9-alpine`): 40% higher throughput than 8.1, hash-field TTL, atomic slot migration. As of October 2025 none of AWS ElastiCache (latest: 8.1, July 2025), Google Cloud, or Oracle Cloud support it yet, and no TYPO3 hosting provider runs it.
+Valkey 9.0 GA released 2025-10-21 (`valkey/valkey:9-alpine`): 40% higher throughput than 8.1, hash-field TTL, atomic slot migration, plus SIMD BITCOUNT and Multipath TCP improvements. As of October 2025 none of AWS ElastiCache (latest: 8.1, July 2025), Google Cloud, or Oracle Cloud support it yet, and no TYPO3 hosting provider runs it.
 
 **Decision: stay on Valkey 8** until a cloud provider (chiefly AWS ElastiCache) supports 9, or 3+ months of production stability reports appear, or a TYPO3 hosting provider adopts it. Upgrade is a one-line, wire-compatible image bump with no config or data migration:
 

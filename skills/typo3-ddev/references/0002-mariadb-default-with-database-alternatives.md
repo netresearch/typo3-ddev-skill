@@ -14,6 +14,8 @@
 
 **Use tiered database selection based on extension complexity for TYPO3 DDEV development environments.** This ADR addresses DDEV extension-development environments, not production hosting — development and production have different requirements, and production-parity that matters for complex extensions is overkill for extensions using only TYPO3 Core APIs.
 
+TYPO3 13 officially supports four database systems: MariaDB >= 10.4.3 <= 11.0.0, MySQL >= 8.0.17, PostgreSQL >= 10.0, SQLite >= 3.8.3. The tiers below pick among these per extension complexity.
+
 ### Tier 1: SQLite (default for simple extensions)
 
 For extensions with no custom database tables (`ext_tables.sql` absent/empty), no raw SQL, category `plugin`/`fe`/`be`/`misc`, file size < 1 MB:
