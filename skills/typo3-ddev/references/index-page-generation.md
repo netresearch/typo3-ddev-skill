@@ -76,7 +76,7 @@ Netresearch branding (colors, fonts, logo, HTML template) is owned by the [`netr
 
 ```bash
 # After generation
-ddev exec cp /var/www/hello_world/.ddev/web-build/index.html /var/www/html/
+ddev exec cp /var/www/html/.ddev/web-build/index.html /var/www/html/
 ```
 
 ## Responsive Design Requirements
