@@ -21,7 +21,7 @@ Each version has an Apache vhost (`/var/www/html/v{VERSION}`) via `additional_ho
 
 1. `.ddev/` exists → `ddev exec`
 2. `docker-compose.yml` → `docker compose exec`
-3. System tools only if no container. Always use project's configured PHP.
+3. System tools only if no container. Use project's configured PHP.
 
 **In-container file edits:** `docker cp` in, `ddev exec` — not heredocs/`php -r`. See `references/container-file-editing.md`.
 
@@ -35,7 +35,7 @@ ddev install-v13                  # v13.4 LTS
 
 ## Database Selection
 
-**MariaDB 10.11** (default) · SQLite (simple, no SQL) · PostgreSQL 16 (GIS) · MySQL 8.0 (Oracle parity). See `references/advanced-options.md`.
+**MariaDB 10.11** (default) · SQLite (simple, no SQL) · PostgreSQL 16 (GIS) · MySQL 8.0 (Oracle parity). See `references/advanced-options.md` `references/0002-mariadb-default-with-database-alternatives.md`.
 
 ## PHP Management
 
