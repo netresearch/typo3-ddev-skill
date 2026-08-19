@@ -25,10 +25,19 @@
 # DB_PASSWORD. DB_HOST defaults to 127.0.0.1 rather than a service name,
 # because a shared network namespace is the common case in these environments
 # and a wrong host fails late, during `typo3 setup`, as a driver exception.
-# shellcheck disable=SC2016  # the PHP below is deliberately unexpanded: it
-# reads the connection settings from the environment at run time, not from the
-# shell that writes it.
 set -euo pipefail
+
+# The header comment is the help text, read from the file rather than repeated
+# in a string: a fixed line range drifts the moment anything is inserted above,
+# and this one already did — it began printing the shellcheck directive.
+usage() {
+    awk 'NR > 1 {
+        if ($0 !~ /^#/) exit
+        if ($0 ~ /shellcheck/) next
+        sub(/^# ?/, "")
+        print
+    }' "$0"
+}
 
 EXTENSION=""
 INSTANCE=/instance
@@ -50,7 +59,7 @@ while [ $# -gt 0 ]; do
         --hostname)        HOSTNAME_OVERRIDE="$2"; shift 2 ;;
         --admin-password)  ADMIN_PASSWORD="$2"; shift 2 ;;
         --serve)           SERVE=1; shift ;;
-        -h|--help)         sed -n '2,28p' "$0"; exit 0 ;;
+        -h|--help)         usage; exit 0 ;;
         *) echo "unknown argument: $1" >&2; exit 2 ;;
     esac
 done
@@ -118,6 +127,9 @@ PHPCONF
 
 echo "=== waiting for the database"
 for _ in $(seq 1 60); do
+    # The PHP is deliberately unexpanded: it reads the connection settings from
+    # the environment when it runs, not from the shell that writes it.
+    # shellcheck disable=SC2016
     if php -r '
         $c = @mysqli_connect(getenv("DB_HOST") ?: "127.0.0.1", getenv("DB_USER"),
                              getenv("DB_PASSWORD"), getenv("DB_NAME"));
