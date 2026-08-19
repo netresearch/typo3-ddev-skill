@@ -55,35 +55,39 @@ while [ $# -gt 0 ]; do
     esac
 done
 
-[ -n "$EXTENSION" ] || { echo "--extension is required" >&2; exit 2; }
-[ -d "$EXTENSION" ] || { echo "no such extension directory: $EXTENSION" >&2; exit 2; }
-[ -n "$DB_PASSWORD" ] || { echo "DB_PASSWORD is not set" >&2; exit 2; }
-[ -n "$ADMIN_PASSWORD" ] || { echo "--admin-password or TYPO3_ADMIN_PASSWORD required" >&2; exit 2; }
+[[ -n "$EXTENSION" ]] || { echo "--extension is required" >&2; exit 2; }
+[[ -d "$EXTENSION" ]] || { echo "no such extension directory: $EXTENSION" >&2; exit 2; }
+[[ -n "$DB_PASSWORD" ]] || { echo "DB_PASSWORD is not set" >&2; exit 2; }
+[[ -n "$ADMIN_PASSWORD" ]] || { echo "--admin-password or TYPO3_ADMIN_PASSWORD required" >&2; exit 2; }
 
 # --- what the project's own DDEV configuration says ---------------------------
 CONFIG="$EXTENSION/.ddev/config.yaml"
 PROJECT_NAME=""
-if [ -f "$CONFIG" ]; then
+if [[ -f "$CONFIG" ]]; then
     # Deliberately not a YAML parser: this needs two scalars and must not add a
     # dependency to an environment that may have neither yq nor python.
     PROJECT_NAME="$(sed -n 's/^name:[[:space:]]*//p' "$CONFIG" | head -1 | tr -d '"'"'"'')"
     echo "project (from .ddev/config.yaml): ${PROJECT_NAME:-unknown}"
-    if [ -d "$EXTENSION/.ddev/commands/web" ]; then
+    if [[ -d "$EXTENSION/.ddev/commands/web" ]]; then
         echo "the project ships install recipes; read them before deviating:"
         find "$EXTENSION/.ddev/commands/web" -maxdepth 1 -type f -printf '  .ddev/commands/web/%f\n'
     fi
 fi
 
 SITE_HOST="$HOSTNAME_OVERRIDE"
-if [ -z "$SITE_HOST" ] && [ -n "$PROJECT_NAME" ]; then
+if [[ -z "$SITE_HOST" && -n "$PROJECT_NAME" ]]; then
     SITE_HOST="$PROJECT_NAME.ddev.site"
 fi
 SITE_HOST="${SITE_HOST:-localhost}"
+# A locally provisioned instance has no certificate, so plain HTTP is the
+# default. DDEV itself serves TLS through its router, and a deployment that
+# terminates TLS sets SITE_SCHEME=https rather than editing this script.
+SITE_SCHEME="${SITE_SCHEME:-http}"
 SITE_IDENTIFIER="${PROJECT_NAME:-main}"
 
 PACKAGE="$(sed -n 's/.*"name"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' \
     "$EXTENSION/composer.json" | head -1)"
-[ -n "$PACKAGE" ] || { echo "no package name in $EXTENSION/composer.json" >&2; exit 1; }
+[[ -n "$PACKAGE" ]] || { echo "no package name in $EXTENSION/composer.json" >&2; exit 1; }
 
 # --- the instance -------------------------------------------------------------
 echo "=== creating the project"
@@ -136,7 +140,7 @@ vendor/bin/typo3 extension:setup
 
 echo "=== site configuration"
 cat > "config/sites/$SITE_IDENTIFIER/config.yaml" <<SITECONF
-base: 'http://$SITE_HOST/'
+base: '$SITE_SCHEME://$SITE_HOST/'
 rootPageId: 1
 languages:
   -
@@ -150,7 +154,7 @@ languages:
 SITECONF
 
 # --- serving ------------------------------------------------------------------
-if [ "$SERVE" = "1" ]; then
+if [[ "$SERVE" == "1" ]]; then
     echo "=== rewrite rules"
     # The composer distribution ships no .htaccess. Without it /typo3/ answers
     # 200 through DirectoryIndex while every sub-route 404s — a backend that
@@ -178,8 +182,8 @@ VHOST
     # Verified by consequence: a 200 on /typo3/ can be reached by an instance
     # whose sub-routes all fail, so the login route is what gets checked.
     for _ in $(seq 1 30); do
-        if curl -fsS -o /dev/null "http://127.0.0.1/typo3/login"; then
-            echo "backend answers at http://$SITE_HOST/typo3/"
+        if curl -fsS -o /dev/null "$SITE_SCHEME://127.0.0.1/typo3/login"; then
+            echo "backend answers at $SITE_SCHEME://$SITE_HOST/typo3/"
             break
         fi
         sleep 1

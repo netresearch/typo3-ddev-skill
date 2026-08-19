@@ -97,8 +97,8 @@ so an entry baked into an image is silently discarded. Use Compose
 backend does not work. Check the things that can only succeed if it does:
 
 ```bash
-curl -so /dev/null -w '%{http_code}\n' http://<host>/typo3/login   # 200
-curl -so /dev/null -w '%{http_code}\n' http://<host>/typo3/main    # 302 unauthenticated
+curl -so /dev/null -w '%{http_code}\n' "$SCHEME://<host>/typo3/login"   # 200
+curl -so /dev/null -w '%{http_code}\n' "$SCHEME://<host>/typo3/main"    # 302 unauthenticated
 # form login with the __RequestToken from the login page           # 303
 # /typo3/main with that session cookie                             # 200
 vendor/bin/typo3 site:list                                          # lists the site
