@@ -1,6 +1,6 @@
 # TYPO3 12 CLI Setup Command Changes
 
-> **Source**: Real-world experience from netresearch/contexts extension upgrade (2024-12)
+> **Source**: Real-world experience from a TYPO3 11 to 12 extension upgrade (2024-12)
 
 ## Breaking Changes in TYPO3 12 Setup Command
 
