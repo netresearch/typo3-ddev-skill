@@ -196,7 +196,7 @@ mechanical:
   # `head` exits 0 on empty input and `echo` always succeeds.
   - id: DD-29
     type: command
-    pattern: "find .ddev/commands/web -maxdepth 1 -name 'install-*' | grep -q ."
+    pattern: "find .ddev/commands/web -maxdepth 1 -type f -name 'install-*' 2>/dev/null | grep -q ."
     severity: info
     desc: "DDEV install commands should exist for multi-version TYPO3 testing"
 
