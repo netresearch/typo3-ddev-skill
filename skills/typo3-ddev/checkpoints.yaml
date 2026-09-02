@@ -190,9 +190,13 @@ mechanical:
     desc: "DDEV nodejs_version may be configured for frontend build tools"
 
   # === MULTI-VERSION TESTING SETUP ===
+  # The exit status must come from the match itself. The previous shape
+  # (`ls … | head -1 || echo 'NOT_FOUND'`) was refused by the runner allowlist
+  # for the `||`, and would have reported success unconditionally had it run:
+  # `head` exits 0 on empty input and `echo` always succeeds.
   - id: DD-29
     type: command
-    pattern: "ls .ddev/commands/web/install-* 2>/dev/null | head -1 || echo 'NOT_FOUND'"
+    pattern: "find .ddev/commands/web -maxdepth 1 -type f -name 'install-*' 2>/dev/null | grep -q ."
     severity: info
     desc: "DDEV install commands should exist for multi-version TYPO3 testing"
 
