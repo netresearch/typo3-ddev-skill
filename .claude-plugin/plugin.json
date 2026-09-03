@@ -1,6 +1,6 @@
 {
   "name": "typo3-ddev",
-  "version": "1.22.2",
+  "version": "1.22.3",
   "description": "DDEV setup for TYPO3 extension development",
   "author": {
     "name": "Netresearch DTT GmbH",
