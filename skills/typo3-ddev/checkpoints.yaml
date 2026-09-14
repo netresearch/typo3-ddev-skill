@@ -4,6 +4,14 @@
 version: 1
 skill_id: typo3-ddev
 
+# Only run for repositories that depend on TYPO3 (extensions and projects).
+# Not gated on .ddev/: DD-01 exists to report a missing DDEV setup. Without this
+# gate /assess ran every check against a Python repository.
+preconditions:
+  - type: contains
+    target: composer.json
+    pattern: typo3/cms-
+
 mechanical:
   # === DDEV CONFIGURATION EXISTENCE ===
   - id: DD-01
