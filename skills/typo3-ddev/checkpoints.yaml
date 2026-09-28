@@ -74,12 +74,26 @@ mechanical:
     desc: "Webserver type should be explicitly configured"
 
   # === DOCROOT CONFIGURATION ===
+  # The docroot is right when it is the web directory TYPO3 itself uses. An
+  # extension-development layout declares that in composer.json
+  # (`extra.typo3/cms.web-dir: .Build/Web` or `.Build/public`), and the shared
+  # test runner and CI use the same directory; a docroot equal to it is the
+  # correct value, not a deviation.
   - id: DD-09
-    type: regex
-    target: .ddev/config.yaml
-    pattern: 'docroot:\s*(public|web|typo3|""|'')|no_project_mount:\s*true'
+    type: script
+    command: |
+      cfg=.ddev/config.yaml
+      [ -f "$cfg" ] || { echo "$cfg not found"; exit 1; }
+      grep -qE '^no_project_mount:[[:space:]]*true' "$cfg" && exit 0
+      grep -qE '^docroot:' "$cfg" || { echo "no docroot in $cfg"; exit 1; }
+      docroot=$(grep -E '^docroot:' "$cfg" | sed -n -e 's/^docroot:[[:space:]]*//' -e 's/[[:space:]]#.*$//' -e 's/[[:space:]]*$//' -e "s/^[\"']//" -e "s/[\"']\$//" -e 1p)
+      case "$docroot" in public|web|typo3|"") exit 0 ;; esac
+      webdir=$(jq -r '.extra["typo3/cms"]["web-dir"] // empty' composer.json 2>/dev/null)
+      if [ -n "$webdir" ] && [ "${docroot%/}" = "${webdir%/}" ]; then exit 0; fi
+      echo "docroot '$docroot' is neither public, web, typo3 nor composer.json extra.typo3/cms.web-dir ('${webdir:-unset}')"
+      exit 1
     severity: warning
-    desc: "Docroot should be set to public, web, or typo3 for TYPO3 projects; empty docroot or no_project_mount: true is valid for custom multi-version extension setups with Apache vhosts"
+    desc: "Docroot should be public, web or typo3, or equal composer.json extra.typo3/cms.web-dir (e.g. .Build/Web for extension development); empty docroot or no_project_mount: true is valid for custom multi-version extension setups with Apache vhosts"
 
   # === ADDITIONAL SERVICES ===
   - id: DD-10
@@ -134,16 +148,23 @@ mechanical:
     desc: "Composer version should be set to 2"
 
   # === HOOKS CONFIGURATION ===
-  # `.ddev/commands/web/setup` is the Netresearch standard one-shot install
-  # entry point — runs inside the web container, performs `composer install`,
-  # database creation, docs render, asset preparation, etc. Single source of
-  # truth across all Netresearch TYPO3 projects. Makefile / shell aliases
-  # (e.g. `make up`) should delegate to `ddev setup`.
+  # `ddev setup` is the Netresearch standard one-shot install entry point:
+  # composer install, database creation, docs render, asset preparation.
+  # Single source of truth across all Netresearch TYPO3 projects. Makefile /
+  # shell aliases (e.g. `make up`) should delegate to `ddev setup`.
+  #
+  # The skill's own template ships it as a HOST command,
+  # assets/templates/commands/host/setup, and has to: it runs `ddev docs`
+  # (a host command that starts the render-guides container) and
+  # `ddev exec …/install-all`, and the `ddev` binary does not exist inside
+  # the web container. Until 2026-09-28 this checkpoint demanded
+  # `.ddev/commands/web/setup`, so a project built from the template failed
+  # it. Both locations provide `ddev setup` and both are accepted.
   - id: DD-17
-    type: file_exists
-    target: .ddev/commands/web/setup
+    type: command
+    pattern: "find .ddev/commands/host/setup .ddev/commands/web/setup -maxdepth 0 -type f 2>/dev/null | grep -q ."
     severity: warning
-    desc: ".ddev/commands/web/setup is the canonical one-shot install entry point (Netresearch convention — Makefile / aliases delegate to it)"
+    desc: "A `ddev setup` command (.ddev/commands/host/setup as the skill's template ships it, or .ddev/commands/web/setup) is the canonical one-shot install entry point (Netresearch convention — Makefile / aliases delegate to it)"
 
   - id: DD-18
     type: regex
@@ -202,11 +223,17 @@ mechanical:
   # (`ls … | head -1 || echo 'NOT_FOUND'`) was refused by the runner allowlist
   # for the `||`, and would have reported success unconditionally had it run:
   # `head` exits 0 on empty input and `echo` always succeeds.
+  # Only meaningful when composer.json admits more than one TYPO3 major: an
+  # extension constrained to `^14.3` has nothing to test on a second version.
   - id: DD-29
-    type: command
-    pattern: "find .ddev/commands/web -maxdepth 1 -type f -name 'install-*' 2>/dev/null | grep -q ."
+    type: script
+    command: |
+      constraint=$(jq -r '.require["typo3/cms-core"] // .require["typo3/cms"] // empty' composer.json 2>/dev/null)
+      majors=$(printf '%s\n' "$constraint" | grep -oE '(^|[^0-9.])[0-9]+' | grep -oE '[0-9]+' | sort -u | wc -l)
+      [ "$majors" -gt 1 ] || exit 0
+      find .ddev/commands/web -maxdepth 1 -type f -name 'install-*' 2>/dev/null | grep -q .
     severity: info
-    desc: "DDEV install commands should exist for multi-version TYPO3 testing"
+    desc: "DDEV install commands should exist for multi-version TYPO3 testing (only when composer.json admits more than one TYPO3 major)"
 
 llm_reviews:
   # === PHP VERSION ALIGNMENT ===
