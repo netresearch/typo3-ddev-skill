@@ -229,7 +229,24 @@ mechanical:
     type: script
     command: |
       constraint=$(jq -r '.require["typo3/cms-core"] // .require["typo3/cms"] // empty' composer.json 2>/dev/null)
-      majors=$(printf '%s\n' "$constraint" | grep -oE '(^|[^0-9.])[0-9]+' | grep -oE '[0-9]+' | sort -u | wc -l)
+      # Count the majors each `||` alternative admits. `<15.0.0` / `<15` is an
+      # exclusive bound that admits no 15, and `>=12.4 <14.0` admits 12 and 13.
+      majors=$(perl -e '
+        my %m;
+        for my $alt (split /\s*\|\|?\s*/, $ARGV[0]) {
+          my ($lo, $hi);
+          for my $t (split /[\s,]+/, $alt) {
+            next unless $t =~ /^(<=|>=|<|>|\^|~|=)?v?(\d+)(?:\.(\d+|\*|x))?(?:\.(\d+|\*|x))?/;
+            my ($op, $maj, $min, $pat) = ($1 // "", $2, $3 // "0", $4 // "0");
+            if ($op eq "<") { $hi = ($min eq "0" && $pat eq "0") ? $maj - 1 : $maj; }
+            elsif ($op eq "<=") { $hi = $maj; }
+            else { $lo = $maj; $m{$maj} = 1; }
+          }
+          if (defined $lo && defined $hi) { $m{$_} = 1 for $lo .. $hi; }
+          elsif (defined $hi) { $m{$hi} = 1; }
+        }
+        print scalar(keys %m), "\n";
+      ' "$constraint" 2>/dev/null)
       [ "$majors" -gt 1 ] || exit 0
       find .ddev/commands/web -maxdepth 1 -type f -name 'install-*' 2>/dev/null | grep -q .
     severity: info
