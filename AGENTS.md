@@ -23,11 +23,13 @@
 │   └── scripts/
 │       ├── validate-prerequisites.sh
 │       └── provision-without-ddev.sh    # TYPO3 instance without DDEV (CI, containers)
+├── tests/                               # Behavioural tests for the scripts (tests.yml)
 ├── .github/workflows/                   # CI workflows
 ├── Build/                               # Build tooling
 ├── evals/                               # Skill evaluations
 ├── docs/                                # Architecture and plans
 │   ├── ARCHITECTURE.md
+│   ├── SECURITY-ASSURANCE.md            # Security assurance case
 │   └── exec-plans/
 └── composer.json                        # Package definition
 ```
@@ -37,6 +39,8 @@
 No Makefile or npm scripts. Key scripts and DDEV commands:
 
 - `bash skills/typo3-ddev/scripts/validate-prerequisites.sh` — check DDEV, Docker, extension structure
+- `bash skills/typo3-ddev/scripts/provision-without-ddev.sh --extension <dir> [--serve]` — TYPO3 instance without DDEV (needs `DB_PASSWORD` and an admin password)
+- `bash tests/provision-without-ddev.sh`, `bash tests/validate-prerequisites.sh`, `bash tests/check-plugin-version.sh` — run the tests
 - `ddev install-v11` / `ddev install-v12` / `ddev install-v13` / `ddev install-v14` — install specific TYPO3 version
 - `ddev install-all` — install all TYPO3 versions
 - `ddev install-introduction v13` — install Introduction Package with demo content
@@ -61,3 +65,5 @@ No Makefile or npm scripts. Key scripts and DDEV commands:
 - [ADR: Valkey Default](skills/typo3-ddev/references/0001-valkey-default-with-redis-alternative.md)
 - [ADR: MariaDB Default](skills/typo3-ddev/references/0002-mariadb-default-with-database-alternatives.md)
 - [Architecture](docs/ARCHITECTURE.md)
+- [Security assurance case](docs/SECURITY-ASSURANCE.md)
+- [Without DDEV](skills/typo3-ddev/references/without-ddev.md)
