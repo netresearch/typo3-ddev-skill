@@ -2,7 +2,7 @@
 
 > An Agent Skill for automating DDEV environment setup in TYPO3 extension projects
 
-[![TYPO3](https://img.shields.io/badge/TYPO3-11%20%7C%2012%20%7C%2013-orange.svg)](https://typo3.org/)
+[![TYPO3](https://img.shields.io/badge/TYPO3-11%20%7C%2012%20%7C%2013%20%7C%2014-orange.svg)](https://typo3.org/)
 [![DDEV](https://img.shields.io/badge/DDEV-Local%20Development-blue.svg)](https://ddev.com/)
 [![License](https://img.shields.io/badge/License-MIT%20%2B%20CC--BY--SA--4.0-blue.svg)](#license)
 [![Agent Skill](https://img.shields.io/badge/Agent%20Skill-Compatible-blueviolet.svg)](https://agentskills.io)
@@ -30,7 +30,7 @@ This skill helps TYPO3 extension developers quickly set up a complete DDEV devel
 - ✅ Detects TYPO3 extension projects automatically
 - ✅ Extracts extension metadata (key, package name, namespace)
 - ✅ Generates complete DDEV configuration
-- ✅ Creates multi-version TYPO3 testing environment (11.5, 12.4, 13.4 LTS)
+- ✅ Creates multi-version TYPO3 testing environment (11.5, 12.4, 13.4 and 14.3 LTS)
 - ✅ Provides backend and frontend access with preconfigured credentials
 - ✅ Includes custom DDEV commands for easy TYPO3 installation
 
@@ -141,6 +141,7 @@ project-root/
 │           ├── install-v11
 │           ├── install-v12
 │           ├── install-v13
+│           ├── install-v14
 │           └── install-all
 ├── Classes/
 ├── Configuration/
@@ -305,7 +306,7 @@ ddev exec -d /var/www/html/v13 vendor/bin/typo3 cache:flush
 The setup creates a unique multi-version environment:
 
 - **Extension Source**: Mounted at `/var/www/{{EXTENSION_KEY}}` (your project root)
-- **TYPO3 Installations**: Separate directories for each version (`/var/www/html/v11`, `v12`, `v13`)
+- **TYPO3 Installations**: Separate directories for each version (`/var/www/html/v11`, `v12`, `v13`, `v14`)
 - **Extension Installation**: Installed via Composer path repository in each TYPO3 version
 - **Persistent Data**: Docker volumes for each TYPO3 version database and files
 

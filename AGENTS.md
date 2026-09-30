@@ -9,7 +9,7 @@
 │   ├── assets/templates/                # DDEV config templates
 │   │   ├── config.yaml                  # DDEV project config
 │   │   ├── docker-compose.web.yaml      # Web container config
-│   │   ├── commands/                    # Custom DDEV commands (install-v11/v12/v13)
+│   │   ├── commands/                    # Custom DDEV commands (install-v11 … install-v14)
 │   │   ├── apache/                      # Apache site config
 │   │   ├── web-build/                   # Dockerfile for PHP extensions
 │   │   └── *.optional                   # Optional service configs (Valkey, Redis, Ofelia)
@@ -21,7 +21,8 @@
 │   │   ├── 0002-mariadb-default-with-database-alternatives.md  # ADR
 │   │   └── ...                          # More references
 │   └── scripts/
-│       └── validate-prerequisites.sh
+│       ├── validate-prerequisites.sh
+│       └── provision-without-ddev.sh    # TYPO3 instance without DDEV (CI, containers)
 ├── .github/workflows/                   # CI workflows
 ├── Build/                               # Build tooling
 ├── evals/                               # Skill evaluations
@@ -36,14 +37,14 @@
 No Makefile or npm scripts. Key scripts and DDEV commands:
 
 - `bash skills/typo3-ddev/scripts/validate-prerequisites.sh` — check DDEV, Docker, extension structure
-- `ddev install-v11` / `ddev install-v12` / `ddev install-v13` — install specific TYPO3 version
+- `ddev install-v11` / `ddev install-v12` / `ddev install-v13` / `ddev install-v14` — install specific TYPO3 version
 - `ddev install-all` — install all TYPO3 versions
 - `ddev install-introduction v13` — install Introduction Package with demo content
 - `ddev generate-index` — regenerate the branded landing page
 
 ## Rules
 
-1. **Multi-version isolation** — each TYPO3 version gets its own directory (`/var/www/html/v11`, `v12`, `v13`)
+1. **Multi-version isolation** — each TYPO3 version gets its own directory (`/var/www/html/v11`, `v12`, `v13`, `v14`)
 2. **Extension mounted separately** — extension source at `/var/www/{{EXTENSION_KEY}}`, installed via Composer path repository
 3. **Tiered database selection** — SQLite for simple extensions (dev only), MariaDB 10.11 for complex ones
 4. **Valkey over Redis** — Valkey 8 is the default caching service (open source, BSD-3)
