@@ -30,7 +30,7 @@ repos:
         args: [--allow-multiple-documents]
         # The templates carry {{PLACEHOLDER}} values that only become valid
         # YAML once substituted in the consumer project; .yamllint.yml
-        # ignores the same directory.
+        # ignores skills/*/assets/, which contains them.
         exclude: ^skills/[^/]+/assets/templates/
 
   - repo: https://github.com/netresearch/skill-repo-skill
