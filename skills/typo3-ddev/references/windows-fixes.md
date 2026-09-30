@@ -1,3 +1,6 @@
+<!-- SPDX-License-Identifier: CC-BY-SA-4.0 -->
+<!-- SPDX-FileCopyrightText: Netresearch DTT GmbH -->
+
 # Windows-Specific DDEV Issues and Fixes
 
 ## Critical Issue: Health Check Failures

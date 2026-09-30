@@ -1,4 +1,6 @@
 ---
+# SPDX-License-Identifier: CC-BY-SA-4.0
+# SPDX-FileCopyrightText: Netresearch DTT GmbH
 name: typo3-ddev
 description: "Use whenever a running TYPO3 instance is wanted, started or reached: ddev commands, backend URLs, DDEV setup, multi-version testing — and when DDEV cannot run, so the instance must be provisioned directly. Triggers on: I need an instance, install TYPO3 locally, ddev URLs, docker environment, CI or container without DDEV."
 ---

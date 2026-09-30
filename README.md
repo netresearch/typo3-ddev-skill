@@ -1,3 +1,6 @@
+<!-- SPDX-License-Identifier: CC-BY-SA-4.0 -->
+<!-- SPDX-FileCopyrightText: Netresearch DTT GmbH -->
+
 # TYPO3 DDEV Skill
 
 > An Agent Skill for automating DDEV environment setup in TYPO3 extension projects

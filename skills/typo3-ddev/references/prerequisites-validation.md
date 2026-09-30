@@ -1,3 +1,6 @@
+<!-- SPDX-License-Identifier: CC-BY-SA-4.0 -->
+<!-- SPDX-FileCopyrightText: Netresearch DTT GmbH -->
+
 ## Prerequisites Validation
 
 Before proceeding with ANY DDEV commands, especially on first DDEV command during a session, perform comprehensive validation:

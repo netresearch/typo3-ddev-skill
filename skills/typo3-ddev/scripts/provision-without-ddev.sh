@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# SPDX-License-Identifier: MIT
+# SPDX-FileCopyrightText: Netresearch DTT GmbH
 # Bring up a TYPO3 instance from a project's DDEV configuration, without DDEV.
 #
 # For environments that are already a container — CI, a devcontainer, an agent
@@ -33,11 +35,12 @@ set -euo pipefail
 
 # The header comment is the help text, read from the file rather than repeated
 # in a string: a fixed line range drifts the moment anything is inserted above,
-# and this one already did — it began printing the shellcheck directive.
+# and this one already did — it began printing the shellcheck directive. The
+# licence notice at the top is skipped the same way.
 usage() {
     awk 'NR > 1 {
         if ($0 !~ /^#/) exit
-        if ($0 ~ /shellcheck/) next
+        if ($0 ~ /shellcheck|SPDX-/) next
         sub(/^# ?/, "")
         print
     }' "$0"

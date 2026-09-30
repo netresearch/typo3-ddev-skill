@@ -1,3 +1,6 @@
+<!-- SPDX-License-Identifier: CC-BY-SA-4.0 -->
+<!-- SPDX-FileCopyrightText: Netresearch DTT GmbH -->
+
 # ADR 0002: Tiered Database Selection for TYPO3 Extension Development
 
 **Status:** Accepted (Revised 2025-01-22)

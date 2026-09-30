@@ -1,3 +1,6 @@
+<!-- SPDX-License-Identifier: CC-BY-SA-4.0 -->
+<!-- SPDX-FileCopyrightText: Netresearch DTT GmbH -->
+
 # Provisioning the instance without DDEV
 
 DDEV drives Docker. Where the agent is *already inside* a container — CI, a

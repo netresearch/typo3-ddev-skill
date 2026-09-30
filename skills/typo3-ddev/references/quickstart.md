@@ -1,3 +1,6 @@
+<!-- SPDX-License-Identifier: CC-BY-SA-4.0 -->
+<!-- SPDX-FileCopyrightText: Netresearch DTT GmbH -->
+
 # Quick Start Guide
 
 This guide walks you through setting up DDEV for your TYPO3 extension using this skill.
