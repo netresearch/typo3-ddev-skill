@@ -239,4 +239,3 @@ echo "✅ All prerequisites validated successfully!"
 **Critical:** Always run these checks on the FIRST DDEV command in a session to catch environment issues early.
 
 If any prerequisite fails, provide clear instructions on how to resolve it before proceeding.
-

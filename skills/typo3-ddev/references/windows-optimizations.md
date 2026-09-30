@@ -60,7 +60,7 @@ source /mnt/ddev_config/commands/web/install-base
 SETUP_CMD="vendor/bin/typo3 setup -n ..."
 install_typo3 "v13" "^13" "$SETUP_CMD"
 
-# .ddev/commands/web/install-v12 (16 lines)  
+# .ddev/commands/web/install-v12 (16 lines)
 source /mnt/ddev_config/commands/web/install-base
 SETUP_CMD="vendor/bin/typo3 install:setup -n --use-existing-database ..."
 install_typo3 "v12" "^12" "$SETUP_CMD"
