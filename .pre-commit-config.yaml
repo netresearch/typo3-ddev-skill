@@ -25,6 +25,10 @@ repos:
       - id: check-json
       - id: check-yaml
         args: [--allow-multiple-documents]
+        # The templates carry {{PLACEHOLDER}} values that only become valid
+        # YAML once substituted in the consumer project; .yamllint.yml
+        # ignores the same directory.
+        exclude: ^skills/[^/]+/assets/templates/
 
   - repo: https://github.com/netresearch/skill-repo-skill
     rev: v2.3.3
@@ -59,3 +63,5 @@ repos:
     rev: v0.11.0.1
     hooks:
       - id: shellcheck
+        # Same reason as check-yaml: {{PLACEHOLDER}} values in the templates.
+        exclude: ^skills/[^/]+/assets/templates/

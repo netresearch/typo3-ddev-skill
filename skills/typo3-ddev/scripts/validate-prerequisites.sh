@@ -42,7 +42,7 @@ DOCKER_VERSION=$(docker version --format '{{.Client.Version}}' 2>/dev/null || ec
 if [ -n "$DOCKER_VERSION" ]; then
     MAJOR=$(echo "$DOCKER_VERSION" | cut -d. -f1)
     MINOR=$(echo "$DOCKER_VERSION" | cut -d. -f2)
-    if [ "$MAJOR" -gt 20 ] || ([ "$MAJOR" -eq 20 ] && [ "$MINOR" -ge 10 ]); then
+    if [ "$MAJOR" -gt 20 ] || { [ "$MAJOR" -eq 20 ] && [ "$MINOR" -ge 10 ]; }; then
         echo -e "${GREEN}✅ $DOCKER_VERSION (>= 20.10)${NC}"
     else
         echo -e "${YELLOW}⚠️  $DOCKER_VERSION (need >= 20.10)${NC}"
