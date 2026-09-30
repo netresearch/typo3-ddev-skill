@@ -51,6 +51,15 @@ DB_NAME="${DB_NAME:-typo3}"
 DB_USER="${DB_USER:-typo3}"
 DB_PASSWORD="${DB_PASSWORD:-}"
 
+# A value as a single-quoted PHP string literal. Written into additional.php,
+# an unescaped quote or backslash in a password ends the literal early and the
+# file no longer parses.
+php_string() {
+    local value="${1//\\/\\\\}"
+    value="${value//\'/\\\'}"
+    printf "'%s'" "$value"
+}
+
 while [ $# -gt 0 ]; do
     case "$1" in
         --extension)       EXTENSION="$2"; shift 2 ;;
@@ -116,11 +125,11 @@ cat > config/system/additional.php <<PHPCONF
 \$GLOBALS['TYPO3_CONF_VARS']['DB']['Connections']['Default'] = [
     'charset' => 'utf8mb4',
     'driver' => 'mysqli',
-    'host' => '${DB_HOST}',
+    'host' => $(php_string "$DB_HOST"),
     'port' => 3306,
-    'dbname' => '${DB_NAME}',
-    'user' => '${DB_USER}',
-    'password' => '${DB_PASSWORD}',
+    'dbname' => $(php_string "$DB_NAME"),
+    'user' => $(php_string "$DB_USER"),
+    'password' => $(php_string "$DB_PASSWORD"),
 ];
 \$GLOBALS['TYPO3_CONF_VARS']['SYS']['trustedHostsPattern'] = '.*';
 PHPCONF

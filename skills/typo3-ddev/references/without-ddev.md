@@ -41,11 +41,15 @@ TYPO3 reads `config/system/additional.php` before setup, so write it first:
 ```php
 $GLOBALS['TYPO3_CONF_VARS']['DB']['Connections']['Default'] = [
     'charset' => 'utf8mb4', 'driver' => 'mysqli',
-    'host' => getenv('DB_HOST'), 'port' => 3306,
-    'dbname' => getenv('DB_NAME'), 'user' => getenv('DB_USER'),
-    'password' => getenv('DB_PASSWORD'),
+    'host' => '127.0.0.1', 'port' => 3306,
+    'dbname' => 'typo3', 'user' => 'typo3',
+    'password' => '<password>',
 ];
 ```
+
+The script writes the values of `DB_HOST`, `DB_NAME`, `DB_USER` and
+`DB_PASSWORD` as PHP string literals, with `\` and `'` escaped, so a password
+containing a quote does not break the file.
 
 **The host is not always a service name.** Under an egress proxy or any
 `network_mode: service:` arrangement the containers share one network
