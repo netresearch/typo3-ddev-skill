@@ -226,7 +226,7 @@ expect_file_line "the virtual host names the site" "$vhost" "ServerName served.d
 expect_file_line "the virtual host serves public/" "$vhost" "DocumentRoot $inst/public"
 expect_file_line "mod_rewrite is enabled" "$CALLS" "a2enmod rewrite"
 expect_file_line "Apache is started" "$CALLS" "apache2ctl -k start"
-expect_file_line "the login route is probed on loopback" "$CALLS" "curl -fsS -o /dev/null http://127.0.0.1/typo3/login"
+expect_file_line "the login route is probed on loopback with a time limit" "$CALLS" "curl --connect-timeout 2 --max-time 5 -fsS -o /dev/null http://127.0.0.1/typo3/login"
 expect_line "the answering backend is reported" "backend answers at http://served.ddev.site/typo3/"
 
 inst="$WORK/i-serve-down"
@@ -237,6 +237,13 @@ expect_line "the unanswered login route is named" "the backend login route did n
 expect_no_line "an unanswered backend is not reported ready" "=== instance ready"
 probes="$(grep -c '^curl ' "$CALLS")"
 report "the login route is probed 30 times before giving up" "$(status [ "$probes" -eq 30 ])" "probed $probes times"
+
+inst="$WORK/i-serve-https"
+run env DB_PASSWORD=x TYPO3_ADMIN_PASSWORD=y APACHE_SITE_CONF="$vhost" SITE_SCHEME=https \
+    bash "$SCRIPT" --extension "$ext" --instance "$inst" --serve
+expect_exit "--serve behind a TLS-terminating proxy exits 0" 0
+expect_file_line "SITE_SCHEME=https still probes port 80 over HTTP" "$CALLS" "curl --connect-timeout 2 --max-time 5 -fsS -o /dev/null http://127.0.0.1/typo3/login"
+expect_line "the public https URL is reported" "backend answers at https://served.ddev.site/typo3/"
 
 echo
 if [ "$fail" -ne 0 ]; then

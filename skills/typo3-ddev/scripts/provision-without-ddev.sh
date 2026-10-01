@@ -211,9 +211,12 @@ VHOST
 
     # Verified by consequence: a 200 on /typo3/ can be reached by an instance
     # whose sub-routes all fail, so the login route is what gets checked.
+    # The virtual host above listens on port 80, so the probe uses plain HTTP
+    # whatever SITE_SCHEME says (an upstream proxy may terminate TLS), and
+    # --max-time bounds each attempt so a stalled request cannot hang the loop.
     ANSWERED=0
     for _ in $(seq 1 30); do
-        if curl -fsS -o /dev/null "$SITE_SCHEME://127.0.0.1/typo3/login"; then
+        if curl --connect-timeout 2 --max-time 5 -fsS -o /dev/null "http://127.0.0.1/typo3/login"; then
             echo "backend answers at $SITE_SCHEME://$SITE_HOST/typo3/"
             ANSWERED=1
             break
@@ -221,7 +224,7 @@ VHOST
         sleep 1
     done
     if [[ "$ANSWERED" != "1" ]]; then
-        echo "the backend login route did not answer at $SITE_SCHEME://127.0.0.1/typo3/login" >&2
+        echo "the backend login route did not answer at http://127.0.0.1/typo3/login" >&2
         exit 1
     fi
 fi
