@@ -1,3 +1,6 @@
+<!-- SPDX-License-Identifier: CC-BY-SA-4.0 -->
+<!-- SPDX-FileCopyrightText: Netresearch DTT GmbH -->
+
 # Writing files / running PHP inside the container
 
 Author the file with your editor and `docker cp` it in, then run a simple

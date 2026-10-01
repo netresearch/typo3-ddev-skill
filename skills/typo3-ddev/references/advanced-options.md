@@ -1,3 +1,6 @@
+<!-- SPDX-License-Identifier: CC-BY-SA-4.0 -->
+<!-- SPDX-FileCopyrightText: Netresearch DTT GmbH -->
+
 ## Advanced Options
 
 ### Custom PHP Version
@@ -418,4 +421,3 @@ cp .ddev/templates/README-SERVICES.md.optional .ddev/README-SERVICES.md
 - Ofelia image: `ghcr.io/netresearch/ofelia:latest` (not Docker Hub)
 - Ofelia command: `daemon --docker-events` (not `--docker`)
 - Redis config must NOT be `.yaml` (DDEV tries to parse it as config)
-

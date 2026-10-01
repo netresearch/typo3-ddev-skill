@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: MIT
+# SPDX-FileCopyrightText: Netresearch DTT GmbH
+#
 # Pre-commit hooks — embodies the CI/Hook Parity Principle for this repo.
 #
 # Every hook below ALSO runs in CI (via the reusable validate.yml workflow
@@ -25,6 +28,10 @@ repos:
       - id: check-json
       - id: check-yaml
         args: [--allow-multiple-documents]
+        # The templates carry {{PLACEHOLDER}} values that only become valid
+        # YAML once substituted in the consumer project; .yamllint.yml
+        # ignores skills/*/assets/, which contains them.
+        exclude: ^skills/[^/]+/assets/templates/
 
   - repo: https://github.com/netresearch/skill-repo-skill
     rev: v2.3.3
@@ -59,3 +66,5 @@ repos:
     rev: v0.11.0.1
     hooks:
       - id: shellcheck
+        # Same reason as check-yaml: {{PLACEHOLDER}} values in the templates.
+        exclude: ^skills/[^/]+/assets/templates/

@@ -1,3 +1,6 @@
+<!-- SPDX-License-Identifier: CC-BY-SA-4.0 -->
+<!-- SPDX-FileCopyrightText: Netresearch DTT GmbH -->
+
 # TYPO3 12 CLI Setup Command Changes
 
 > **Source**: Real-world experience from a TYPO3 11 to 12 extension upgrade (2024-12)

@@ -1,3 +1,6 @@
+<!-- SPDX-License-Identifier: CC-BY-SA-4.0 -->
+<!-- SPDX-FileCopyrightText: Netresearch DTT GmbH -->
+
 # Architecture — TYPO3 DDEV Skill
 
 ## Purpose
@@ -12,7 +15,7 @@ skills/typo3-ddev/
 ├── checkpoints.yaml      # Evaluation checkpoints for skill quality
 ├── assets/templates/     # File templates copied into target projects
 ├── references/           # Deep-dive docs and ADRs
-└── scripts/              # Validation helpers
+└── scripts/              # Prerequisite check and provisioner without DDEV
 ```
 
 ### SKILL.md
@@ -37,6 +40,13 @@ Architecture Decision Records (ADRs) and reference docs:
 - ADR-0002: MariaDB tiered database selection
 - ADR-0003: PHP version management
 - Troubleshooting, prerequisites, quickstart guides
+
+### Scripts
+
+- **validate-prerequisites.sh** — checks Docker, Docker Compose and DDEV on the user's machine; reads only
+- **provision-without-ddev.sh** — builds a TYPO3 instance from the project's `.ddev/` configuration where DDEV cannot run (CI, containers); see `references/without-ddev.md`
+
+Their behavioural tests are in `tests/`. Security properties and limits: [SECURITY-ASSURANCE.md](SECURITY-ASSURANCE.md).
 
 ## Multi-Version Architecture
 

@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# SPDX-License-Identifier: MIT
+# SPDX-FileCopyrightText: Netresearch DTT GmbH
 # Bring up a TYPO3 instance from a project's DDEV configuration, without DDEV.
 #
 # For environments that are already a container — CI, a devcontainer, an agent
@@ -25,15 +27,20 @@
 # DB_PASSWORD. DB_HOST defaults to 127.0.0.1 rather than a service name,
 # because a shared network namespace is the common case in these environments
 # and a wrong host fails late, during `typo3 setup`, as a driver exception.
+#
+# With --serve the virtual host is written to APACHE_SITE_CONF (default
+# /etc/apache2/sites-available/000-default.conf), and the script exits 1 when
+# the backend login route does not answer.
 set -euo pipefail
 
 # The header comment is the help text, read from the file rather than repeated
 # in a string: a fixed line range drifts the moment anything is inserted above,
-# and this one already did — it began printing the shellcheck directive.
+# and this one already did — it began printing the shellcheck directive. The
+# licence notice at the top is skipped the same way.
 usage() {
     awk 'NR > 1 {
         if ($0 !~ /^#/) exit
-        if ($0 ~ /shellcheck/) next
+        if ($0 ~ /shellcheck|SPDX-/) next
         sub(/^# ?/, "")
         print
     }' "$0"
@@ -50,6 +57,17 @@ DB_HOST="${DB_HOST:-127.0.0.1}"
 DB_NAME="${DB_NAME:-typo3}"
 DB_USER="${DB_USER:-typo3}"
 DB_PASSWORD="${DB_PASSWORD:-}"
+
+APACHE_SITE_CONF="${APACHE_SITE_CONF:-/etc/apache2/sites-available/000-default.conf}"
+
+# A value as a single-quoted PHP string literal. Written into additional.php,
+# an unescaped quote or backslash in a password ends the literal early and the
+# file no longer parses.
+php_string() {
+    local value="${1//\\/\\\\}"
+    value="${value//\'/\\\'}"
+    printf "'%s'" "$value"
+}
 
 while [ $# -gt 0 ]; do
     case "$1" in
@@ -116,11 +134,11 @@ cat > config/system/additional.php <<PHPCONF
 \$GLOBALS['TYPO3_CONF_VARS']['DB']['Connections']['Default'] = [
     'charset' => 'utf8mb4',
     'driver' => 'mysqli',
-    'host' => '${DB_HOST}',
+    'host' => $(php_string "$DB_HOST"),
     'port' => 3306,
-    'dbname' => '${DB_NAME}',
-    'user' => '${DB_USER}',
-    'password' => '${DB_PASSWORD}',
+    'dbname' => $(php_string "$DB_NAME"),
+    'user' => $(php_string "$DB_USER"),
+    'password' => $(php_string "$DB_PASSWORD"),
 ];
 \$GLOBALS['TYPO3_CONF_VARS']['SYS']['trustedHostsPattern'] = '.*';
 PHPCONF
@@ -176,7 +194,7 @@ if [[ "$SERVE" == "1" ]]; then
         public/.htaccess
 
     echo "=== web server"
-    cat > /etc/apache2/sites-available/000-default.conf <<VHOST
+    cat > "$APACHE_SITE_CONF" <<VHOST
 <VirtualHost *:80>
     ServerName $SITE_HOST
     ServerAlias localhost
@@ -193,13 +211,22 @@ VHOST
 
     # Verified by consequence: a 200 on /typo3/ can be reached by an instance
     # whose sub-routes all fail, so the login route is what gets checked.
+    # The virtual host above listens on port 80, so the probe uses plain HTTP
+    # whatever SITE_SCHEME says (an upstream proxy may terminate TLS), and
+    # --max-time bounds each attempt so a stalled request cannot hang the loop.
+    ANSWERED=0
     for _ in $(seq 1 30); do
-        if curl -fsS -o /dev/null "$SITE_SCHEME://127.0.0.1/typo3/login"; then
+        if curl --connect-timeout 2 --max-time 5 -fsS -o /dev/null "http://127.0.0.1/typo3/login"; then
             echo "backend answers at $SITE_SCHEME://$SITE_HOST/typo3/"
+            ANSWERED=1
             break
         fi
         sleep 1
     done
+    if [[ "$ANSWERED" != "1" ]]; then
+        echo "the backend login route did not answer at http://127.0.0.1/typo3/login" >&2
+        exit 1
+    fi
 fi
 
 vendor/bin/typo3 cache:flush || true

@@ -1,8 +1,11 @@
+<!-- SPDX-License-Identifier: CC-BY-SA-4.0 -->
+<!-- SPDX-FileCopyrightText: Netresearch DTT GmbH -->
+
 # TYPO3 DDEV Skill
 
 > An Agent Skill for automating DDEV environment setup in TYPO3 extension projects
 
-[![TYPO3](https://img.shields.io/badge/TYPO3-11%20%7C%2012%20%7C%2013-orange.svg)](https://typo3.org/)
+[![TYPO3](https://img.shields.io/badge/TYPO3-11%20%7C%2012%20%7C%2013%20%7C%2014-orange.svg)](https://typo3.org/)
 [![DDEV](https://img.shields.io/badge/DDEV-Local%20Development-blue.svg)](https://ddev.com/)
 [![License](https://img.shields.io/badge/License-MIT%20%2B%20CC--BY--SA--4.0-blue.svg)](#license)
 [![Agent Skill](https://img.shields.io/badge/Agent%20Skill-Compatible-blueviolet.svg)](https://agentskills.io)
@@ -30,7 +33,7 @@ This skill helps TYPO3 extension developers quickly set up a complete DDEV devel
 - ✅ Detects TYPO3 extension projects automatically
 - ✅ Extracts extension metadata (key, package name, namespace)
 - ✅ Generates complete DDEV configuration
-- ✅ Creates multi-version TYPO3 testing environment (11.5, 12.4, 13.4 LTS)
+- ✅ Creates multi-version TYPO3 testing environment (11.5, 12.4, 13.4 and 14.3 LTS)
 - ✅ Provides backend and frontend access with preconfigured credentials
 - ✅ Includes custom DDEV commands for easy TYPO3 installation
 
@@ -141,6 +144,7 @@ project-root/
 │           ├── install-v11
 │           ├── install-v12
 │           ├── install-v13
+│           ├── install-v14
 │           └── install-all
 ├── Classes/
 ├── Configuration/
@@ -305,7 +309,7 @@ ddev exec -d /var/www/html/v13 vendor/bin/typo3 cache:flush
 The setup creates a unique multi-version environment:
 
 - **Extension Source**: Mounted at `/var/www/{{EXTENSION_KEY}}` (your project root)
-- **TYPO3 Installations**: Separate directories for each version (`/var/www/html/v11`, `v12`, `v13`)
+- **TYPO3 Installations**: Separate directories for each version (`/var/www/html/v11`, `v12`, `v13`, `v14`)
 - **Extension Installation**: Installed via Composer path repository in each TYPO3 version
 - **Persistent Data**: Docker volumes for each TYPO3 version database and files
 
@@ -533,6 +537,53 @@ Contributions welcome! Please:
 3. Commit your changes (`git commit -m 'Add amazing feature'`)
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
+
+The commands for working on this repository are listed in [AGENTS.md](AGENTS.md#commands). A pull request that adds or changes behaviour in a script adds or updates a check in `tests/` that fails without the change.
+
+### Tests
+
+The behavioural tests live in `tests/` and run offline, without Docker or DDEV; they need bash, coreutils, git and python3, and php for two checks of `additional.php`:
+
+```bash
+bash tests/provision-without-ddev.sh   # skills/typo3-ddev/scripts/provision-without-ddev.sh
+bash tests/validate-prerequisites.sh   # skills/typo3-ddev/scripts/validate-prerequisites.sh
+bash tests/check-plugin-version.sh     # Build/Scripts/check-plugin-version.sh and Build/hooks/pre-push
+```
+
+- `tests/provision-without-ddev.sh` replaces composer, php, curl, apache2ctl, a2enmod and sleep with stubs that log their arguments, and checks the argument errors, what the provisioner reads from `.ddev/config.yaml`, the site configuration, that `additional.php` parses and holds a password with a quote and a backslash unchanged, the `--serve` path, and that a backend that never answers ends the run with exit 1.
+- `tests/validate-prerequisites.sh` runs the prerequisite check with stubbed `docker` and `ddev` on an isolated `PATH` and checks each missing prerequisite and the Docker 20.10 and Compose 2.0 boundaries.
+- `tests/check-plugin-version.sh` builds throwaway git repositories and checks that a semver tag at `HEAD` must match the version in `.claude-plugin/plugin.json`, and that the pre-push hook passes the result on.
+
+Each check prints `ok` or `FAIL`; a `FAIL` line names the expectation that was not met and is followed by the script's output. A test file exits 1 when any check failed. In CI, the Skill Tests workflow (`.github/workflows/tests.yml`) runs every `tests/**/*.sh` on each pull request and on pushes to `main`, and fails when the repository ships scripts under `skills/*/scripts/` but no test ran.
+
+Not covered by tests: the DDEV templates under `skills/typo3-ddev/assets/templates/` (their commands need a running DDEV project) and `scripts/verify-harness.sh`. The skill's Markdown is not executed; Skill Validation checks its structure, and Eval Validation checks the eval definitions in `evals/evals.json`. `pre-commit run --all-files` runs the hooks of [`.pre-commit-config.yaml`](.pre-commit-config.yaml) locally.
+
+### Dependencies
+
+- **Composer:** `composer.json` requires `netresearch/composer-agent-skill-plugin` (`*`, the latest release at install time), which installs the skill into a PHP project. No `composer.lock` is committed.
+- **What the skill installs in a user's project:** TYPO3 and its packages through Composer, and the container images named in the templates. Which versions and images, and how they are verified, is listed in [docs/SECURITY-ASSURANCE.md](docs/SECURITY-ASSURANCE.md#downloads-and-how-they-are-verified). They are chosen per TYPO3 LTS version (`commands/install-v11` … `install-v14`) and by the ADRs in `skills/typo3-ddev/references/` (Valkey, database, PHP version).
+- **Scripts:** `provision-without-ddev.sh` needs bash, composer, php, sed and, with `--serve`, Apache and curl; `validate-prerequisites.sh` needs docker and ddev to report on them. Neither installs tools.
+- **Development tools:** the hooks in `.pre-commit-config.yaml` are pinned by `rev:`. Renovate ([`renovate.json`](renovate.json), `config:recommended` with the pre-commit manager enabled) proposes updates for them. The Composer requirement has no version range and no lock file, so there is nothing for it to update.
+- **CI:** the workflows call reusable workflows of `netresearch/.github`, `netresearch/skill-repo-skill` and `netresearch/typo3-ci-workflows`; those reusables pin the actions they use by commit SHA.
+
+## Governance and policies
+
+This repository follows the Netresearch organisation policies:
+
+- [Governance](https://github.com/netresearch/.github/blob/main/GOVERNANCE.md): ownership, roles, how decisions are made and disputes resolved, and continuity.
+- [Roadmap](https://github.com/netresearch/.github/blob/main/ROADMAP.md): planned and explicitly excluded work for the coming year.
+- [Handling of dependency and code analysis findings](https://github.com/netresearch/.github/blob/main/SECURITY.md#handling-of-dependency-and-code-analysis-findings): thresholds, deadlines and the exception process for dependency (SCA) and static analysis (SAST) findings.
+- [Secret management](https://github.com/netresearch/.github/blob/main/SECURITY.md#secret-management): how CI and release credentials are stored, accessed and rotated.
+- [Access roster](https://github.com/netresearch/.github/blob/main/docs/access-roster.md): who holds administrative access to this repository and the organisation.
+
+The security assurance case for this skill (what it downloads, trust boundaries, threats, countermeasures and limits) is in [docs/SECURITY-ASSURANCE.md](docs/SECURITY-ASSURANCE.md).
+
+Checks that run on pull requests in this repository:
+
+- Every pull request: Skill Validation (`lint.yml`: skill structure, markdownlint, yamllint, actionlint, JSON syntax, ShellCheck at severity error, ruff, checkpoint schema), Eval Validation (`eval-validate.yml`) and Skill Tests (`tests.yml`).
+- Pull requests to `main`: `security.yml` with Betterleaks (secret scanning), zizmor (workflow static analysis), dependency review (fails on vulnerabilities of severity high or above), Composer Audit and Opengrep SAST (findings handled under the [organisation's static analysis rule](https://github.com/netresearch/.github/blob/main/SECURITY.md#static-analysis-sast)); Harness Verification (`harness-verify.yml`) and Template Drift (`check-template-drift.yml`).
+- Every pull request, from the template workflows: Labeler (`labeler.yml`) and the dependency auto-merge job (`auto-merge-deps.yml`, skipped unless a dependency bot opened the pull request).
+- Configured outside the workflows: CodeQL (GitHub default setup), which analyses the workflows, SonarCloud code analysis, the DCO sign-off check, Copilot code review (a repository ruleset), CodeRabbit review, and GitHub secret scanning with push protection.
 
 ## Credits
 
