@@ -581,8 +581,9 @@ The security assurance case for this skill (what it downloads, trust boundaries,
 Checks that run on pull requests in this repository:
 
 - Every pull request: Skill Validation (`lint.yml`: skill structure, markdownlint, yamllint, actionlint, JSON syntax, ShellCheck at severity error, ruff, checkpoint schema), Eval Validation (`eval-validate.yml`) and Skill Tests (`tests.yml`).
-- Pull requests to `main`: `security.yml` with Betterleaks (secret scanning), zizmor (workflow static analysis), dependency review (fails on vulnerabilities of severity high or above), Composer Audit and Opengrep SAST (fails on findings of severity WARNING or above); Harness Verification (`harness-verify.yml`) and Template Drift (`check-template-drift.yml`).
-- CodeQL default setup (a repository setting) analyses the workflows.
+- Pull requests to `main`: `security.yml` with Betterleaks (secret scanning), zizmor (workflow static analysis), dependency review (fails on vulnerabilities of severity high or above), Composer Audit and Opengrep SAST (findings handled under the [organisation's static analysis rule](https://github.com/netresearch/.github/blob/main/SECURITY.md#static-analysis-sast)); Harness Verification (`harness-verify.yml`) and Template Drift (`check-template-drift.yml`).
+- Every pull request, from the template workflows: Labeler (`labeler.yml`) and the dependency auto-merge job (`auto-merge-deps.yml`, skipped unless a dependency bot opened the pull request).
+- Configured outside the workflows: CodeQL (GitHub default setup), which analyses the workflows, SonarCloud code analysis, the DCO sign-off check, Copilot code review (a repository ruleset), CodeRabbit review, and GitHub secret scanning with push protection.
 
 ## Credits
 
