@@ -6,7 +6,8 @@ name: Skill Tests
 # Runs this repo's behavioural tests (tests/*.sh) via the skill-repo-skill
 # reusable: skills/typo3-ddev/scripts/provision-without-ddev.sh,
 # skills/typo3-ddev/scripts/validate-prerequisites.sh,
-# Build/Scripts/check-plugin-version.sh and the pre-push hook. The other
+# Build/Scripts/check-plugin-version.sh, the pre-push hook and the git-info
+# templates (config.yaml post-start, pre-start-git-info, generate-index). The other
 # workflows validate structure, lint and security; none of them executes a
 # script. Not part of the central skill template, so it carries its own notice.
 

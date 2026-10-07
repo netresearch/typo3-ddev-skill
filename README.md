@@ -542,21 +542,23 @@ The commands for working on this repository are listed in [AGENTS.md](AGENTS.md#
 
 ### Tests
 
-The behavioural tests live in `tests/` and run offline, without Docker or DDEV; they need bash, coreutils, git and python3, and php for two checks of `additional.php`:
+The behavioural tests live in `tests/` and run offline, without Docker or DDEV; they need bash, coreutils, git, sed, jq and python3, and php for two checks of `additional.php`:
 
 ```bash
 bash tests/provision-without-ddev.sh   # skills/typo3-ddev/scripts/provision-without-ddev.sh
 bash tests/validate-prerequisites.sh   # skills/typo3-ddev/scripts/validate-prerequisites.sh
 bash tests/check-plugin-version.sh     # Build/Scripts/check-plugin-version.sh and Build/hooks/pre-push
+bash tests/git-info-templates.sh       # git-info hook, pre-start-git-info and generate-index templates
 ```
 
 - `tests/provision-without-ddev.sh` replaces composer, php, curl, apache2ctl, a2enmod and sleep with stubs that log their arguments, and checks the argument errors, what the provisioner reads from `.ddev/config.yaml`, the site configuration, that `additional.php` parses and holds a password with a quote and a backslash unchanged, the `--serve` path, and that a backend that never answers ends the run with exit 1.
 - `tests/validate-prerequisites.sh` runs the prerequisite check with stubbed `docker` and `ddev` on an isolated `PATH` and checks each missing prerequisite and the Docker 20.10 and Compose 2.0 boundaries.
 - `tests/check-plugin-version.sh` builds throwaway git repositories and checks that a semver tag at `HEAD` must match the version in `.claude-plugin/plugin.json`, and that the pre-push hook passes the result on.
+- `tests/git-info-templates.sh` runs the `config.yaml` post-start hook (with a `ddev` stub that runs `ddev exec` locally), `pre-start-git-info` and `generate-index` in a throwaway repository whose branch name and commit subject hold shell, YAML, sed, HTML and CSS metacharacters, and checks that each value arrives as written and that nothing in it runs.
 
 Each check prints `ok` or `FAIL`; a `FAIL` line names the expectation that was not met and is followed by the script's output. A test file exits 1 when any check failed. In CI, the Skill Tests workflow (`.github/workflows/tests.yml`) runs every `tests/**/*.sh` on each pull request and on pushes to `main`, and fails when the repository ships scripts under `skills/*/scripts/` but no test ran.
 
-Not covered by tests: the DDEV templates under `skills/typo3-ddev/assets/templates/` (their commands need a running DDEV project) and `scripts/verify-harness.sh`. The skill's Markdown is not executed; Skill Validation checks its structure, and Eval Validation checks the eval definitions in `evals/evals.json`. `pre-commit run --all-files` runs the hooks of [`.pre-commit-config.yaml`](.pre-commit-config.yaml) locally.
+Not covered by tests: the DDEV templates under `skills/typo3-ddev/assets/templates/` other than the three git-info ones (their commands need a running DDEV project) and `scripts/verify-harness.sh`. The skill's Markdown is not executed; Skill Validation checks its structure, and Eval Validation checks the eval definitions in `evals/evals.json`. `pre-commit run --all-files` runs the hooks of [`.pre-commit-config.yaml`](.pre-commit-config.yaml) locally.
 
 ### Dependencies
 

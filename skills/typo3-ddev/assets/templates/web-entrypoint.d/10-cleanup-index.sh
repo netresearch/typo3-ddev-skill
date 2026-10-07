@@ -1,4 +1,6 @@
-#!/bin/bash
+# shellcheck shell=bash
+# DDEV's web container sources every .ddev/web-entrypoint.d/*.sh at start;
+# it is not executed, so it carries no shebang and no executable bit.
 # Remove stale Debian default index.html if it exists
 # This ensures index.php is served instead
 # The index.html can persist in Docker volumes across rebuilds

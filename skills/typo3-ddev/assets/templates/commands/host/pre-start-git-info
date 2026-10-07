@@ -9,6 +9,17 @@ GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "unknown")
 GIT_COMMIT=$(git rev-parse --short HEAD 2>/dev/null || echo "unknown")
 GIT_PR=$(gh pr view --json number 2>/dev/null | jq -r '.number // "unknown"' 2>/dev/null || echo "unknown")
 
+# A value as a YAML double-quoted scalar that Compose takes literally:
+# backslash and double quote escaped for YAML, $ doubled for Compose's
+# variable interpolation. Git refuses control characters in branch names.
+compose_quote() {
+    local s=$1
+    s=${s//\\/\\\\}
+    s=${s//\"/\\\"}
+    s=${s//\$/\$\$}
+    printf '"%s"' "$s"
+}
+
 # Write docker-compose override with current git info
 # This ensures build args are always up-to-date (exports don't work for build args)
 cat > .ddev/docker-compose.git-info.yaml << EOF
@@ -16,9 +27,9 @@ services:
   web:
     build:
       args:
-        GIT_BRANCH: "${GIT_BRANCH}"
-        GIT_COMMIT: "${GIT_COMMIT}"
-        GIT_PR: "${GIT_PR}"
+        GIT_BRANCH: $(compose_quote "$GIT_BRANCH")
+        GIT_COMMIT: $(compose_quote "$GIT_COMMIT")
+        GIT_PR: $(compose_quote "$GIT_PR")
 EOF
 
 echo "Git info updated: ${GIT_BRANCH} @ ${GIT_COMMIT} (PR: ${GIT_PR})"

@@ -29,7 +29,7 @@ services:
     image: valkey/valkey:8-alpine
     restart: unless-stopped
     ports:
-      - "6379"
+      - "127.0.0.1::6379"
     volumes:
       - valkey-data:/data
     environment:

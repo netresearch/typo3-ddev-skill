@@ -11,17 +11,19 @@
     <style>
         /* ═══════════════════════════════════════════════════════════════
            TYPO3 DDEV LANDING PAGE TEMPLATE
-           Template Variables:
-           - {{EXTENSION_NAME}} : Display name of the extension
-           - {{EXTENSION_DESCRIPTION}} : Short description
-           - {{DDEV_PROJECT}} : DDEV project identifier (used in URLs)
-           - {{GITHUB_REPO}} : Full GitHub repository URL
-           - {{GIT_BRANCH}} : Current git branch name
-           - {{GIT_COMMIT_SHORT}} : Short commit hash (7 chars)
-           - {{GIT_COMMIT_MSG}} : Last commit message (first line)
-           - {{PR_NUMBER}} : Pull request number (empty if none)
-           - {{PR_TITLE}} : Pull request title (empty if none)
-           - {{PR_URL}} : Pull request URL (empty if none)
+           Template variables, written as {{NAME}} in the markup below.
+           They are listed without braces so that generate-index does not
+           fill them into this comment.
+           - EXTENSION_NAME : Display name of the extension
+           - EXTENSION_DESCRIPTION : Short description
+           - DDEV_PROJECT : DDEV project identifier (used in URLs)
+           - GITHUB_REPO : Full GitHub repository URL
+           - GIT_BRANCH : Current git branch name
+           - GIT_COMMIT_SHORT : Short commit hash (7 chars)
+           - GIT_COMMIT_MSG : Last commit message (first line)
+           - PR_NUMBER : Pull request number (empty if none)
+           - PR_TITLE : Pull request title (empty if none)
+           - PR_URL : Pull request URL (empty if none)
            ═══════════════════════════════════════════════════════════════ */
 
         /* ═══════════════════════════════════════

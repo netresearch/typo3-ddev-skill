@@ -15,7 +15,7 @@ services:
     image: redis:7-alpine
     restart: unless-stopped
     ports:
-      - "6379"
+      - "127.0.0.1::6379"  # loopback only, random host port
     volumes:
       - redis-data:/data
     labels:
@@ -32,8 +32,8 @@ services:
     image: axllent/mailpit:latest
     restart: unless-stopped
     ports:
-      - "1025"  # SMTP port
-      - "8025"  # Web UI port
+      - "127.0.0.1::1025"  # SMTP port, loopback only
+      - "127.0.0.1::8025"  # Web UI port, loopback only
     labels:
       com.ddev.site-name: ${DDEV_SITENAME}
       com.ddev.approot: $DDEV_SITENAME
