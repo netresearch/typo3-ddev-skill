@@ -34,8 +34,8 @@ check() { # check <name> <expected> <actual>
 BRANCH='x'"'"'$(touch${IFS}PWNED)|e<b>&"y;z'
 REPO="$WORK/repo"
 git init -q -b main "$REPO"
-# The subject closes and reopens a CSS comment.
-SUBJECT='First */ body{display:none} /* commit'
+# The subject closes and reopens a CSS comment and holds a sed back-reference.
+SUBJECT='First */ body{display:none} /* fix \1 commit'
 git -C "$REPO" -c user.email=t@example.org -c user.name=t -c commit.gpgsign=false commit -q --allow-empty -m "$SUBJECT"
 git -C "$REPO" checkout -q -b "$BRANCH"
 
@@ -75,6 +75,9 @@ check "the file has its three keys and nothing else" 3 \
 
 echo "generate-index"
 cp "$TEMPLATES/index.html.typo3.template" "$HTML/.ddev/"
+cat >"$HTML/composer.json" <<'JSON'
+{"name": "vendor/my-ext", "description": "Uses <b>bold</b> & more", "extra": {"typo3": {"extension-key": "my_ext"}}}
+JSON
 (cd "$REPO" && GENERATE_INDEX_ROOT="$HTML" bash "$TEMPLATES/commands/web/generate-index") >"$WORK/out" 2>&1
 check "the command succeeds" 0 "$?"
 check "the branch is shown as text" 1 \
@@ -84,7 +87,20 @@ check "the commit subject appears only as page text, not in the stylesheet" \
     '<span class="git-commit-msg">'"$SUBJECT"'</span>' \
     "$(grep -F "$SUBJECT" "$HTML/index.html" | sed 's/^ *//')"
 
-check "nothing named in the branch ran" "absent" \
+check "the composer.json description is shown as text" 1 \
+    "$(grep -cF '<p class="header-description">Uses &lt;b&gt;bold&lt;/b&gt; &amp; more</p>' "$HTML/index.html")"
+
+# A branch without a double quote: with one, the old hook's command did not
+# even parse, so it could not show that a command in the name runs.
+echo "config.yaml post-start hook, branch without a double quote"
+BRANCH2='y'"'"'$(touch${IFS}PWNED)'"'"''
+git -C "$REPO" checkout -q -b "$BRANCH2"
+(cd "$REPO" && bash "$WORK/post-start.sh") >"$WORK/out" 2>&1
+check "the hook succeeds" 0 "$?"
+check "the branch name reaches .git-info.json as written" "$BRANCH2" \
+    "$(jq -r .branch "$HTML/.git-info.json" 2>/dev/null)"
+
+check "nothing named in a branch ran" "absent" \
     "$(find "$WORK" -name PWNED | grep -q . && echo present || echo absent)"
 
 echo

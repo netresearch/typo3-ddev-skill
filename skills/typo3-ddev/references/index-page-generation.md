@@ -217,7 +217,7 @@ $description = $composerJson['description'] ?? '';
     <header>
         <h1><?= htmlspecialchars($extensionName) ?></h1>
         <p><?= htmlspecialchars($description) ?></p>
-        <div class="git-info">Branch: <?= $gitBranch ?> @ <?= $gitCommitShort ?></div>
+        <div class="git-info">Branch: <?= htmlspecialchars($gitBranch) ?> @ <?= htmlspecialchars($gitCommitShort) ?></div>
     </header>
     <!-- Links to TYPO3 backends, documentation, etc. -->
 </body>

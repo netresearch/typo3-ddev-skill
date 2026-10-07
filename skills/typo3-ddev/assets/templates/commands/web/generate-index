@@ -44,7 +44,7 @@ EXTENSION_KEY=$(basename "$(pwd)")
 COMPOSER_FILE="$HTML_ROOT/composer.json"
 if [[ -f "$COMPOSER_FILE" ]]; then
     COMPOSER_PACKAGE=$(jq -r '.name // empty' "$COMPOSER_FILE")
-    EXTENSION_NAME=$(jq -r '.extra.typo3.extension-key // .extra["extension-key"] // empty' "$COMPOSER_FILE")
+    EXTENSION_NAME=$(jq -r '.extra.typo3["extension-key"] // .extra["extension-key"] // empty' "$COMPOSER_FILE")
     EXTENSION_DESCRIPTION=$(jq -r '.description // empty' "$COMPOSER_FILE")
 
     # Extract GitHub repo from homepage or support.source
