@@ -21,6 +21,8 @@ html_escape() {
     s=${s//>/"&gt;"}
     s=${s//\"/"&quot;"}
     s=${s//\'/"&#39;"}
+    # A value must not form a {{PLACEHOLDER}} that a later replacement fills.
+    s=${s//\{/"&#123;"}
     printf '%s' "$s"
 }
 

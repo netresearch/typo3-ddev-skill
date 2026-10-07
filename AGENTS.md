@@ -43,7 +43,7 @@ No Makefile or npm scripts. Key scripts and DDEV commands:
 
 - `bash skills/typo3-ddev/scripts/validate-prerequisites.sh` — check DDEV, Docker, extension structure
 - `bash skills/typo3-ddev/scripts/provision-without-ddev.sh --extension <dir> [--serve]` — TYPO3 instance without DDEV (needs `DB_PASSWORD` and an admin password)
-- `bash tests/provision-without-ddev.sh`, `bash tests/validate-prerequisites.sh`, `bash tests/check-plugin-version.sh` — run the tests
+- `bash tests/provision-without-ddev.sh`, `bash tests/validate-prerequisites.sh`, `bash tests/check-plugin-version.sh`, `bash tests/git-info-templates.sh` — run the tests
 - `ddev install-v11` / `ddev install-v12` / `ddev install-v13` / `ddev install-v14` — install specific TYPO3 version
 - `ddev install-all` — install all TYPO3 versions
 - `ddev install-introduction v13` — install Introduction Package with demo content

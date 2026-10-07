@@ -70,25 +70,27 @@ check "the command succeeds" 0 "$?"
 check "the branch is one double-quoted YAML scalar, \$ doubled for Compose" \
     '        GIT_BRANCH: "x'"'"'$$(touch$${IFS}PWNED)|e<b>&\"y;z"' \
     "$(grep 'GIT_BRANCH:' "$REPO/.ddev/docker-compose.git-info.yaml")"
-check "the file has its three keys and nothing else" 3 \
-    "$(grep -c '^        GIT_[A-Z]*: "' "$REPO/.ddev/docker-compose.git-info.yaml")"
+check "the file has its three keys and nothing else" \
+    "$(printf '%s\n' services: '  web:' '    build:' '      args:' '        GIT_BRANCH: V' '        GIT_COMMIT: V' '        GIT_PR: V')" \
+    "$(sed -E 's/^(        GIT_[A-Z]+): ".*"$/\1: V/' "$REPO/.ddev/docker-compose.git-info.yaml")"
 
 echo "generate-index"
 cp "$TEMPLATES/index.html.typo3.template" "$HTML/.ddev/"
 cat >"$HTML/composer.json" <<'JSON'
-{"name": "vendor/my-ext", "description": "Uses <b>bold</b> & more", "extra": {"typo3": {"extension-key": "my_ext"}}}
+{"name": "vendor/my-ext", "description": "Uses <b>bold</b> & {{GIT_BRANCH}}\nmore", "extra": {"typo3": {"extension-key": "my_ext"}}}
 JSON
 (cd "$REPO" && GENERATE_INDEX_ROOT="$HTML" bash "$TEMPLATES/commands/web/generate-index") >"$WORK/out" 2>&1
 check "the command succeeds" 0 "$?"
 check "the branch is shown as text" 1 \
-    "$(grep -cF '<span class="git-branch">x&#39;$(touch${IFS}PWNED)|e&lt;b&gt;&amp;&quot;y;z</span>' "$HTML/index.html")"
+    "$(grep -cF '<span class="git-branch">x&#39;$(touch$&#123;IFS}PWNED)|e&lt;b&gt;&amp;&quot;y;z</span>' "$HTML/index.html")"
 check "no placeholder is left" 0 "$(grep -c '{{GIT_BRANCH}}' "$HTML/index.html")"
+SUBJECT_HTML=${SUBJECT//\{/"&#123;"}
 check "the commit subject appears only as page text, not in the stylesheet" \
-    '<span class="git-commit-msg">'"$SUBJECT"'</span>' \
-    "$(grep -F "$SUBJECT" "$HTML/index.html" | sed 's/^ *//')"
+    '<span class="git-commit-msg">'"$SUBJECT_HTML"'</span>' \
+    "$(grep -F "fix \\1 commit" "$HTML/index.html" | sed 's/^ *//')"
 
-check "the composer.json description is shown as text" 1 \
-    "$(grep -cF '<p class="header-description">Uses &lt;b&gt;bold&lt;/b&gt; &amp; more</p>' "$HTML/index.html")"
+check "the composer.json description is shown as text, on one line, with no placeholder filled" 1 \
+    "$(grep -cF '<p class="header-description">Uses &lt;b&gt;bold&lt;/b&gt; &amp; &#123;&#123;GIT_BRANCH}} more</p>' "$HTML/index.html")"
 
 # A branch without a double quote: with one, the old hook's command did not
 # even parse, so it could not show that a command in the name runs.
