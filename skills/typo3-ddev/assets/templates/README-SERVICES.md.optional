@@ -43,10 +43,12 @@ redis-cli -h redis ping
 - 1025 (SMTP)
 - 8025 (Web UI)
 
+Both are published on `127.0.0.1` with a host port Docker picks at start. Find the Web UI port with `docker port ddev-{{DDEV_SITENAME}}-mailpit 8025`.
+
 **Purpose**: Catch all emails sent by TYPO3 for testing
 
 **Access**:
-- **Web UI**: `http://rte-ckeditor-image.ddev.site:8025`
+- **Web UI**: `http://127.0.0.1:<port>`, with the port from `docker port ddev-{{DDEV_SITENAME}}-mailpit 8025`
 - **SMTP**: `mailpit:1025` (from containers)
 
 **TYPO3 Configuration**:
@@ -69,8 +71,8 @@ ddev ssh
 cd /var/www/html/v13
 vendor/bin/typo3 mailer:spool:send
 
-# View in MailPit UI
-open http://rte-ckeditor-image.ddev.site:8025
+# View in MailPit UI (Docker picks the host port at start)
+open "http://$(docker port ddev-{{DDEV_SITENAME}}-mailpit 8025)"
 ```
 
 ---
@@ -182,8 +184,8 @@ ddev redis-cli
 ddev ssh
 redis-cli -h redis
 
-# MailPit web interface
-open http://rte-ckeditor-image.ddev.site:8025
+# MailPit web interface (Docker picks the host port at start)
+open "http://$(docker port ddev-{{DDEV_SITENAME}}-mailpit 8025)"
 
 # Check Redis connection from TYPO3
 ddev ssh
@@ -350,7 +352,7 @@ solr:
 | Service | Access | Purpose |
 |---------|--------|---------|
 | Redis | `redis-cli -h redis` | Caching |
-| MailPit UI | http://localhost:8025 | Email testing |
+| MailPit UI | `docker port ddev-{{DDEV_SITENAME}}-mailpit 8025` | Email testing |
 | MailPit SMTP | `mailpit:1025` | Email delivery |
 | Ofelia | Background | Cron jobs |
 | Web | https://*.ddev.site | TYPO3 instances |
