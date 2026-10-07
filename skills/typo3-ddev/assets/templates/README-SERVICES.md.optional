@@ -328,7 +328,7 @@ elasticsearch:
     - discovery.type=single-node
     - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
   ports:
-    - "9200"
+    - "127.0.0.1::9200"
 ```
 
 ### Solr
@@ -338,7 +338,7 @@ elasticsearch:
 solr:
   image: solr:9
   ports:
-    - "8983"
+    - "127.0.0.1::8983"
   volumes:
     - solr-data:/var/solr
 ```
