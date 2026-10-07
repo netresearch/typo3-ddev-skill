@@ -34,7 +34,9 @@ check() { # check <name> <expected> <actual>
 BRANCH='x'"'"'$(touch${IFS}PWNED)|e<b>&"y;z'
 REPO="$WORK/repo"
 git init -q -b main "$REPO"
-git -C "$REPO" -c user.email=t@example.org -c user.name=t -c commit.gpgsign=false commit -q --allow-empty -m 'First commit'
+# The subject closes and reopens a CSS comment.
+SUBJECT='First */ body{display:none} /* commit'
+git -C "$REPO" -c user.email=t@example.org -c user.name=t -c commit.gpgsign=false commit -q --allow-empty -m "$SUBJECT"
 git -C "$REPO" checkout -q -b "$BRANCH"
 
 mkdir -p "$WORK/bin" "$WORK/html/.ddev"
@@ -78,6 +80,9 @@ check "the command succeeds" 0 "$?"
 check "the branch is shown as text" 1 \
     "$(grep -cF '<span class="git-branch">x&#39;$(touch${IFS}PWNED)|e&lt;b&gt;&amp;&quot;y;z</span>' "$HTML/index.html")"
 check "no placeholder is left" 0 "$(grep -c '{{GIT_BRANCH}}' "$HTML/index.html")"
+check "the commit subject appears only as page text, not in the stylesheet" \
+    '<span class="git-commit-msg">'"$SUBJECT"'</span>' \
+    "$(grep -F "$SUBJECT" "$HTML/index.html" | sed 's/^ *//')"
 
 check "nothing named in the branch ran" "absent" \
     "$(find "$WORK" -name PWNED | grep -q . && echo present || echo absent)"
