@@ -72,6 +72,8 @@
         :root, [data-theme="light"] {
             --page-bg: #e8eaed;
             --header-bg: var(--accent);
+            --accent-text: var(--accent);
+            --accent-tint: rgba(71, 85, 105, 0.12);
             --card-bg: #FFFFFF;
             --card-bg-alt: #f8f8f8;
             --text-primary: var(--neutral-dark);
@@ -90,6 +92,8 @@
         [data-theme="dark"] {
             --page-bg: #1a1a1a;
             --header-bg: #252525;
+            --accent-text: #94a3b8;
+            --accent-tint: rgba(148, 163, 184, 0.15);
             --card-bg: #262626;
             --card-bg-alt: #1f1f1f;
             --text-primary: #f0f0f0;
@@ -109,6 +113,8 @@
             [data-theme="system"] {
                 --page-bg: #1a1a1a;
                 --header-bg: #252525;
+                --accent-text: #94a3b8;
+                --accent-tint: rgba(148, 163, 184, 0.15);
                 --card-bg: #262626;
                 --card-bg-alt: #1f1f1f;
                 --text-primary: #f0f0f0;
@@ -137,7 +143,7 @@
 
         /* Focus States for Accessibility */
         :focus-visible {
-            outline: 2px solid var(--accent);
+            outline: 2px solid var(--accent-text);
             outline-offset: 2px;
         }
 
@@ -303,8 +309,8 @@
 
         .badge--outline {
             background: transparent;
-            border: 1.5px solid var(--accent);
-            color: var(--accent);
+            border: 1.5px solid var(--accent-text);
+            color: var(--accent-text);
         }
 
         /* Git Info */
@@ -340,8 +346,8 @@
         .git-commit {
             font-family: var(--font-mono);
             font-size: 0.8rem;
-            color: var(--accent);
-            background: rgba(255, 135, 0, 0.15);
+            color: var(--accent-text);
+            background: var(--accent-tint);
             padding: 2px 8px;
             border-radius: 4px;
         }
@@ -412,7 +418,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: rgba(255, 135, 0, 0.15);
+            background: var(--accent-tint);
             border-radius: 8px;
             font-size: 1rem;
         }
@@ -442,7 +448,7 @@
         }
 
         .instance-card:hover {
-            border-color: var(--accent);
+            border-color: var(--accent-text);
             box-shadow: 0 8px 24px var(--shadow-color);
         }
 
@@ -467,7 +473,7 @@
         .instance-badge {
             padding: var(--space-xs) var(--space-sm);
             background: var(--color-v12-bg);
-            color: var(--card-accent, var(--accent));
+            color: var(--card-accent, var(--accent-text));
             font-family: var(--font-mono);
             font-size: 0.7rem;
             font-weight: 500;
@@ -511,8 +517,8 @@
 
         .instance-link--secondary {
             background: transparent;
-            color: var(--accent);
-            border: 1.5px solid var(--accent);
+            color: var(--accent-text);
+            border: 1.5px solid var(--accent-text);
         }
 
         .instance-link--secondary:hover {
@@ -580,7 +586,7 @@
         }
 
         .credential-value:hover {
-            border-color: var(--accent);
+            border-color: var(--accent-text);
         }
 
         /* ═══════════════════════════════════════
@@ -607,7 +613,7 @@
 
         .tool-card:hover {
             background: var(--card-bg);
-            border-color: var(--accent);
+            border-color: var(--accent-text);
         }
 
         .tool-icon {
