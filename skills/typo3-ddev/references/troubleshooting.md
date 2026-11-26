@@ -241,9 +241,9 @@ Solutions:
   1. For Netresearch projects, ALWAYS check composer.json vendor:
      grep '"netresearch/' composer.json
 
-  2. Invoke the `netresearch-branding` skill for colors, fonts, and the
-     logo SVG — don't hardcode brand facts here. Embed the logo inline,
-     never link it externally.
+  2. Take colors, fonts, and the logo SVG from the project's corporate
+     design — don't guess brand facts. Embed the logo inline, never link
+     it externally.
 
   3. Get extension name from composer.json "name" field:
      jq -r '.name' composer.json  # Returns: netresearch/nr-llm
