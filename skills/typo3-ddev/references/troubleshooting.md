@@ -233,7 +233,7 @@ Symptoms:
   - Extension name shows underscores instead of hyphens
 
 Causes:
-  1. Branding skill not consulted before generating page
+  1. Netresearch template not used when generating the page
   2. Logo SVG not embedded (relying on external URL)
   3. Extension name taken from ext_emconf instead of composer.json
 
@@ -241,9 +241,10 @@ Solutions:
   1. For Netresearch projects, ALWAYS check composer.json vendor:
      grep '"netresearch/' composer.json
 
-  2. Take colors, fonts, and the logo SVG from the project's corporate
-     design — don't guess brand facts. Embed the logo inline, never link
-     it externally.
+  2. Generate the page from assets/templates/index.html.netresearch.template
+     (ddev generate-index picks it for netresearch/* packages); it carries
+     the colors, fonts, and logo SVG — don't guess brand facts. Embed the
+     logo inline, never link it externally.
 
   3. Get extension name from composer.json "name" field:
      jq -r '.name' composer.json  # Returns: netresearch/nr-llm

@@ -9,11 +9,11 @@ Generate a professional overview page (`index.html`) that serves as the main ent
 
 ## Branding
 
-For a Netresearch project, style the page in the Netresearch corporate design (colors, fonts, logo) as the project or the user provides it; this skill does not define brand facts, so do not guess them.
+For a Netresearch project, base the page on `assets/templates/index.html.netresearch.template`, which carries the Netresearch colors, fonts and inline logo SVG; `ddev generate-index` selects it for `netresearch/*` packages. Do not guess brand facts.
 
 **Detection:** Netresearch project if `composer.json` vendor is `netresearch/` or the git remote contains `netresearch`; otherwise fall back to plain TYPO3 orange `#FF8700` with system fonts.
 
-**Known failure mode:** an agent generates the page with generic colors/system fonts, an externally-linked (not embedded) logo, or an extension name with underscores instead of the composer-name's hyphens. Fix: apply the corporate design before generating, embed the logo SVG inline (never link it externally), and read the extension name from `composer.json` `name`.
+**Known failure mode:** an agent generates the page with generic colors/system fonts, an externally-linked (not embedded) logo, or an extension name with underscores instead of the composer-name's hyphens. Fix: start from the Netresearch template, embed the logo SVG inline (never link it externally), and read the extension name from `composer.json` `name`.
 
 ## HTML Template Structure
 
@@ -228,7 +228,7 @@ $description = $composerJson['description'] ?? '';
 
 Before finalizing the index page:
 
-- [ ] Corporate design (or fallback) applied per the Branding section above
+- [ ] Netresearch template (or fallback) used per the Branding section above
 - [ ] All TYPO3 version links present
 - [ ] Backend credentials displayed
 - [ ] **Git branch and commit displayed**
