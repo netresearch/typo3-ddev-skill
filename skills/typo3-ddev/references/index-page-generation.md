@@ -9,11 +9,11 @@ Generate a professional overview page (`index.html`) that serves as the main ent
 
 ## Branding
 
-Netresearch branding (colors, fonts, logo, HTML template) is owned by the [`netresearch-branding`](https://github.com/netresearch/netresearch-branding-skill/blob/main/skills/netresearch-branding/SKILL.md) skill — invoke it before generating the index page rather than hardcoding brand facts here. Base the page on its [`templates/landing-page.html`](https://github.com/netresearch/netresearch-branding-skill/blob/main/skills/netresearch-branding/templates/landing-page.html); for extension-specific requirements (icon, `composer.json`/`ext_emconf.php` fields) see its [`references/typo3-extension-branding.md`](https://github.com/netresearch/netresearch-branding-skill/blob/main/skills/netresearch-branding/references/typo3-extension-branding.md).
+For a Netresearch project, style the page in the Netresearch corporate design (colors, fonts, logo) as the project or the user provides it; this skill does not define brand facts, so do not guess them.
 
-**Detection:** Netresearch project if `composer.json` vendor is `netresearch/` or the git remote contains `netresearch`; otherwise fall back to plain TYPO3 orange `#FF8700` with system fonts (no company skill to invoke).
+**Detection:** Netresearch project if `composer.json` vendor is `netresearch/` or the git remote contains `netresearch`; otherwise fall back to plain TYPO3 orange `#FF8700` with system fonts.
 
-**Known failure mode:** an agent generates the page without invoking `netresearch-branding` first, producing generic colors/system fonts, an externally-linked (not embedded) logo, or an extension name with underscores instead of the composer-name's hyphens. Fix: explicitly invoke `netresearch-branding` before generating, embed its logo SVG inline (never link it externally), and read the extension name from `composer.json` `name`.
+**Known failure mode:** an agent generates the page with generic colors/system fonts, an externally-linked (not embedded) logo, or an extension name with underscores instead of the composer-name's hyphens. Fix: apply the corporate design before generating, embed the logo SVG inline (never link it externally), and read the extension name from `composer.json` `name`.
 
 ## HTML Template Structure
 
@@ -228,7 +228,7 @@ $description = $composerJson['description'] ?? '';
 
 Before finalizing the index page:
 
-- [ ] `netresearch-branding` invoked (or fallback applied) per the Branding section above
+- [ ] Corporate design (or fallback) applied per the Branding section above
 - [ ] All TYPO3 version links present
 - [ ] Backend credentials displayed
 - [ ] **Git branch and commit displayed**
