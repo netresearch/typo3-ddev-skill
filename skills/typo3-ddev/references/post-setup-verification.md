@@ -42,8 +42,7 @@ Copy templates from `assets/templates/` to project's `.ddev/`:
 │   ├── v12.conf             (committable - copy for TYPO3 v12)
 │   ├── v13.conf             (committable - copy for TYPO3 v13)
 │   └── docs.conf            (committable - for docs subdomain)
-├── index.html.netresearch.template  (for netresearch/* packages)
-├── index.html.typo3.template        (for all other packages)
+├── index.html.template              (landing page, used by ddev generate-index)
 └── commands/web/install-v{11,12,13,14}
 ```
 

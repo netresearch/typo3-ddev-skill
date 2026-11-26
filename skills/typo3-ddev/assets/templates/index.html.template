@@ -7,10 +7,10 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚀</text></svg>">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700;800&family=Open+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
         /* ═══════════════════════════════════════════════════════════════
-           NETRESEARCH DDEV LANDING PAGE TEMPLATE
+           TYPO3 DDEV LANDING PAGE TEMPLATE
            Template variables, written as {{NAME}} in the markup below.
            They are listed without braces so that generate-index does not
            fill them into this comment.
@@ -30,12 +30,15 @@
            THEME VARIABLES
            ═══════════════════════════════════════ */
         :root {
-            /* Netresearch Brand Colors (constant) */
-            --nr-turquoise: #2F99A4;
-            --nr-turquoise-light: #3db5c2;
-            --nr-turquoise-dark: #247a83;
-            --nr-orange: #FF4D00;
-            --nr-anthracite: #585961;
+            /* Neutral accent colours. They carry no brand: to apply an
+               organisation's branding, override these values (for example
+               from a branding skill, a style guide or design tokens the
+               project provides). */
+            --accent: #475569;
+            --accent-light: #94a3b8;
+            --accent-dark: #334155;
+            --neutral-dark: #313131;
+            --neutral-dark-light: #4a4a4a;
 
             /* Semantic Colors */
             --color-v12: #22c55e;
@@ -55,9 +58,9 @@
             --space-3xl: 4rem;
 
             /* Typography */
-            --font-display: 'Raleway', sans-serif;
-            --font-body: 'Open Sans', sans-serif;
-            --font-mono: 'JetBrains Mono', monospace;
+            --font-display: 'Source Sans 3', sans-serif;
+            --font-body: 'Source Sans 3', sans-serif;
+            --font-mono: 'JetBrains Mono', 'Share Tech Mono', monospace;
 
             /* Transitions */
             --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
@@ -68,18 +71,20 @@
         /* Light Theme (default) */
         :root, [data-theme="light"] {
             --page-bg: #e8eaed;
-            --header-bg: var(--nr-turquoise);
+            --header-bg: var(--accent);
+            --accent-text: var(--accent);
+            --accent-tint: rgba(71, 85, 105, 0.12);
             --card-bg: #FFFFFF;
-            --card-bg-alt: #f7f8f9;
-            --text-primary: #3d3e44;
-            --text-secondary: #6e6f78;
-            --border-color: #CCCDCC;
+            --card-bg-alt: #f8f8f8;
+            --text-primary: var(--neutral-dark);
+            --text-secondary: #6b6b6b;
+            --border-color: #e0e0e0;
             --border-color-light: rgba(0, 0, 0, 0.06);
-            --shadow-color: rgba(0, 0, 0, 0.08);
-            --terminal-bg: #3d3e44;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --terminal-bg: var(--neutral-dark);
             --terminal-text: rgba(255, 255, 255, 0.9);
             --terminal-comment: rgba(255, 255, 255, 0.6);
-            --footer-bg: var(--nr-anthracite);
+            --footer-bg: var(--neutral-dark);
             --footer-text: rgba(255, 255, 255, 0.7);
         }
 
@@ -87,13 +92,15 @@
         [data-theme="dark"] {
             --page-bg: #1a1a1a;
             --header-bg: #252525;
-            --card-bg: #2d2d2d;
-            --card-bg-alt: #252525;
-            --text-primary: #e5e5e5;
-            --text-secondary: #a0a0a0;
-            --border-color: #404040;
+            --accent-text: #94a3b8;
+            --accent-tint: rgba(148, 163, 184, 0.15);
+            --card-bg: #262626;
+            --card-bg-alt: #1f1f1f;
+            --text-primary: #f0f0f0;
+            --text-secondary: #a8a8a8;
+            --border-color: #3d3d3d;
             --border-color-light: rgba(255, 255, 255, 0.06);
-            --shadow-color: rgba(0, 0, 0, 0.3);
+            --shadow-color: rgba(0, 0, 0, 0.4);
             --terminal-bg: #1a1a1a;
             --terminal-text: rgba(255, 255, 255, 0.9);
             --terminal-comment: rgba(255, 255, 255, 0.5);
@@ -106,13 +113,15 @@
             [data-theme="system"] {
                 --page-bg: #1a1a1a;
                 --header-bg: #252525;
-                --card-bg: #2d2d2d;
-                --card-bg-alt: #252525;
-                --text-primary: #e5e5e5;
-                --text-secondary: #a0a0a0;
-                --border-color: #404040;
+                --accent-text: #94a3b8;
+                --accent-tint: rgba(148, 163, 184, 0.15);
+                --card-bg: #262626;
+                --card-bg-alt: #1f1f1f;
+                --text-primary: #f0f0f0;
+                --text-secondary: #a8a8a8;
+                --border-color: #3d3d3d;
                 --border-color-light: rgba(255, 255, 255, 0.06);
-                --shadow-color: rgba(0, 0, 0, 0.3);
+                --shadow-color: rgba(0, 0, 0, 0.4);
                 --terminal-bg: #1a1a1a;
                 --terminal-text: rgba(255, 255, 255, 0.9);
                 --terminal-comment: rgba(255, 255, 255, 0.5);
@@ -134,7 +143,7 @@
 
         /* Focus States for Accessibility */
         :focus-visible {
-            outline: 2px solid var(--nr-turquoise);
+            outline: 2px solid var(--accent-text);
             outline-offset: 2px;
         }
 
@@ -202,7 +211,7 @@
         }
 
         .theme-btn.active {
-            background: var(--nr-turquoise);
+            background: var(--accent);
             color: white;
         }
 
@@ -219,7 +228,7 @@
             padding: var(--space-3xl) var(--space-2xl) var(--space-2xl);
             background: var(--card-bg);
             border-bottom: 1px solid var(--border-color);
-            border-top: 4px solid var(--nr-turquoise);
+            border-top: 4px solid var(--accent);
             transition: var(--theme-transition);
         }
 
@@ -284,7 +293,7 @@
             align-items: center;
             gap: var(--space-xs);
             padding: var(--space-xs) var(--space-md);
-            background: var(--nr-turquoise);
+            background: var(--accent);
             color: white;
             font-family: var(--font-display);
             font-size: 0.75rem;
@@ -295,13 +304,13 @@
         }
 
         .badge--secondary {
-            background: var(--nr-anthracite);
+            background: var(--neutral-dark);
         }
 
         .badge--outline {
             background: transparent;
-            border: 1.5px solid var(--nr-turquoise);
-            color: var(--nr-turquoise);
+            border: 1.5px solid var(--accent-text);
+            color: var(--accent-text);
         }
 
         /* Git Info */
@@ -326,7 +335,7 @@
         .git-branch {
             display: inline-flex;
             padding: var(--space-xs) var(--space-sm);
-            background: var(--nr-turquoise);
+            background: var(--accent);
             color: white;
             font-family: var(--font-mono);
             font-size: 0.75rem;
@@ -337,8 +346,8 @@
         .git-commit {
             font-family: var(--font-mono);
             font-size: 0.8rem;
-            color: var(--nr-turquoise);
-            background: rgba(47, 153, 164, 0.15);
+            color: var(--accent-text);
+            background: var(--accent-tint);
             padding: 2px 8px;
             border-radius: 4px;
         }
@@ -358,7 +367,7 @@
             align-items: center;
             gap: var(--space-xs);
             padding: var(--space-xs) var(--space-sm);
-            background: var(--nr-turquoise);
+            background: var(--accent);
             color: white;
             font-family: var(--font-display);
             font-size: 0.75rem;
@@ -369,7 +378,7 @@
         }
 
         .pr-link:hover {
-            background: var(--nr-turquoise-dark);
+            background: var(--accent-dark);
         }
 
         .pr-title {
@@ -409,7 +418,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: rgba(47, 153, 164, 0.15);
+            background: var(--accent-tint);
             border-radius: 8px;
             font-size: 1rem;
         }
@@ -439,7 +448,7 @@
         }
 
         .instance-card:hover {
-            border-color: var(--nr-turquoise);
+            border-color: var(--accent-text);
             box-shadow: 0 8px 24px var(--shadow-color);
         }
 
@@ -464,7 +473,7 @@
         .instance-badge {
             padding: var(--space-xs) var(--space-sm);
             background: var(--color-v12-bg);
-            color: var(--card-accent, var(--nr-turquoise));
+            color: var(--card-accent, var(--accent-text));
             font-family: var(--font-mono);
             font-size: 0.7rem;
             font-weight: 500;
@@ -498,22 +507,22 @@
         }
 
         .instance-link--primary {
-            background: var(--nr-turquoise);
+            background: var(--accent);
             color: white;
         }
 
         .instance-link--primary:hover {
-            background: var(--nr-turquoise-dark);
+            background: var(--accent-dark);
         }
 
         .instance-link--secondary {
             background: transparent;
-            color: var(--nr-turquoise);
-            border: 1.5px solid var(--nr-turquoise);
+            color: var(--accent-text);
+            border: 1.5px solid var(--accent-text);
         }
 
         .instance-link--secondary:hover {
-            background: var(--nr-turquoise);
+            background: var(--accent);
             color: white;
         }
 
@@ -523,7 +532,7 @@
         .credentials-box {
             background: var(--card-bg-alt);
             border: 1px solid var(--border-color);
-            border-left: 4px solid var(--nr-orange);
+            border-left: 4px solid var(--accent-dark);
             border-radius: 12px;
             padding: var(--space-lg);
             transition: var(--theme-transition);
@@ -577,7 +586,7 @@
         }
 
         .credential-value:hover {
-            border-color: var(--nr-turquoise);
+            border-color: var(--accent-text);
         }
 
         /* ═══════════════════════════════════════
@@ -604,7 +613,7 @@
 
         .tool-card:hover {
             background: var(--card-bg);
-            border-color: var(--nr-turquoise);
+            border-color: var(--accent-text);
         }
 
         .tool-icon {
@@ -677,7 +686,7 @@
         }
 
         .command-prompt {
-            color: var(--nr-turquoise-light);
+            color: var(--accent-light);
             user-select: none;
         }
 
@@ -711,19 +720,13 @@
             gap: var(--space-sm);
         }
 
-        .footer-logo {
-            width: 32px;
-            height: 32px;
-            opacity: 0.9;
-        }
-
         .footer-text {
             font-size: 0.85rem;
             color: var(--footer-text);
         }
 
         .footer-link {
-            color: var(--nr-turquoise-light);
+            color: var(--accent-light);
             text-decoration: none;
             font-weight: 500;
         }
@@ -868,13 +871,9 @@
 
                 <div class="header-content">
                     <div class="logo-container">
-                        <!-- Netresearch Official Logo SVG -->
-                        <svg viewBox="-75 -75 440 440" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Netresearch Logo">
-                            <title>Netresearch DTT GmbH</title>
-                            <g>
-                                <path fill="#2999a4" d="M209.6,0V31.62h32.77a26.38,26.38,0,0,1,26.44,26.43V242a26.38,26.38,0,0,1-26.44,26.44H209.6V300h47.93a42.77,42.77,0,0,0,42.86-42.86V42.89A42.76,42.76,0,0,0,257.53,0ZM43.25,0A42.76,42.76,0,0,0,.39,42.89V257.18A42.76,42.76,0,0,0,43.25,300H91.18V268.46H58.4A26.38,26.38,0,0,1,32,242v-184A26.37,26.37,0,0,1,58.4,31.62H91.18V0Z" transform="translate(-0.39 -0.04)"/>
-                                <path fill="#595a62" d="M221.44,120.41c0-34.48-13.94-57.82-48.93-57.82-26.62,0-48.54,7.74-64.17,26.56l-.7-22.06-28.31.06V232.94h31.59V124.69c7.14-18.38,32.14-34.8,53-34.5,27.38.4,25.2,26.24,26,45.81v96.94h31.58" transform="translate(-0.39 -0.04)"/>
-                            </g>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                            <rect x="2.5" y="4" width="19" height="16" rx="2"/>
+                            <path d="M7 10l3 2.5L7 15M12.5 15h4.5"/>
                         </svg>
                     </div>
                     <div class="header-text">
@@ -1067,14 +1066,8 @@
                  ═══════════════════════════════════════ -->
             <footer class="footer">
                 <div class="footer-brand">
-                    <svg class="footer-logo" viewBox="-75 -75 440 440" xmlns="http://www.w3.org/2000/svg">
-                        <g>
-                            <path fill="#2999a4" d="M209.6,0V31.62h32.77a26.38,26.38,0,0,1,26.44,26.43V242a26.38,26.38,0,0,1-26.44,26.44H209.6V300h47.93a42.77,42.77,0,0,0,42.86-42.86V42.89A42.76,42.76,0,0,0,257.53,0ZM43.25,0A42.76,42.76,0,0,0,.39,42.89V257.18A42.76,42.76,0,0,0,43.25,300H91.18V268.46H58.4A26.38,26.38,0,0,1,32,242v-184A26.37,26.37,0,0,1,58.4,31.62H91.18V0Z" transform="translate(-0.39 -0.04)"/>
-                            <path fill="#ffffff" d="M221.44,120.41c0-34.48-13.94-57.82-48.93-57.82-26.62,0-48.54,7.74-64.17,26.56l-.7-22.06-28.31.06V232.94h31.59V124.69c7.14-18.38,32.14-34.8,53-34.5,27.38.4,25.2,26.24,26,45.81v96.94h31.58" transform="translate(-0.39 -0.04)"/>
-                        </g>
-                    </svg>
                     <span class="footer-text">
-                        Developed by <a href="https://www.netresearch.de/" target="_blank" rel="noopener" class="footer-link">Netresearch DTT GmbH</a>
+                        Powered by <a href="https://typo3.org/" target="_blank" rel="noopener" class="footer-link">TYPO3 CMS</a>
                     </span>
                 </div>
                 <div class="footer-meta">

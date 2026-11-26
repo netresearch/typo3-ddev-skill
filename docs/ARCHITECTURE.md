@@ -60,7 +60,7 @@ The generated environment uses a unique layout:
 │   ├── v12/             # TYPO3 12.4 installation
 │   ├── v13/             # TYPO3 13.4 installation
 │   └── v14/             # TYPO3 14.3 installation (default / gold standard)
-└── index.html           # Branded landing page
+└── index.html           # Landing page
 ```
 
 Each TYPO3 installation includes the extension via a Composer path repository, so changes to extension source are immediately available in all versions without rebuilding.
@@ -71,4 +71,4 @@ Each TYPO3 installation includes the extension via a Composer path repository, s
 - **Subdomain routing** — `v11.ext.ddev.site`, `v12.ext.ddev.site`, etc. via Apache vhosts
 - **Tiered database** — SQLite for simple extensions (faster startup), MariaDB for complex ones
 - **Template-based generation** — files are copied and variable-substituted, not dynamically generated at runtime
-- **Branded landing pages** — Netresearch and generic TYPO3 templates with auto-detected metadata
+- **Landing page** — one neutral template with auto-detected metadata; branding is applied by overriding its CSS custom properties
