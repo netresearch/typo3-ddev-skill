@@ -316,7 +316,13 @@
         "value": "index.html.template",
         "description": "Starts from the neutral landing-page template"
       }
-    ]
+    ],
+    "samples": {
+      "passing": "Run ddev generate-index. It fills assets/templates/index.html.template, a neutral template; to apply your organisation's branding, override the colour and font custom properties at the top of its style block.",
+      "failing": [
+        "Write a new index.html by hand with your brand colours and copy it into .ddev/web-build/."
+      ]
+    }
   },
   {
     "name": "ofelia-scheduler",
