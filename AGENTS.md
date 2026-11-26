@@ -47,7 +47,7 @@ No Makefile or npm scripts. Key scripts and DDEV commands:
 - `ddev install-v11` / `ddev install-v12` / `ddev install-v13` / `ddev install-v14` — install specific TYPO3 version
 - `ddev install-all` — install all TYPO3 versions
 - `ddev install-introduction v13` — install Introduction Package with demo content
-- `ddev generate-index` — regenerate the branded landing page
+- `ddev generate-index` — regenerate the landing page
 
 ## Rules
 

@@ -184,14 +184,9 @@ Username: admin
 Password: Joh316!!
 ```
 
-### Branded Landing Page
+### Landing Page
 
-The overview dashboard automatically uses branded templates based on your project:
-
-| Vendor | Template | Branding |
-|--------|----------|----------|
-| `netresearch/*` | Netresearch | Turquoise (#2F99A4), [n] logo |
-| All others | TYPO3 | Orange (#FF8700), TYPO3 swoosh |
+The overview dashboard is generated from one neutral template, `assets/templates/index.html.template`. It names no brand; to apply an organisation's branding, override the colour and font custom properties at the top of its `<style>` block.
 
 **Features:**
 - Three-state theme switcher (Light / System / Dark)

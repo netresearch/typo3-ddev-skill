@@ -30,22 +30,22 @@ $prUrl = $githubUrl && $prNumber ? $githubUrl . '/pull/' . $prNumber : null;
     <style>
         body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,Cantarell,sans-serif;max-width:900px;margin:50px auto;padding:0 20px;line-height:1.6;color:#333;background:#f5f5f5}
         .container{background:#fff;padding:40px;border-radius:8px;box-shadow:0 2px 10px rgba(0,0,0,0.1)}
-        h1{color:#ff8700;border-bottom:3px solid #ff8700;padding-bottom:10px;margin-bottom:10px}
+        h1{color:#475569;border-bottom:3px solid #475569;padding-bottom:10px;margin-bottom:10px}
         .git-info{font-size:0.85em;color:#666;margin-bottom:30px;padding:10px;background:#f9f9f9;border-radius:4px}
         .git-info a{color:#0078e7;text-decoration:none;font-weight:500}
         .git-info a:hover{text-decoration:underline}
         .git-info .separator{margin:0 8px;color:#ccc}
         h2{color:#666;margin-top:30px;margin-bottom:15px;font-size:1.3em}
-        .card{background:#f9f9f9;border-left:4px solid #ff8700;padding:20px;margin:15px 0;border-radius:4px}
-        .card h3{margin-top:0;color:#ff8700}
+        .card{background:#f9f9f9;border-left:4px solid #475569;padding:20px;margin:15px 0;border-radius:4px}
+        .card h3{margin-top:0;color:#475569}
         a{color:#0078e7;text-decoration:none;font-weight:500}
         a:hover{text-decoration:underline}
         code{background:#eee;padding:2px 6px;border-radius:3px;font-family:monospace;font-size:0.9em}
         .links{display:flex;gap:15px;margin-top:10px;flex-wrap:wrap}
         .btn{display:inline-block;padding:10px 20px;background:#0078e7;color:#fff!important;border-radius:4px;text-decoration:none;transition:background 0.3s}
         .btn:hover{background:#0056b3;text-decoration:none}
-        .btn-docs{background:#ff8700}
-        .btn-docs:hover{background:#e67700}
+        .btn-docs{background:#475569}
+        .btn-docs:hover{background:#334155}
         ul{list-style:none;padding:0}
         li{padding:5px 0}
         .version-card{margin:10px 0}

@@ -9,11 +9,11 @@ Generate a professional overview page (`index.html`) that serves as the main ent
 
 ## Branding
 
-For a Netresearch project, base the page on `assets/templates/index.html.netresearch.template`, which carries the Netresearch colors, fonts and inline logo SVG; `ddev generate-index` selects it for `netresearch/*` packages. Do not guess brand facts.
+Base the page on `assets/templates/index.html.template`, which `ddev generate-index` fills in. The template is neutral: it defines plain colour and font custom properties at the top of its `<style>` block and names no brand.
 
-**Detection:** Netresearch project if `composer.json` vendor is `netresearch/` or the git remote contains `netresearch`; otherwise fall back to plain TYPO3 orange `#FF8700` with system fonts.
+When the organisation has a branding of its own (a branding skill, a style guide, design tokens or brand information the project or user provides), apply it by overriding those custom properties. Otherwise keep the neutral defaults. Do not guess brand facts.
 
-**Known failure mode:** an agent generates the page with generic colors/system fonts, an externally-linked (not embedded) logo, or an extension name with underscores instead of the composer-name's hyphens. Fix: start from the Netresearch template, embed the logo SVG inline (never link it externally), and read the extension name from `composer.json` `name`.
+**Known failure mode:** an agent generates the page with an externally-linked (not embedded) image, or an extension name with underscores instead of the composer-name's hyphens. Fix: embed any image inline (never link it externally), and read the extension name from `composer.json` `name`.
 
 ## HTML Template Structure
 
@@ -69,8 +69,8 @@ For a Netresearch project, base the page on `assets/templates/index.html.netrese
 **Template variables to replace:**
 - `{{PROJECT_NAME}}` - Extension display name
 - `{{DDEV_SITENAME}}` - DDEV project name
-- `{{PRIMARY_COLOR}}` - Brand primary color
-- `{{ACCENT_COLOR}}` - Brand accent color
+- `{{PRIMARY_COLOR}}` - Primary color
+- `{{ACCENT_COLOR}}` - Accent color
 - `{{TEXT_COLOR}}` - Body text color
 - `{{FONT_HEADLINE}}` - Headline font family
 - `{{FONT_BODY}}` - Body font family
@@ -228,7 +228,7 @@ $description = $composerJson['description'] ?? '';
 
 Before finalizing the index page:
 
-- [ ] Netresearch template (or fallback) used per the Branding section above
+- [ ] Neutral template used, or the organisation's branding applied per the Branding section above
 - [ ] All TYPO3 version links present
 - [ ] Backend credentials displayed
 - [ ] **Git branch and commit displayed**

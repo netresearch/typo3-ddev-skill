@@ -1,6 +1,6 @@
 #!/bin/bash
 
-## Description: Generate index.html overview page with branded template
+## Description: Generate the index.html overview page from the landing-page template
 ## Usage: generate-index
 ## Example: ddev generate-index
 
@@ -104,37 +104,15 @@ if [[ -n "${GITHUB_HEAD_REF:-}" ]]; then
 fi
 
 # =============================================================================
-# TEMPLATE SELECTION
+# TEMPLATE
 # =============================================================================
 
-TEMPLATE_DIR="$HTML_ROOT/.ddev"
-IS_NETRESEARCH=false
-
-# Detect Netresearch project by checking composer.json vendor
-if [[ -n "$COMPOSER_PACKAGE" ]]; then
-    VENDOR=$(echo "$COMPOSER_PACKAGE" | cut -d'/' -f1)
-    if [[ "$VENDOR" == "netresearch" ]]; then
-        IS_NETRESEARCH=true
-    fi
-fi
-
-# Select template based on vendor
-if [[ "$IS_NETRESEARCH" == true ]]; then
-    TEMPLATE_FILE="$TEMPLATE_DIR/index.html.netresearch.template"
-    echo "🔵 Detected Netresearch project - using Netresearch branded template"
-else
-    TEMPLATE_FILE="$TEMPLATE_DIR/index.html.typo3.template"
-    echo "🟠 Using TYPO3 branded template"
-fi
-
-# Fallback to TYPO3 template if selected template not found
-if [[ ! -f "$TEMPLATE_FILE" ]]; then
-    TEMPLATE_FILE="$TEMPLATE_DIR/index.html.typo3.template"
-    echo "⚠️  Selected template not found, falling back to TYPO3 template"
-fi
+# One neutral template. To apply an organisation's branding, override the
+# colour and font custom properties at the top of its <style> block.
+TEMPLATE_FILE="$HTML_ROOT/.ddev/index.html.template"
 
 if [[ ! -f "$TEMPLATE_FILE" ]]; then
-    echo "❌ Error: No template file found!"
+    echo "❌ Error: template $TEMPLATE_FILE not found!"
     exit 1
 fi
 

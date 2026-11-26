@@ -304,17 +304,17 @@
   },
   {
     "name": "landing-page-branding",
-    "prompt": "Generate a landing page for my Netresearch TYPO3 extension DDEV project",
+    "prompt": "Generate a landing page for my TYPO3 extension DDEV project",
     "assertions": [
       {
         "type": "content_contains",
-        "value": "#2F99A4",
-        "description": "Uses Netresearch turquoise primary color"
+        "value": "generate-index",
+        "description": "Uses ddev generate-index to build the page"
       },
       {
         "type": "content_contains",
-        "value": "Raleway",
-        "description": "Uses Raleway font for headlines"
+        "value": "index.html.template",
+        "description": "Starts from the neutral landing-page template"
       }
     ]
   },

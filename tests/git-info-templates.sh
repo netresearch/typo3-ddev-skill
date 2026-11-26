@@ -75,7 +75,7 @@ check "the file has its three keys and nothing else" \
     "$(sed -E 's/^(        GIT_[A-Z]+): ".*"$/\1: V/' "$REPO/.ddev/docker-compose.git-info.yaml")"
 
 echo "generate-index"
-cp "$TEMPLATES/index.html.typo3.template" "$HTML/.ddev/"
+cp "$TEMPLATES/index.html.template" "$HTML/.ddev/"
 cat >"$HTML/composer.json" <<'JSON'
 {"name": "vendor/my-ext", "description": "Uses <b>bold</b> & {{GIT_BRANCH}}\nmore", "extra": {"typo3": {"extension-key": "my_ext"}}}
 JSON

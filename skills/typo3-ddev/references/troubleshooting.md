@@ -222,32 +222,29 @@ name format (hyphens) as the authoritative display name:
   ❌ nr_llm (only for internal TYPO3 references)
 ```
 
-**12. Landing Page Missing Branding**
+**12. Landing Page Shows the Wrong Name or Missing Details**
 ```
-❌ Landing page has generic styling instead of Netresearch branding
+❌ Landing page shows the extension name with underscores, or the logo is missing offline
 
 Symptoms:
-  - Generic blue/grey colors instead of Netresearch turquoise
-  - Missing Netresearch logo
-  - System fonts instead of Raleway/Open Sans
   - Extension name shows underscores instead of hyphens
+  - An image does not load without network access
 
 Causes:
-  1. Netresearch template not used when generating the page
-  2. Logo SVG not embedded (relying on external URL)
-  3. Extension name taken from ext_emconf instead of composer.json
+  1. Extension name taken from ext_emconf instead of composer.json
+  2. An image linked externally instead of embedded
 
 Solutions:
-  1. For Netresearch projects, ALWAYS check composer.json vendor:
-     grep '"netresearch/' composer.json
+  1. Generate the page with ddev generate-index from
+     assets/templates/index.html.template. The template is neutral; to
+     apply an organisation's branding, use the branding skill, style guide or
+     design tokens the project provides and override the colour and font
+     custom properties at the top of its <style> block.
 
-  2. Generate the page from assets/templates/index.html.netresearch.template
-     (ddev generate-index picks it for netresearch/* packages); it carries
-     the colors, fonts, and logo SVG — don't guess brand facts. Embed the
-     logo inline, never link it externally.
+  2. Embed any image inline, never link it externally.
 
   3. Get extension name from composer.json "name" field:
-     jq -r '.name' composer.json  # Returns: netresearch/nr-llm
+     jq -r '.name' composer.json  # Returns: vendor/extension-name
 
 See: references/index-page-generation.md (Branding section)
 ```
